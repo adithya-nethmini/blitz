@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box; 
+}
+
+.header img {
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin-top: -20px;
+  }
+
+body{
+    font-family:"Roboto";
+    background-image: url(bg.png);
+    background-position: -25% 0%;
+}
+
+.box {
+   border-radius: 20px;
+   width: 320px;
+   padding: 40px;
+   right: -450px;
+   margin-top: 40px;
+   border: 2px solid rgb(15, 15, 90);
+   background-color: rgba(16, 83, 227, 0.305);
+   box-shadow: 1px 1px 2px #14075fef;
+   display: flex;
+   flex-direction: column;
+   position:relative; 
+}
+
+.box h1 {
+    text-transform: uppercase;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.employeeid,
+.username,
+.password {
+    position: relative;
+}
+
+.fa-id-card,
+.fa-circle-user,
+.fa-lock-open{
+    position: relative;
+    left: 22px;
+    bottom: 47px;
+}
+
+.box input[type="text"],
+.box input[type="password"] {
+    font-size: 17px;
+    text-align: center;
+    border: 0;
+    background: none;
+    display: block;
+    margin: 10px auto;
+    border: 3px solid #000000ef;
+    width: 220px;
+    padding: 14px 10px;
+    color: rgb(2, 2, 2);
+    border-radius: 30px;
+    transition: all .2s ease-in;
+
+}
+
+.box input[type="text"]:focus,
+.box input[type="password"]:focus{
+    width: 230px;
+    border-color: rgb(255, 255, 255);
+}
+
+.main {
+   display:flex;
+   height: 100vh;
+   align-items:center;
+   justify-content: center;
+}
+
+#btn {
+   border: 0;
+   background: none;
+   display: block;
+   text-align: center;
+   border: 3px solid #08bd05ef;
+   padding: 10px 25px;
+   font-size: 20px;
+   align-self: center;
+   border-radius: 20px;
+   transition: all .2s ease-in-out;
+   cursor: pointer;
+}
+
+#btn:hover{
+    background-color: #08bd05ef;
+}
