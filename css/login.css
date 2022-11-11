@@ -1,0 +1,136 @@
+/* Login */
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+.outer-container{
+    display: block;
+    text-align: center;
+}
+
+h1{
+    padding-bottom: 50px;
+    position: relative;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #F8C000, #fff, #004AAD);
+    background-repeat: no-repeat;
+    background-size: 80%;
+    animation: animate 3s ;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0);
+  }
+  @keyframes animate {
+    0% {
+      background-position: -500%;
+    }
+    100% {
+      background-position: 500%;
+    }
+  }
+
+body:not(.container){
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+    background-image: linear-gradient(to left,#F8C000, #004AAD );
+}
+
+.container{
+    max-width: 400px;
+    padding: 20px 55px ;
+    margin: 0 28px;
+    box-shadow: 0px 0px 25px 5px #ABB2B9;
+    border-radius: 15px;
+    background-color:white;
+} 
+
+.container:hover{
+    box-shadow: 0 0 35px var(--clr);
+}
+
+h2{
+    font-size: 30px;
+    font-weight: 600;
+    text-align: left;
+    color: #004AAD;
+    padding-bottom: 12px;
+}
+
+.logo{
+    max-width: 100%;
+    height: 60px;
+}
+ 
+.heading{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-bottom: 0;
+    vertical-align:auto;
+    border-bottom: 1px solid silver;
+}
+
+.content{
+    font-size: 20px;
+}
+
+input{
+    font-size: 16px;
+    color: #004AAD;
+    border-width:3px ;
+    border-radius: 10px;
+    border-color: rgba(0, 0, 0, 0.249);
+    width: 100%;
+    height: 50PX;
+}
+
+.input-box{
+    /* background-color: burlywood; */
+    display: flex; 
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 20Px 0;
+}
+
+.button-container{
+    margin: 15px 0;
+}
+
+.button-container button{
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    display: block;
+    font-size: 22px;
+    color: aliceblue;
+    border: none;
+    border-radius: 8px;
+    background-image: linear-gradient(to left,#F8C000, #004AAD );
+    text-transform: uppercase;
+}   
+
+button:hover{
+    cursor: pointer;
+    letter-spacing: 0.3em;
+    box-shadow: 0 0 35px var(--clr);
+}
+
+.register-here{
+    text-decoration: none;
+}
+
+.register-here:hover{
+    cursor: pointer;
+    box-shadow: 0 0 35px var(--clr);
+    background-color: rgb(248, 192, 0, 0.3);
+}
+
+.error{
+    color: red;
+    padding: 10px 0 0 0;
+}
