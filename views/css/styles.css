@@ -1,0 +1,1090 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+* {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+/* Landing Page starts here */
+
+.header-landing{
+    padding: 0 30px;
+    align-items: center;
+    background-size:cover;
+    background-position:center;
+    height: 100vh;
+}
+
+.header-landing::before{
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;
+    opacity: .3; 
+    background-size:cover;
+    background-position:center;
+    background-image: url(../images/img_landing.png);
+  }
+
+.header-landing-logged{
+    padding: 0 30px;
+    align-items: center;
+    background-size:cover;
+    background-position:center;
+}
+
+.header-landing-logged::before{
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height:130vh;
+    z-index: -1;
+    opacity: .175; 
+    background-size:cover;
+    background-position:center;
+    background-image: url(../images/img_logged.png);
+  }
+
+.ul-top-nav-landing li{
+    list-style: none;
+    margin-left: 3rem;
+}
+
+.ul-top-nav-landing li a{
+    text-decoration: none;
+    color: #071D70;
+    font-size: 25px;
+    font-weight: 800;
+    border-radius: 50px;
+    transition: 0.2s;
+    margin: 0 3px;
+    padding: 5px 25px;
+}
+
+.top-nav-landing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+}
+
+.menu {
+    display: none;
+}
+
+.bar {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    -webkit-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    background-color: rgb(131, 131, 131);
+}
+
+.ul-top-nav-landing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-nav-link:hover{
+    background-color: hwb(46 0% 3% / 0.542);
+}
+
+.blitz-logo{
+    width: auto;
+    height: 80px;
+    margin: 10px 0 0 50px;
+}
+
+/* Navigation bar ends here */
+
+/* header space starts here */
+.header-space{
+    padding-top: 400px ;
+}
+
+/* header space ends here */
+
+/* Introductory para start here */
+
+.landing-header-p{
+    color:#071D70;
+    font-size: 25px;
+    text-align: justify;
+}
+
+/* Introductory para ends here */
+
+/* First section starts here */
+
+.search-input{
+    border-bottom: 1px solid white;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    background-color: #071e7000;
+    color: #ffffff;
+    height: 25px;
+    font-size: 20px;
+}
+
+.search-div{
+    float: right;
+    border: 1px solid grey;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #071e7084;
+    width: 350px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+}
+.search-input:focus{
+    outline: none;
+}
+
+.search-div a{
+    color: white;
+}
+
+/* First section ends here */
+
+
+/* Second Section start here */
+
+#section-landing-2{
+    padding: 50px 30px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.btn-get-started{
+    cursor: pointer;
+    padding: 10px 30px;
+    font-size: 28px;
+    border-radius: 20px;
+    border:0px ;
+    background-color: #ffb040;
+    box-shadow: 0px 2px 10px #071e707a;
+}
+
+.btn-get-started a{
+    color: #071D70;
+}
+
+.btn-get-started:hover{
+    background-color: #ffaf407a;
+    border: 2px solid #071D70;
+}
+
+/* Second section - logged in user starts here */
+
+.div-loyalty, .div-offers, .div-promotions{
+    width: 100%;
+    height: 200px;
+}
+.div-loyalty h2, .div-offers h2, .div-promotions h2{
+    text-align: left;
+}
+.div-loyalty table, .div-offers table, .div-promotions table{
+    padding: 30px 0;
+}
+.div-loyalty table tr td, .div-offers table tr td, .div-promotions table tr td{
+    padding-right: 20px;
+}
+
+
+/* Second section - logged in user ends here */
+
+/* Second section ends here */
+
+
+@media only screen and (max-width: 1400px) {
+    .header-landing{
+        padding: 0 50px;
+    }
+    .ul-top-nav-landing li{
+        margin-left: 2.5rem;
+    }
+    .ul-top-nav-landing li a{
+        padding: 5px 20px;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .header-landing{
+        padding: 0 70px;
+    }
+    .ul-top-nav-landing li{
+        margin-left: 2rem;
+    }
+    .ul-top-nav-landing li a{
+        padding: 5px 10px;
+    }
+}
+
+@media only screen and (max-width: 1150px) {
+    .header-landing{
+        padding: 0 75px;
+    }
+    .ul-top-nav-landing li{
+        margin-left: 0.5rem;
+    }
+    .ul-top-nav-landing li a{
+        padding: 5px 15px;
+        font-size: 25px;
+    }
+}
+
+@media only screen and (max-width: 950px) {
+    .header-landing{
+        border-bottom: none;
+    }
+    .ul-top-nav-landing {
+        z-index: 1;
+        position: fixed;
+        left: -100%;
+        top: 9rem;
+        flex-direction: column;
+        background-color: #fff;
+        width: 100%;
+        border-radius: 10px;
+        text-align: center;
+        transition: 0.3s;
+        box-shadow:
+            0 10px 27px rgba(0, 0, 0, 0.05);
+    }
+
+    .ul-top-nav-landing.active {
+        left: 0;
+    }
+
+    .ul-top-nav-landing li {
+        margin: 1.5rem 0;
+    }
+
+    .menu {
+        display: block;
+        cursor: pointer;
+    }
+
+    .menu.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu.active .bar:nth-child(1) {
+        -webkit-transform: translateY(8px) rotate(45deg);
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .menu.active .bar:nth-child(3) {
+        -webkit-transform: translateY(-8px) rotate(-45deg);
+        transform: translateY(-8px) rotate(-45deg);
+    }
+    .header-space{
+        padding-top: 420px ;
+    }
+    .landing-header-p{
+        font-size: 20px;
+    }
+}
+
+@media only screen and (max-width: 785px){
+    .header-space{
+        padding-top: 420px ;
+    }
+    .landing-header-p{
+        font-size: 18px;
+    }
+}
+
+@media only screen and (max-width: 680px){
+    .header-space{
+        padding-top: 420px ;
+    }
+    .landing-header-p{
+        font-size: 12px;
+    }
+}
+
+
+/* Landing page ends here */
+
+
+/* General signup page starts hree */
+
+.header-signup{
+    align-items: center;
+    background-size:cover;
+    background-position:center;
+    height: 100vh;
+}
+
+.header-signup::before{
+    content: "";
+    position: fixed;
+    top: 0px; 
+    left: 0px;
+    width: 55%;
+    height: 100vh;
+    z-index: -1;
+    opacity: .3; 
+    background-size:cover;
+    background-position:center;
+    background-image: url(../images/g_signup.png);
+}
+
+.wrapper-signup{
+    display: flex;
+    justify-content: space-between;
+}
+
+.signup-container{
+    background-color: #071D70;
+    float: right;
+    width: 45%;
+    height:100vh;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    padding: 30px;
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.727);
+}
+
+.signup-container .heading h1{ 
+    color: grey;
+    padding: 100px 30px 0 30px;
+}
+
+.content{
+    color: white;
+    padding: 50px 0 0 100px;
+}
+
+.content label{
+    font-size: 25px;
+    line-height: 35px;
+}
+
+.content input[type=radio]{
+    height: 20px;
+    width: 20px;
+    accent-color: #004AAD;
+}
+
+
+.div-g_signup-btn-go{
+    padding: 50px;
+   
+}
+
+.g_signup-btn-go{
+    padding: 10px 20px;
+    font-size: 25px;
+    border-radius: 10px;
+    float: right; position: relative;
+    cursor: pointer;
+    border: 2px solid white;
+    color: white;
+    background-color:#071D70;
+}
+
+.g_signup-btn-go:hover{
+    background-color: white;
+    color:#071D70;
+}
+
+@media only screen and (max-width: 903px) {
+    .content label{
+        font-size: 22px;
+    }
+    .content input{
+        height: 18px;
+        width: 18px;
+    }
+}
+@media only screen and (max-width: 755px) {
+    .content label{
+        font-size: 18px;
+    }
+    .content input{
+        height: 16px;
+        width: 16px;
+    }
+    .content{
+        padding: 50px 0 0 80px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .signup-container{
+        background-color: #071D70;
+        float: right;
+        width: 55%;
+        height:100vh;
+        border-top-left-radius: 40px;
+        border-bottom-left-radius: 40px;
+        padding: 30px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapper-signup{
+        display: block;
+        justify-content: center;
+        padding: 0 100px 0 100px;
+    }
+    .div-logo{
+        padding: 0 50px 0 50px;
+    }
+    .div-logo .blitz-logo{
+        align-items: center;
+    }
+    .signup-container{
+        background-color: #071D70;
+        float: none;
+        width: 100%;
+        height:70vh;
+        border-radius: 40px;
+        padding: 30px;
+    }
+}
+@media only screen and (max-width: 500px) {
+    .div-logo{
+        padding: 0 20px 0 20px;
+    }
+    .signup-container .heading h1{ 
+        color: grey;
+        padding: 100px 0px 0 0px;
+    }
+    
+    .content{
+        color: white;
+        padding: 50px 0 0 20px;
+    }
+    .div-g_signup-btn-go{
+        padding: 30px;
+    }
+}
+
+
+/* Profile starts here */
+
+.header-profile .top-nav-landing .ul-top-nav-landing li a{
+    color: white;
+}
+  
+/* profile side bar stars here */
+.profile-container{
+    display: flex;
+    position: fixed;
+}
+
+.sidebar{
+   /*  width: 1000px; */
+    height: 85vh;
+    background-color:#071D70;
+    padding: 0 50px;
+}
+
+.sidebar a{
+    padding: 20px 10px;
+    text-decoration: none;
+    font-size: 20px;
+    color: white;
+    display: block;
+}
+
+.sidebar a i{
+    padding: 0 8px 0 0;
+}
+.sidebar .sidebar-icon:not(.profile-username){
+    border-bottom: 2px solid #071D70;
+}
+.sidebar .sidebar-icon:not(.profile-username):hover{
+    padding-left: 20px;
+    border-bottom: 2px solid #ffb040;
+    transition: .2s all ease;
+}
+
+.profile-logout{
+    color: rgb(255, 255, 255);
+    background-color:#071D70;
+    border: 1px solid white;
+    width: 200px;
+    height: 30px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    align-items: center;
+}
+
+.profile-logout:hover{
+    color: #071D70;
+    background-color:white;
+    cursor: pointer;
+}
+.profile-logout a:hover{
+    color: #071D70;
+    cursor: pointer;
+}
+
+.profile-username:hover{
+    background-color: none;
+}
+
+.page{
+    justify-content: center;
+    height: 70vh;
+    padding: 40px;
+}
+
+.profile{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+/* profile side bar ends
+
+/* Profile edit data starts here */
+
+.page-a-space{
+    float: right;
+}
+
+.profile-tbl{
+    width: 100%;
+    height: 500px;
+    
+}
+
+.profile-tbl table tr th{
+    text-align: left;
+    padding: 12px 70px;
+}
+
+.btn-profile-edit{
+    color: #818181;
+    padding: 10px;
+    font-size: 30px;
+    text-decoration: none;
+    border-style: none;
+    width: 50px;
+    border-radius: 20px;
+    background-color: black;
+}
+.btn-profile-edit:hover{
+    cursor: pointer;
+    color: white;
+}
+/* @media only screen and (max-width: 1250px) {
+    .profile{
+        background-color: #818181;
+    }.profile-tbl{
+        width: 80%;
+        border-collapse: collapse;
+        display: inline-block;
+        height: 500px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+    
+    .profile-tbl table tr th{
+        text-align: left;
+        padding: 12px 70px;
+    }
+} */
+@media only screen and (max-width: 1250px) {
+    /* .sidebar{
+        width: 60%;
+    } */
+}
+@media only screen and (max-width: 1080px) {
+    /* .sidebar{
+        width: 70%;
+    } */
+}
+@media only screen and (max-width: 1000px){
+    /* .sidebar{
+        width: 80%;
+    } */
+}
+@media only screen and (max-width: 950px){
+    /* .sidebar{
+        width: 90%;
+    } */
+    .header-profile .top-nav-landing .ul-top-nav-landing li a{
+        color: #071D70;
+    }
+    .page{
+        padding: 10px;
+    }
+    .profile-tbl table tr th{
+        padding: 12px 40px;
+    }
+}
+@media only screen and (max-width: 900px){
+    /* .sidebar{
+        width: 100%;
+    } */
+    /* .sidebar a{
+        padding: 20px 40px;
+        font-size: 15px;
+    } *//* #div-profile-data-outer{
+        font-size: 15px;
+    } */.profile-tbl table tr th{
+        text-align: left;
+        padding: 12px 23px;
+    }
+}
+
+@media only screen and (max-width: 850px){
+    /* .sidebar{
+        width: 100%;
+    }
+    .sidebar a{
+        padding: 20px 30px;
+        font-size: 15px;
+    } *//* #div-profile-data-outer{
+        font-size: 15px;
+    } */
+}
+@media only screen and (max-width: 750px){
+    .profile-tbl table{
+    width: 200px;
+    border-collapse: collapse;
+    display: inline-block;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+}
+
+.div-two,.div-three,.div-four,.div-five {
+    display:none
+  }
+
+
+/* Profile edit data ends here */
+
+/* Profile ends here */ 
+
+/* Task-manager starts here */
+
+.all-tasks{
+    padding: 30px 0px;
+    font-size: 20px;    
+}
+
+.btn-task-add, .btn-task-update, .btn-task-delete{
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border-style: none;
+    width: 100px;
+    border-radius: 4px;
+}
+
+.btn-task-add{
+    background-color: black;
+    border: 1px solid black;
+}
+
+.btn-task-update{
+    background-color: #20bf6b;
+    border: 1px solid #20bf6b;
+}
+
+.btn-task-delete{
+    background-color: #a00000;
+    border: 1px solid #a00000;
+}
+.btn-task-add:hover, .btn-task-update:hover, .btn-task-delete:hover{
+    cursor: pointer;
+    background-color: white;
+}
+.btn-task-add:hover{
+    color: black;
+    border:1px solid black;
+}
+.btn-task-update:hover{
+    color: #20bf6b;
+    border:1px solid #20bf6b;
+}
+.btn-task-delete:hover{
+    color: #a00000;
+    border: 1px solid #a00000;
+}
+
+.task-tbl{
+    width: 100%;
+    border-collapse: collapse;
+    display: inline-block;
+    height: 400px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.task-tbl tr th{
+    border-bottom: 1px solid grey ;
+    padding: 30px;
+}
+
+.task-tbl tr td{
+    padding: 20px;
+    border-bottom: 1px solid grey ;
+}
+
+@media only screen and (max-width: 1050px){
+    .task-tbl{
+        width: 80%;
+        border-collapse: collapse;
+        display: inline-block;
+        height: 380px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+}
+@media only screen and (max-width: 950px){
+    .task-tbl{
+        width: 60%;
+        border-collapse: collapse;
+        display: inline-block;
+        height: 370px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+}
+
+@media only screen and (max-width: 650px){
+    .all-tasks{
+        font-size: 18px;
+    }
+    .task-tbl{
+        width: 35%;
+        border-collapse: collapse;
+        display: inline-block;
+        height: 360px;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+}
+/* Task-manager ends here */
+
+/* Update task page starts here */
+
+.body-update{
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    justify-content: center;
+}
+
+.body-update div h2{
+    position: relative;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: 0.05em;
+    word-spacing: 0.1em;
+}
+
+.update-container{
+    max-width: 600px;
+    padding: 40px 50px;
+    box-shadow: 0px 0px 25px 5px #ABB2B9;
+    background-color:#FFB040;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.update-heading{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 25px;
+    vertical-align:auto;
+    border-bottom: 1px solid silver;
+    text-align: center;
+}
+.update-heading div h2 a{
+    font-weight: 600;
+    color:#071D70;
+    padding: 0 65px;
+    text-align: center;
+}
+
+.update-content{
+    font-size: 20px;
+    color:#071D70;
+    padding-top: 10px;
+}
+
+.update-content table tr .update-label{
+    padding: 20px 20px 20px 0;
+}
+
+.update-content table tr .update-input{
+    padding: 12px 0;
+}
+
+.update-content table tr td input{
+    font-size: 16px;
+    color:#071D70;
+    border-width:3px ;
+    border-radius: 10px;
+    border-color: rgba(0, 0, 0, 0.249);
+    width: 400px;
+    height: 40PX;
+    padding-left: 12px;
+}
+
+.update-content table tr td .task-textarea{
+    width: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    color: #022D66;
+    border-color: rgba(0, 0, 0, 0.249);
+    resize: none;
+}
+
+.update-content table tr td select{
+    width: 400px;
+    font-weight:bold;
+    color:#071D70;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    border-width: 3px;
+    border-color: rgba(0, 0, 0, 0.249);
+    padding: 8px;
+    font-weight: 500;
+}
+
+.update-content table tr td select:focus{
+    border-color:black;
+}
+
+.btn-task{
+    padding: 12px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    background-color:#071D70;
+    color: white;
+    border: 2px solid #071D70;
+    border-radius: 5px;
+}
+
+.btn-profile{
+    padding: 10px 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    background-color:#071D70;
+    color: white;
+    border: 2px solid #071D70;
+    border-radius: 5px;
+}
+
+.btn-profile:hover,.btn-task:hover{
+    border: 2px solid #071D70;
+    background-color: white;
+    color:#071D70;
+}
+
+.btn-update{
+    padding: 10px 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+    background-color:white;
+    color: #071D70;
+    border: 2px solid #071D70;
+    border-radius: 5px;
+}
+
+.btn-update:hover{
+    border: 2px solid #071D70;
+    background-color:#071D70 ;
+    color:white;
+}
+.div-update{
+    padding: 10px 0;
+}
+.div-update .btn-update{
+    float: right;
+}
+
+
+@media only screen and (max-width: 600px){
+    .update-container{
+        padding: 20px 30px;
+    }
+    .update-content{
+        font-size: 18px;
+    }
+    .update-content table tr td input{
+        width: 250px;
+    }
+    .update-heading div h2 a{
+        font-size: 21px;
+    }
+}
+
+@media only screen and (max-width: 540px){
+    .update-container{
+        padding: 20px 30px;
+    }
+    .update-content{
+        font-size: 16px;
+    }
+    .update-content table tr td input{
+        font-size: 14px;
+    }
+    .update-heading div h2 a{
+        font-size: 20px;
+        letter-spacing: 0.03em;
+        word-spacing: 0.1em;
+    }
+    .update-content table tr td input{
+        width: 240px;
+    }
+}
+@media only screen and (max-width: 456px){
+    .update-container{
+        padding: 15px 25px;
+    }
+    .update-content{
+        font-size: 15px;
+    }
+    .update-content table tr td input{
+        font-size: 13px;
+    }
+}
+
+/* Update task page ends here */
+
+.error{
+    color: red;
+    padding: 5px;
+}
+
+
+/* Rewards page starts here */
+
+.rewards-page{
+    width: 500px;
+    height: 70vh;
+    padding: 70px;
+}
+
+.div-rewards{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rewards-input{
+    width: 250px;
+    height: 40px;
+    color: #071D70;
+    background-color: #ffffff;
+    
+    border-radius: 5px;
+    padding-left: 10px;
+}
+.rewards-input:focus{
+    border: 2px solid #071D70;
+    box-shadow:0px 2px 10px #071e707a;
+} 
+
+.btn-go{
+    padding: 10px 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    background-color:#071D70;
+    color: white;
+    border: 2px solid #071D70;
+    border-radius: 5px;
+}
+.btn-go:hover{
+    background-color:white;
+    color: #071D70;
+    border: 2px solid #071D70;
+}
+
+/* Rewards page ends here */
+
+/* Forgot password page starts here */
+
+.forgot-password-heading{
+    padding: 50px 0 0px 50px;
+    color: rgb(97, 97, 97);
+}
+
+.forgot-password-content{
+        color: white;
+        padding: 50px 0 10px 50px;
+}
+
+.forgot-password-content input{
+    width: 280px;
+    height: 40px;
+    border-radius: 10px;
+    padding-left: 30px;
+    color: #071D70;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.div-forgot-password-btn-go{
+    padding: 20px 50px 0 0;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.forgot-password-btn-go{
+    padding: 10px 20px;
+    font-size: 15px;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid white;
+    color: white;
+    background-color:#071D70;
+}
+
+.forgot-password-btn-go:hover{
+    background-color: white;
+    color:#071D70;
+}
+
+/* Forgot password page starts here */
+
