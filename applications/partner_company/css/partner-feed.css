@@ -1,0 +1,236 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing:border-box;
+    font-family: 'Raleway', sans-serif;
+
+}
+ .cover-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+ }
+.cover-container img{
+    height: 300px;
+    width: 1210px;
+    justify-items: center;
+    align-items: center;
+    object-fit: cover;
+}
+
+.profile-heading{
+    display: flex;
+    flex-direction: row;
+    padding-left: 120px;
+    color: #52619B;
+    align-content: center;
+    font-size: 30px;
+}
+
+.profile-heading h3{
+    margin-top: 50px;
+}
+
+.profile-heading img{
+    height: 140px;
+    width: 160px;
+}
+
+nav{
+    width: 100%;
+    height: 100px;
+    line-height: 75px;
+    padding: 0px 100px;
+    position: fixed;
+    background-color: #fff;
+
+}
+
+.promo-grid h2{
+    padding: 30px 30px 30px 30px;
+
+}
+
+/* Container */
+.container
+{
+    display : flex;
+}
+
+.container > div
+{
+    flex : auto;
+    display: inline-block;
+    list-style: none;
+    font-size: 19px;
+}
+
+.container > div > a
+{
+    padding: 0px 30px;
+    text-transform: uppercase;
+    color: #6775A7;
+    text-decoration: none;
+}
+
+.container > div > img
+{
+    padding: 0px;
+    padding-top: 15px;
+    width: 50px;
+    padding-left: 0px;
+    height: auto
+    
+}
+
+nav ul li a :hover{
+    color: #071D70;
+}
+
+h2{
+   color:  #6775A7;
+   font-weight: bold;
+
+
+}
+
+
+.page-content{
+    display: flex;
+    flex-direction: column;
+}
+.promo-grid,
+.offer-grid{
+    position: relative;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 30px 30px 30px 0px;
+    border: 2px #071D70;
+}
+
+.offer-grid h2{
+    padding-bottom: 30px;
+}
+
+.promo-grid .promo, 
+.offer-grid .offer{
+    display: inline-block;
+    padding: 0px;
+    background-color: none;
+    height: 260px;
+    width: 200px;
+    border-radius: 53px;
+    border: 2px solid #071D70;
+}
+
+.promo-grid h2{
+    padding-bottom: 30px;
+}
+
+.promo-grid .promo img,
+.offer-grid .offer img {
+    border-radius: 53px 53px 0 0 ;
+    width: 196px;
+    height: 30%;
+}
+
+.promo-grid .promo ul li, 
+.offer-grid .offer ul li{
+    font-size: 15px;
+    color: #071D70;
+    list-style-type: none;
+}
+
+nav{
+    z-index: 1;
+}
+
+.flex{
+    display: flex;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+    grid-gap: 10px
+  }
+  * {
+    box-sizing: border-box;
+  }
+  
+ section {
+    font-family: raleway;
+    margin: 0 auto; /* Center website */
+    max-width: 800px; /* Max width */
+    padding: 20px;
+    margin-right: 500px;
+  }
+  
+  .heading {
+    font-size: 25px;
+    margin-right: 25px;
+  }
+  
+  .fa {
+    font-size: 25px;
+  }
+  
+  .checked {
+    color: orange;
+  }
+  
+  /* Three column layout */
+  .side {
+    float: left;
+    width: 15%;
+    margin-top:10px;
+  }
+  
+  .middle {
+    margin-top:10px;
+    float: left;
+    width: 70%;
+  }
+  
+  /* Place text to the right */
+  .right {
+    text-align: right;
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  
+  /* The bar container */
+  .bar-container {
+    width: 100%;
+    background-color: #f1f1f1;
+    text-align: center;
+    color: white;
+  }
+  
+  /* Individual bars */
+  .bar-5 {width: 60%; height: 18px; background-color: #04AA6D;}
+  .bar-4 {width: 30%; height: 18px; background-color: #2196F3;}
+  .bar-3 {width: 10%; height: 18px; background-color: #00bcd4;}
+  .bar-2 {width: 4%; height: 18px; background-color: #ff9800;}
+  .bar-1 {width: 15%; height: 18px; background-color: #f44336;}
+  
+  /* Responsive layout - make the columns stack on top of each other instead of next to each other */
+  @media (max-width: 400px) {
+    .side, .middle {
+      width: 100%;
+    }
+    .right {
+      display: none;
+    }
+  }
+
+  .review-box{
+    margin-right: 300px;
+  }
