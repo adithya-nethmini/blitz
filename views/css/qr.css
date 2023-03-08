@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+.page-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.show-qr-btn{
+    padding: 15px 30px;
+    background-color: white;
+    border: 2px solid #071D70;
+    color:#071D70;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+td{
+    text-align: center;
+    padding: 20px 0;
+}
+
+.QR{
+    border: #071D70 solid 1px;
+    width: 250px;
+    height: 250px;
+}
+
+.show-qr-btn:hover{
+    background-color: #071D70 ;
+    border: 2px solid white;
+    color:white;
+}
+
+.download-qr-btn{
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    width: 500px;
+    height: 45px;
+    background-color: white;
+    border: 2px solid #071D70 ;
+    color:#071D70;
+}
+
+.download-qr-btn:hover{
+    background-color: #071D70;
+    border: 2px solid white;
+    color:white;    
+}

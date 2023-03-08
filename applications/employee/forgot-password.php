@@ -1,3 +1,13 @@
+<?php 
+
+    require("../function/function.php");
+    if(isset($_POST['submit'])){
+        $response = forgotPassword(@$_POST['email']);
+    }
+
+    use PHPMailer\PHPMailer\PHPMailer;
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,24 +29,27 @@
                 <div class="forgot-password-heading">
                     <h1>Forgot Password</h1>
                 </div>
-
-                <form action="" method="post">
-                    <div class="forgot-password-content">
-                        <input type="text" name="forgot-password" required placeholder="Enter your Email address">
-                    </div>
-
-                    <div class="div-forgot-password-btn-go">
-                        <button class="forgot-password-btn-go" type= "submit" name="submit"><strong><i class='fa fa-arrow-right'></i>Reset my Password</strong></button>
-                    </div>
-
-                    <div style="padding: 20px 0 10px 50px;">
-                        <p style="color: white;">Already have an account?&nbsp;&nbsp;<a style="color:#ffffff93;" href="login.php">Login Here</a></p>
-                    </div>
-                    
-                    <div style="padding: 10px 0 20px 50px;">
-                        <p style="color: white;">Don't have an account yet?&nbsp;&nbsp;<a style="color:#ffffff93;" href="signup.php">Register Here</a></p>
-                    </div>
-                </form>
+                
+                <p style="padding:20px 0 0 50px" class="error"><strong><?php echo @$response; ?></strong></p>
+                <div style="display:flex;flex-direction:column;justify-content:center">
+                    <form action="" method="post">
+                        <div class="forgot-password-content">
+                            <input type="text" name="email" placeholder="Enter your Email address" value="<?php echo @$_POST['email'];?>">
+                        </div>
+    
+                        <div class="div-forgot-password-btn-go">
+                            <button class="forgot-password-btn-go" type= "submit" name="submit"><strong><i class='fa fa-arrow-right'></i>Reset my Password</strong></button>
+                        </div>
+    
+                        <div style="padding: 20px 0 10px 50px;">
+                            <p style="color: white;">Already have an account?&nbsp;&nbsp;<a style="color:#ffffff93;" href="login.php">Login Here</a></p>
+                        </div>
+                        
+                        <div style="padding: 10px 0 20px 50px;">
+                            <p style="color: white;">Don't have an account yet?&nbsp;&nbsp;<a style="color:#ffffff93;" href="signup.php">Register Here</a></p>
+                        </div>
+                    </form>
+                </div>
 
             </div>
         </div>

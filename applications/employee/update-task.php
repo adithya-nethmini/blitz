@@ -16,7 +16,7 @@ if( isset($_POST['submit']) ) {
 		$stmt = $mysqli->prepare("UPDATE `task` SET `name`=?, `description`=?, `priority`=?, `deadline`=?, `status`=? WHERE `id`=? AND `username`=?");
 
 		// Bind params
-		$stmt->bind_param( "sssssi", $name, $description, $priority, $deadline, $status, $_GET['id']);
+		$stmt->bind_param( "ssssssi", $name, $description, $priority, $deadline, $status, $_SESSION['user'], $_GET['id']);
 
 		// Execute query
 		if( $stmt->execute() ) {
@@ -57,7 +57,7 @@ if( isset($_POST['submit']) ) {
                     $mysqli=connect();
 					// Get task details
 					$stmt = $mysqli->prepare("SELECT `name`, `description`, `priority`, `deadline`, `status` FROM `task` WHERE `id` = ? AND `username` = ?");
-					$stmt->bind_param("is", $_GET['id'], $_SESSION['user']);
+					$stmt->bind_param("is", $_GET['id'],$_SESSION['user'] );
 					$stmt->execute();
 					$stmt->store_result();
 						if( $stmt->num_rows == 1 ) {
@@ -72,7 +72,7 @@ if( isset($_POST['submit']) ) {
 								<table>
 									<tr>
 										<!-- <td class="update-label">:</td> -->
-										<td class="update-input">Task Name<br><input required class="form-control" type="text" name="name" value="<?=$name?>"></td>
+										<td class="update-input">Task&nbsp;Name<br><input required type="text" name="name" value="<?=$name?>"></td>
 									</tr>
 									<tr>
 										<!-- <td class="update-label">:</td> -->
@@ -94,13 +94,13 @@ if( isset($_POST['submit']) ) {
 									</tr>
 									<tr>
 										<!-- <td class="update-label">:</td> -->
-										<td class="update-input">Deadline<br><input required class="form-control" type="date" name="deadline" value="<?=$deadline?>"></td>
+										<td class="update-input">Deadline<br><input required type="date" id="date" min="<?php date("m/d/y")?>" name="deadline" value="<?=$deadline?>"></td>
 									</tr>
 									<tr>
 										<!-- <td class="update-label">:</td> -->
 										<td class="update-input">Status<br>
 											<select name="status">
-												<option <?php if($priority=="To Do"){echo "selected";} ?> value="<To Do>">To Do</option>
+												<option <?php if($priority=="To Do"){echo "selected";} ?> value="To Do">To Do</option>
 												<option <?php if($priority=="Doing"){echo "selected";} ?> value="Doing">Doing</option>
 												<option <?php if($priority=="Done"){echo "selected";} ?> value="Done">Done</option>
 											</select> 
@@ -121,4 +121,7 @@ if( isset($_POST['submit']) ) {
 				</div>	
 		</div>
 	</body>
+	<script>
+    document.getElementById("date").min = new Date().getFullYear() + "-" +  parseInt(new Date().getMonth() + 1 ) + "-" + new Date().getDate()
+</script>
 </html>

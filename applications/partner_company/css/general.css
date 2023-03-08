@@ -1,0 +1,12 @@
+body{
+    font-family: 'raleway';
+    min-height: 100vh;
+    background-image: url('../images/16.png');
+    background-repeat: no-repeat;
+    background-position: 90% 80%;
+}
+
+
+nav{
+    z-index: 1;
+}

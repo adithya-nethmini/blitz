@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    font-family: 'Raleway';
+}
+
+.page-content{
+    display: flex;
+    flex-direction: column;
+    margin-left: 340px;
+}
+
+.heading{
+    padding: 0 10px 6px 10px;
+    color: #51619b;
+    font-size: 17px;
+}
+
+.container{
+    max-width: 1050px;
+    padding: 10px 35px;
+    box-shadow: 0px 0px 15px 2px #ABB2B9;
+    border-radius: 10px;
+    background-color:white;
+    height: 300px;
+    color: #51619b;
+    font-weight: 550;
+}
+
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 60px;
+}
+
+.header div h2{
+    padding-left: 40px;
+    font-size: 20px;
+}
+
+.container div{
+    padding: 10px 0;
+}
+
+.all-tasks{
+    padding: 30px 0px;
+    font-size: 16px;    
+}
+
+.div-search{
+    width: 400px;
+    height: 35px;
+    font-size: 18px;
+    font-weight: 500;
+    border: #071D70 solid 1.5px;
+    border-radius: 10px;
+    color:#51619b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+}
+
+#search{
+    border: none;
+    width: 350px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 5px 40px;
+}
+
+#search:focus{
+    outline: none;
+}
+
+.action-col{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.accept{
+    color: #20bf6b;
+}
+
+.cancel{
+    color:#a00000;
+}
+
+.task-tbl{
+    width: 100%;
+    border-collapse: collapse;
+    display: inline-block;
+    height: 200px;
+    overflow-x: auto;
+    overflow-y: auto;
+    border-collapse: separate;
+    border-spacing: 35px;
+    text-transform: capitalize;
+}
+
+.task-tbl tr th{
+    border-bottom: 1px solid grey ;
+    padding: 0px 8px 8px 8px;
+    position: sticky;
+    position: -webkit-sticky;
+    z-index: 2;
+    font-size: 17px;
+    background-color: white;
+}
+
+.task-tbl tr td{
+    padding: 5px 15px;
+    border-bottom: 1px solid grey ;
+}
