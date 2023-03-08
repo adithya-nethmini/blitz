@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
 
+@import "profile.css";
+
+
 * {
     font-family: sans-serif;
     margin: 0;
@@ -55,14 +58,14 @@
 
 .ul-top-nav-landing li{
     list-style: none;
-    margin-left: 3rem;
+    /* margin-left: 2rem; */
 }
 
 .ul-top-nav-landing li a{
     text-decoration: none;
     color: #071D70;
     font-size: 25px;
-    font-weight: 800;
+    font-weight: 400;
     border-radius: 50px;
     transition: 0.2s;
     margin: 0 3px;
@@ -120,7 +123,7 @@
 .landing-header-p{
     color:#071D70;
     font-size: 25px;
-    text-align: justify;
+    text-align: center;
 }
 
 /* Introductory para ends here */
@@ -171,6 +174,14 @@
     text-align: center;
 }
 
+.div-get-started{
+    text-align: center;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    padding: 30px 10px;    
+}
+
 .btn-get-started{
     cursor: pointer;
     padding: 10px 30px;
@@ -179,22 +190,20 @@
     border:0px ;
     background-color: #ffb040;
     box-shadow: 0px 2px 10px #071e707a;
-}
-
-.btn-get-started a{
+    border: 2px solid #ffb040;
     color: #071D70;
 }
 
 .btn-get-started:hover{
-    background-color: #ffaf407a;
     border: 2px solid #071D70;
+    background-color: #071D70;
+    color: #ffb040;
 }
 
 /* Second section - logged in user starts here */
 
 .div-loyalty, .div-offers, .div-promotions{
     width: 100%;
-    height: 200px;
 }
 .div-loyalty h2, .div-offers h2, .div-promotions h2{
     text-align: left;
@@ -494,7 +503,7 @@
 
 .sidebar{
    /*  width: 1000px; */
-    height: 85vh;
+    height: 90vh;
     background-color:#071D70;
     padding: 0 50px;
 }
@@ -510,13 +519,17 @@
 .sidebar a i{
     padding: 0 8px 0 0;
 }
-.sidebar .sidebar-icon:not(.profile-username){
+.sidebar .sidebar-icon:not(.profile-username):not(.active){
     border-bottom: 2px solid #071D70;
 }
 .sidebar .sidebar-icon:not(.profile-username):hover{
     padding-left: 20px;
     border-bottom: 2px solid #ffb040;
     transition: .2s all ease;
+}
+
+.active{
+    border-bottom: 2px solid#ffaf4086;
 }
 
 .profile-logout{
@@ -682,6 +695,44 @@
 /* Profile edit data ends here */
 
 /* Profile ends here */ 
+
+/* QR Code page starts here */
+
+.show-qr-btn{
+    padding: 15px 30px;
+    background-color: white;
+    border: 2px solid #071D70;
+    color:#071D70;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.show-qr-btn:hover{
+    background-color: #071D70 ;
+    border: 2px solid white;
+    color:white;
+}
+
+.download-qr-btn{
+    padding: 10px 20px;
+    background-color: rgb(72, 71, 71);
+    border: 2px solid white;
+    color:white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.download-qr-btn:hover{
+    background-color: white;
+    border: 2px solid ;
+    color:rgb(72, 71, 71);
+}
+
+/* QR Code page ends here */
 
 /* Task-manager starts here */
 
@@ -854,6 +905,12 @@
     width: 400px;
     height: 40PX;
     padding-left: 12px;
+}
+
+.update-container table tr td img{
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
 }
 
 .update-content table tr td .task-textarea{
@@ -1041,6 +1098,91 @@
 
 /* Rewards page ends here */
 
+/* Performance page starts here */
+
+.div-performance-tbl{
+    padding: 30px 0;
+}
+.performance-tbl{
+    border: 1px solid #071D70;
+}
+.performance-tbl .performance-tr-heading{
+    background-color: #FFB040;
+}
+.performance-tbl tr:not(.performance-tr-heading){
+    background-color: #ffaf4079;
+}
+.performance-tbl .performance-tr-heading th{
+    padding: 10px;
+}
+.performance-tbl tr:not(.performance-tr-heading) td{
+    padding: 20px;
+    text-align: center;
+}
+
+.get-pdf-btn{
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    background-color:#FFB040;
+    color: #071D70;
+    border: 2px solid #071D70;
+    border-radius: 20px;
+    box-shadow: 0px 2px 10px #071e707a;
+}
+.download-pdf-btn{
+    padding: 10px 20px;
+    background-color: rgb(72, 71, 71);
+    border: 2px solid white;
+    color:white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    float:right;
+}
+.get-pdf-btn:hover{
+    background-color:#071D70;
+    color: #FFB040;
+    border: 2px solid #FFB040;
+}
+.download-pdf-btn:hover{
+    background-color: white ;
+    border: 2px solid rgb(72, 71, 71);
+    color:rgb(72, 71, 71);
+}
+
+@media only screen and (max-width: 1100px){
+    .performance-tbl{
+        width: 90%;
+        border-collapse: collapse;
+        display: inline-block;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+}
+
+@media only screen and (max-width: 1000px){
+    .performance-tbl{
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 900px){
+    .performance-tbl{
+        width: 70%;
+    }
+}
+
+@media only screen and (max-width: 700px){
+    .performance-tbl{
+        width: 50%;
+    }
+}
+
+/* Performance page ends here */
+
 /* Forgot password page starts here */
 
 .forgot-password-heading{
@@ -1064,7 +1206,7 @@
 }
 
 .div-forgot-password-btn-go{
-    padding: 20px 50px 0 0;
+    padding: 20px 50px;
     justify-content: center;
     align-items: center;
     text-align: center;

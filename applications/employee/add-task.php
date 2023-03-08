@@ -66,7 +66,7 @@
                     
             <div class="input-box">
                 <label>Deadline</label>
-                <input type="date" name="deadline" value="<?php echo @$_POST['deadline']; ?>">
+                <input type="date" id="date" name="deadline" min="<?php date("m/d/y")?>" value="<?php echo @$_POST['deadline']; ?>">
             </div>
             
             <div class="input-box">
@@ -89,4 +89,7 @@
     </div>
 
 </body>
+<script>
+    document.getElementById("date").min = new Date().getFullYear() + "-" +  parseInt(new Date().getMonth() + 1 ) + "-" + new Date().getDate()
+</script>
 </html>

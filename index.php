@@ -1,9 +1,14 @@
 <?php
 
   include "applications/function/function.php";
+  include 'header.php';
 
 if(isset($_GET['logout'])){
-logoutUser();
+  unset($_SESSION['login']);
+  session_destroy();
+  /* $index = $_SERVER['REQUEST_URI']; */
+  header("location: index.php");
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -14,6 +19,8 @@ logoutUser();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blitz</title>
     <link rel="stylesheet" href="views/css/styles.css">
+    <link rel="stylesheet" href="views/css/index.css">
+
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <style>
@@ -24,57 +31,41 @@ logoutUser();
     </style>
   </head>
 <body>
-<?php if (!isset($_SESSION['user'])) : ?>
-  <header class="header-landing">
-<?php else: ?>
-  <header class="header-landing-logged">
-    <?php endif ?>
-    <nav class="top-nav-landing">
-        <a href="#"><img class="blitz-logo"src="views/images/Blitz - Logo.png" alt=""></a>
-        <ul class="ul-top-nav-landing">
-            <li><a href="#" class="top-nav-link">Home</a>
-            </li>
-            <li><a href="#" class="top-nav-link">About</a></li>
-            <li><a href="#" class="top-nav-link">Help</a></li>
-            <?php 
 
-              if (isset($_SESSION['user'])) {
 
-                echo "<li>
-                        <a href='applications/employee/profile.php' class='top-nav-link'>Profile</a>
-                      </li>
-                      <li>
-                        <a href='index.php?logout='1' class='top-nav-link'>Logout</a>
-                      </li>";
-              } else {
-                echo "<li>
-                        <a href='applications/employee/login.php' class='top-nav-link'>Login</a>
-                      </li>
-                      <li>
-                        <a href='applications/g_signup.php' class='top-nav-link'>Register</a>
-                      </li>";
-              }
-            
-            ?>
-        </ul>
-        <div class="menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-        
-    </nav>
-    <?php if (!isset($_SESSION['user'])) : ?>
-      <div class="header-space"></div>
-      
-      <span class="landing-header-p">
-        We appreciate you for more than just your work. We also want to celebrate your character and the positive effect you have on others.Warmly welcome to the rewarding space for your contribution towards us!
-      </span>
-    <?php endif ?>
+
+ <!-- ?php endif ? -->
+
+ <div class="div-feedback">
+   <a href="applications/employee/feedback_form.php"><button class="feedback-button" title="Submit your feedbacks">Feedback</button></a>
+ </div>
+ 
+ <section id="section-landing-2">
+  
+ <!-- ?php if (isset($_SESSION['user'])) : ? -->
+  <div class="div-loyalty">
+    <h2>Best Performers of the Month</h2>
+    <table>
+      <tr>
+        <td><img style="border-radius: 50%;transform:scale(0.5)" src="applications/partner_company/images/jessica.jpg" alt=""></td><a href="applications/partner_company/images/"></a>
+        <td><img style="border-radius: 50%;transform:scale(0.5)" src="applications/partner_company/images/emp2.png" alt=""></td>
+        <td><img style="border-radius: 50%;transform:scale(0.5)" src="applications/partner_company/images/emp3.png" alt=""></td>
+        <td><img style="border-radius: 50%;transform:scale(0.5)" src="applications/partner_company/images/emp4.png" alt=""></td>
+        <td><img style="border-radius: 50%;transform:scale(0.5)" src="applications/partner_company/images/emp6.jpg" alt=""></td>
+      </tr>
+      <tr class="rrr">
+        <td>Anne Jessica Fernando</td>
+        <td>Penelope Hartley F'do</td>
+        <td>Tina Catalina Rose</td>
+        <td>Francis Safwan Mcleod</td>
+        <td>Todd Sebastian O'Brien</td>
+      </tr>
+    </table>
+  </div>
+ <!-- ?php endif ? -->
     
-</header>
-<?php if (isset($_SESSION['user'])) : ?>
-
+  </div>
+</section>   
 <section id="section-landing-1">
   <div style="padding: 40px 50px;">
     <div class="search-div">
@@ -83,81 +74,91 @@ logoutUser();
       <a href=""><i class='fa fa-search'></i></a>
     </div>
   </div>
-</section>  
+</section>       
+  
+  <div class="promo-grid">
+        <h2>Trending Offers</h2>
+<div class="flex grid-container">
+        <?php
 
-<section id="section-landing-2">
-  <div class="div-loyalty">
-    <h2>Loyalty Users of the Month</h2>
-    <table>
-      <tr>
-        <td><i class='fa fa-user'></i></td>
-        <td><i class='fa fa-user'></i></td>
-        <td><i class='fa fa-user'></i></td>
-        <td><i class='fa fa-user'></i></td>
-        <td><i class='fa fa-user'></i></td>
-      </tr>
-      <tr>
-        <td>Employee 1</td>
-        <td>Employee 2</td>
-        <td>Employee 3</td>
-        <td>Employee 4</td>
-        <td>Employee 5</td>
-      </tr>
-    </table>
-  </div>
-  <div class="div-offers">
-    <h2>Daily Offers</h2>
-    <table>
-      <tr>
-        <td><i class='fas fa-percentage'></i></td>
-        <td><i class='fas fa-percentage'></i></td>
-        <td><i class='fas fa-percentage'></i></td>
-        <td><i class='fas fa-percentage'></i></td>
-        <td><i class='fas fa-percentage'></i></td>
-      </tr>
-      <tr>
-        <td>Offer 1</td>
-        <td>Offer 2</td>
-        <td>Offer 3</td>
-        <td>Offer 4</td>
-        <td>Offer 5</td>
-      </tr>
-    </table>
-  </div>
-  <div class="div-promotions">
-    <h2>Promotions</h2>
-    <table>
-      <tr>
-        <td><i class="fas fa-award"></i></td>
-        <td><i class="fas fa-award"></i></td>
-        <td><i class="fas fa-award"></i></td>
-        <td><i class="fas fa-award"></i></td>
-        <td><i class="fas fa-award"></i></td>
-      </tr>
-      <tr>
-        <td>Promotion 1</td>
-        <td>Promotion 2</td>
-        <td>Promotion 3</td>
-        <td>Promotion 4</td>
-        <td>Promotion 5</td>
-      </tr>
-    </table>
-  </div>
-</section>
+$sql="SELECT offer_cover,type, name, date, amount FROM offers";
+$result=mysqli_query($con,$sql);
 
-<?php else: ?>
+if($result){
+    while($row=mysqli_fetch_assoc($result))
+    
+{
+        $offer_cover=$row['offer_cover'];
+        $offertype=$row['type'];
+        $offer_name=$row['name'];
+        $offer_date=$row['date'];
+        $amount=$row['amount'];
 
-<section id="section-landing-2">
-  <button class="btn-get-started"><a href="applications/g_signup.php">Get Started</a></button>
-</section>
+        echo 
+        '<a href="applications/employee/partner-feed.php"><div style="padding: 20px;">
+        <div class="promo">
+                <div class="image-container"> 
+                    <img src=applications/partner_company/'.$offer_cover.' alt="cover photo">
+                </div>
+                    <ul>
+                        <li><b>'.$offer_name.'</b></li>
+                        <li>'.$offertype.' offer</li>
+                        <li>Valid until: '.$offer_date.'</li>
+                        <li>Save '.$amount.'/=</li>
+                    </ul>
+        
+        </div></div></a>';
+     
+      
+    }}
+    
 
-<?php endif ?>
+?>  
+</div>  
+</div>
+ <br>
+           
+
+<div class="promo-grid">
+<h2>Promotions</h2>
+<div class="flex grid-container">
+<?php
+
+$sql="SELECT type,name, date, description, promotion_cover FROM promotions";
+$result=mysqli_query($con,$sql);
+
+if($result){
+    while($row=mysqli_fetch_assoc($result))
+    
+{
+        $type=$row['type'];
+        $name=$row['name'];
+        $date=$row['date'];
+        $description=$row['description'];
+        $promotion_cover=$row['promotion_cover'];
 
 
+echo '<a href="applications/employee/partner-feed.php"><div style="padding:20px">
+    <div class="promo">
+        <div class="image-container"> 
+            <img src=applications/partner_company/'.$promotion_cover.' alt="cover photo">
+        </div>
+            <ul>
+                <li><b>'.$name.'</b></li>
+                <li>Valid until:'.$date.'</li>
+                <li>'.$type.'</li>
+                <li>'.$description.'</li>
+            </ul>
 
-<footer>
-  <div style="width: 100%; height:100px;background-color:#071D70"></div>
-</footer>
+      </div>
+      </div></a>';
+    }
+}
+?>  
+</div>    
+<!-- <a href="applications/partner_company/partner-feed.php"></a>
+ -->
+
 
 </body>
 
