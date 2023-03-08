@@ -145,11 +145,13 @@ if( isset($_POST['submit']) ) {
             <th>Action</th>
         </tr>
         <?php
-        $qry = "SELECT task,description,status from task_list WHERE project_id=$id";
+        // $qry = "SELECT task,description,status from task_list WHERE project_id=$id";
+        $user = $_SESSION['user'];
+        $qry = "SELECT * FROM task_list WHERE project_id=$id AND FIND_IN_SET('$user', emp_id) > 0";
         $result = $mysqli->query($qry);
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
+        if ($result->num_rows > 0) :
+            while ($row = $result->fetch_assoc()) :
                 echo '
                 <tr>
                     <td>' . $row['task'] . '</td>
@@ -172,11 +174,11 @@ if( isset($_POST['submit']) ) {
                     </td>
                     <?php
 
-            }
-        }
-        else{
-            echo mysqli_error($mysqli);
-        }
+            endwhile;
+        else:
+                echo mysqli_error($mysqli);
+            
+        endif;
 //        ?>
 
         </tr>

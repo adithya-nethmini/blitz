@@ -75,7 +75,8 @@ if( isset($_POST['submit']) ) {
                         <th>Action</th>
                         </tr>
                     <?php
-                    $qry = "SELECT id,name,start_date,end_date,status from project_list";
+                    $user = $_SESSION['user'];
+                    $qry = "SELECT * FROM project_list WHERE FIND_IN_SET('$user', user_ids) > 0";
                     $result = $mysqli->query($qry);
 
                     if ($result->num_rows > 0) {
@@ -157,8 +158,18 @@ if( isset($_POST['submit']) ) {
                                     <th>Proof&nbsp;Of&nbsp;Work</th>
                                     </tr>
                                     <?php
-                                    $qry = "SELECT * from task_list";
-                                    $result = $mysqli->query($qry);
+                                    $user = $_SESSION['user'];
+                                    $emp_id_query = "SELECT employeeid FROM employee WHERE username = '$user'";
+                                    $emp_id_result = $mysqli->query($emp_id_query);
+                                    
+                                    if ($emp_id_result->num_rows > 0) :
+                                      // Get the employeeid value from the query result
+                                      $emp_id_row = $emp_id_result->fetch_assoc();
+                                      $emp_id = $emp_id_row['employeeid'];
+                                    
+                                      // Use the employeeid in the $qry query
+                                      $qry = "SELECT * FROM task WHERE employeeid='$emp_id'";
+                                      $result = $mysqli->query($qry);
 
                                     if ($result->num_rows > 0) :
                                         while ($row = $result->fetch_assoc()) :
@@ -166,7 +177,7 @@ if( isset($_POST['submit']) ) {
                                             $status = $row['status'];
                                             echo '
                                                 <tr>
-                                                    <td>' . $row['task'] . '</td>
+                                                    <td>' . @$row['name'] . '</td>
                                                     <td style="width:75%">' . $row['description'] . '</td>';
                                                     ?>
                                                     <td>
@@ -207,6 +218,7 @@ if( isset($_POST['submit']) ) {
                                             else:
                                                 echo mysqli_error($mysqli);
                                             endif;
+                                        endif;
                                             ?>
 
                                     </tr>

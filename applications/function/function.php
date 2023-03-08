@@ -191,7 +191,7 @@ define('DATABASE', 'blitz');
         $stmt->bind_param("sssssssssssss", $employeeid, $name, $department, $jobrole, $email, $contactno, $address, $jobstartdate, $username, $hashed_password, $gender, $qr, $unique_Id);
         $stmt->execute();
         if($stmt->affected_rows != 1){
-            return "hey! An error occurred. Please try again";
+            echo "Error: " . $mysqli->error;
         }else{
             $_SESSION["user"] = $username;
             $_SESSION["employeeid"] = $employeeid;
@@ -226,15 +226,22 @@ define('DATABASE', 'blitz');
 		$result = $stmt->get_result();
 		$data = $result->fetch_assoc();
 
-        $userType = $data['user_type'];
-
+        
 		if($data == NULL){
-			return "Wrong username or password";
+            return "Wrong username or password";
 		}
         if(password_verify($password, $data["password"]) == FALSE){
             return "Wrong username or password";
         }
-                switch ($userType) {
+        
+        $userType = $data['user_type'];
+        
+        if(!isset($userType)){
+            return "Invalid user type";
+        }
+
+            switch ($userType) {
+                    
                     case "employee":
                     $_SESSION['user'] = $username;
                     header('location: ../../index.php');
@@ -252,7 +259,7 @@ define('DATABASE', 'blitz');
                         header('location: ../partner_company/partner-profile.php');                  
                       break;
                     default:
-                        echo 'error';
+                        return "Error logging in. Please try again.";
                   }
 	}
 
