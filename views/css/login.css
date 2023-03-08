@@ -1,142 +1,235 @@
-/* Login */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap');
 
-*{
+* {
+    font-family: 'Raleway';
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: sans-serif;
     text-decoration: none;
-}
-
-.outer-container{
-    display: block;
-    text-align: center;
-}
-
-h1{
-    padding-bottom: 50px;
-    position: relative;
-    text-transform: uppercase;
-    background: linear-gradient(90deg, #F8C000, #fff, #004AAD);
-    background-repeat: no-repeat;
-    background-size: 80%;
-    animation: animate 3s ;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: rgba(255, 255, 255, 0);
-  }
-  @keyframes animate {
-    0% {
-      background-position: -500%;
-    }
-    100% {
-      background-position: 500%;
-    }
-  }
-
-body:not(.container){
-    display: flex;
-    align-items: center;
-    height: 100vh;
-    justify-content: center;
-    background-image: linear-gradient(to left,#F8C000, #004AAD );
-}
-
-.container{
-    max-width: 400px;
-    padding: 40px 50px ;
-    margin: 0 28px;
-    box-shadow: 0px 0px 25px 5px #ABB2B9;
-    border-radius: 15px;
-    background-color:white;
-} 
-
-.container:hover{
-    box-shadow: 0 0 35px var(--clr);
-}
-
-h2{
-    font-size: 30px;
-    font-weight: 600;
-    text-align: left;
-    color: #004AAD;
-    padding-bottom: 12px;
-}
-
-.logo{
-    max-width: 100%;
-    height: 60px;
-}
- 
-.heading{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    padding-bottom: 0;
-    vertical-align:auto;
-    border-bottom: 1px solid silver;
-}
-
-.content{
-    font-size: 20px;
-}
-
-input:not(.login-checkbox){
-    font-size: 16px;
-    color: #004AAD;
-    border-width:3px ;
-    border-radius: 10px;
-    border-color: rgba(0, 0, 0, 0.249);
-    width: 100%;
-    height: 50PX;
-}
-
-.input-box{
-    /* background-color: burlywood; */
-    display: flex; 
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 20Px 0;
-}
-
-.button-container{
-    margin: 15px 0;
-}
-
-.button-container button{
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    display: block;
-    font-size: 22px;
-    color: aliceblue;
-    border: none;
-    border-radius: 8px;
-    background-image: linear-gradient(to left,#F8C000, #004AAD );
-    text-transform: uppercase;
-}   
-
-button:hover{
-    cursor: pointer;
-    letter-spacing: 0.3em;
-    box-shadow: 0 0 35px var(--clr);
-}
-
-.login-bottom{
-    display: flex;
-    justify-content: space-between;
-}
-
-.register-here{
-    text-decoration: none;
-}
-
-.register-here:hover{
-    cursor: pointer;
-    box-shadow: 0 0 35px var(--clr);
-    background-color: rgb(248, 192, 0, 0.3);
 }
 
 .error{
     color: red;
-    padding: 10px 0 0 0;
+    padding: 5px;
 }
+
+.blitz-logo{
+    width: 170px;
+    height: 130px;
+    padding-left: 45px;
+}
+
+.header-signup{
+    align-items: center;
+    background-size:cover;
+    background-position:center;
+    height: 100vh;
+}
+
+.header-signup::before{
+    content: "";
+    position: fixed;
+    top: 0px; 
+    left: 0px;
+    width: 55%;
+    height: 100vh;
+    z-index: -1;
+    opacity: .3; 
+    background-size:cover;
+    background-position:center;
+    background-image: url(../images/g_signup.png);
+}
+
+.wrapper-signup{
+    display: flex;
+    justify-content: space-between;
+}
+
+.signup-container{
+    background-color: #071D70;
+    float: right;
+    width: 45%;
+    height:100vh;
+    border-top-left-radius: 106px;
+    border-bottom-left-radius: 106px;
+    padding: 30px;
+    box-shadow: 0px 3px 20px rgba(0, 0, 0, 0.727);
+    display: flex;flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.inner-container{
+    color: white;
+}
+
+.inner-container div{
+    padding:10px 0;
+}
+
+input{
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border-color: #ffffff;
+    font-size: 16px;
+    padding-left: 5px;
+    color: #51619b;
+}
+
+a{
+    color: rgb(255, 255, 255);
+}
+
+.login{
+    padding: 5px 15px;
+    font-size: 18px;
+    border-radius: 10px;/* 
+    float: right; position: relative; */
+    cursor: pointer;
+    border: 2px solid white;
+    color: white;
+    background-color:#071D70;
+}
+
+.login:hover{
+    background-color: white;
+    color:#071D70;
+    border: #071D70 solid 2px;
+}
+
+.cancel{
+    padding: 5px 15px;
+    font-size: 18px;
+    border-radius: 10px;/* 
+    float: right; position: relative; */
+    cursor: pointer;
+    background-color: white;
+    color:#071D70;
+    border: #071D70 solid 2px;
+}
+
+.cancel:hover{
+    border: 2px solid white;
+    color: white;
+    background-color:#071D70;
+}
+
+/* 
+.signup-container .heading h1{ 
+    color: grey;
+    padding: 100px 30px 0 30px;
+}
+
+.content{
+    color: white;
+    padding: 50px 0 0 100px;
+}
+
+.content label{
+    font-size: 25px;
+    line-height: 35px;
+}
+
+.content input[type=radio]{
+    height: 20px;
+    width: 20px;
+    accent-color: #004AAD;
+}
+
+
+.div-g_signup-btn-go{
+    padding: 50px;
+   
+}
+
+.g_signup-btn-go{
+    padding: 10px 20px;
+    font-size: 25px;
+    border-radius: 10px;
+    float: right; position: relative;
+    cursor: pointer;
+    border: 2px solid white;
+    color: white;
+    background-color:#071D70;
+}
+
+.g_signup-btn-go:hover{
+    background-color: white;
+    color:#071D70;
+}
+
+@media only screen and (max-width: 903px) {
+    .content label{
+        font-size: 22px;
+    }
+    .content input{
+        height: 18px;
+        width: 18px;
+    }
+}
+@media only screen and (max-width: 755px) {
+    .content label{
+        font-size: 18px;
+    }
+    .content input{
+        height: 16px;
+        width: 16px;
+    }
+    .content{
+        padding: 50px 0 0 80px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .signup-container{
+        background-color: #071D70;
+        float: right;
+        width: 55%;
+        height:100vh;
+        border-top-left-radius: 40px;
+        border-bottom-left-radius: 40px;
+        padding: 30px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .wrapper-signup{
+        display: block;
+        justify-content: center;
+        padding: 0 100px 0 100px;
+    }
+    .div-logo{
+        padding: 0 50px 0 50px;
+    }
+    .div-logo .blitz-logo{
+        align-items: center;
+    }
+    .signup-container{
+        background-color: #071D70;
+        float: none;
+        width: 100%;
+        height:70vh;
+        border-radius: 40px;
+        padding: 30px;
+    }
+}
+@media only screen and (max-width: 500px) {
+    .div-logo{
+        padding: 0 20px 0 20px;
+    }
+    .signup-container .heading h1{ 
+        color: grey;
+        padding: 100px 0px 0 0px;
+    }
+    
+    .content{
+        color: white;
+        padding: 50px 0 0 20px;
+    }
+    .div-g_signup-btn-go{
+        padding: 30px;
+    }
+}
+ */

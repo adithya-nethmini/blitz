@@ -1,0 +1,23 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+.page{
+    margin-top: 100px;
+    margin-left: 500px;
+}
+
+#myChart{
+    width:100%;
+    max-width:600px;
+
+}
+
+#myChart1{
+    width:100%;
+    max-width:600px;
+
+}

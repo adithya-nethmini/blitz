@@ -30,10 +30,10 @@
 
                 <form action="" method="post">
                 <div class="content">
-                    <input type="radio" name="signup-option" value="Employee">
-                    <label>As an employee</label><br>
-                    <input type="radio" name="signup-option" value="Company">
-                    <label>As a company</label>
+                    <input type="radio" id="employee" name="signup-option" value="Employee">
+                    <label for="employee">As an employee</label><br>
+                    <input type="radio" id="company" name="signup-option" value="Company">
+                    <label for="company">As a Partner Company</label>
                 </div>
                 <div class="div-g_signup-btn-go">
                     <button class="g_signup-btn-go" type= "submit" name="submit"><strong><i class='fa fa-arrow-right'></i> Go</strong></button>
