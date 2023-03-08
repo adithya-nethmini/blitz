@@ -1,0 +1,248 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+}
+
+.page-content{
+    display: flex;
+    flex-direction: column;
+    margin-left: 380px;
+    margin-top: 100px;
+}
+.leave-container1{
+    width: 1080px;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 15px 2px #ABB2B9;
+    border-radius: 10px;
+    background-color:white;
+    color: #51619b;
+}
+
+.leave-container2{
+    width: 1080px;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 15px 2px #ABB2B9;
+    border-radius: 10px;
+    background-color:white;
+    color: #51619b;
+    margin-top: 30px;
+}
+
+
+.header{
+    display: flex;
+    align-items:self-end;
+    justify-content: space-between;
+    padding: 10px 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.topic h3{
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    color: #022D66;
+    margin-left: 30px;
+}
+
+
+#started{
+    color: #f8f8f8;
+    background-color: #0264A2;
+    border: 1px solid #0264A2;
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
+
+#ongoing{
+    color: #f8f8f8;
+    background-color:  #027da284;
+    border: 1px solid #027da284;
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
+
+#done{
+    color: #f8f8f8;
+    background-color: rgba(26, 191, 10, 0.73);
+    border: 1px solid rgba(26, 191, 10, 0.73);
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
+
+.group{
+    display: flex;
+}
+
+.button{
+    width: 180px;
+    height: 80px;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 15px 2px #ABB2B9;
+    border-radius: 10px;
+    background-color:white;
+    color: #51619b;
+    margin-bottom: 50px;
+}
+
+.button a{
+    color: rgba(38, 38, 38, 0.55);
+    text-align: center;
+    font-size: 25px;
+}
+
+.button:hover{
+    transform: scale(1.08);
+    z-index: 1;
+}
+
+.button1{
+    width: 240px;
+    height: 100px;
+    padding: 20px 30px;
+    box-shadow: 0px 0px 15px 2px #ABB2B9;
+    border-radius: 10px;
+    background-color:white;
+    color: #51619b;
+    margin-bottom: 50px;
+    margin-left: 50px;
+}
+
+.button1 a{
+    color: rgba(38, 38, 38, 0.55);
+    text-align: center;
+    font-size: 25px;
+}
+
+.button1:hover{
+    transform: scale(1.08);
+    z-index: 1;
+}
+
+.all-tasks{
+    padding: 0 ;
+    font-size: 18px;
+}
+
+.task-tbl{
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    table-layout: fixed;
+    display: inline-block;
+    height: 450px;
+    border-collapse: separate;
+    border-spacing: 0px;
+    color: #51619b;
+    font-weight: 520;
+    margin-top: 10px;
+}
+
+.task-tbl tr {
+    border: 2px solid grey ;
+}
+
+
+.task-tbl tr th{
+    border-bottom: 2px solid grey ;
+    padding: 10px 40px;
+    font-size: 17px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.task-tbl tr td{
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    border-bottom: 1px solid grey ;
+    z-index: -2;
+}
+
+.dropbtn a{
+    color: #022D66;
+    border: none;
+    background: rgba(129, 129, 129, 0.44);
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 15px;
+    align-self: center;
+    border-radius: 10px;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+.dropdown a:hover{
+    background-color: rgba(129, 129, 129, 0.3);
+}
+
+.dropdown {
+    align-items: center;
+    background:none;
+    color: #51619b;
+    padding: 5px 5px;
+    font-size: 13px;
+}
+
+.table-header th{
+    background: white;
+}
+
+.container_pro {
+    background-color: rgb(192, 192, 192);
+    width: 80%;
+    border-radius: 15px;
+}
+
+.project {
+    background-color: rgba(2, 100, 162, 0.63);
+    color: white;
+    padding: 1%;
+    text-align: right;
+    font-size: 12px;
+    border-radius: 15px;
+}
+
+.button_p{
+    color: #fafafa;
+    border: none;
+    background: rgba(26, 191, 10, 0.73);
+    float: right;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 15px;
+    align-self: center;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+.button_p:hover{
+    background-color: rgba(26, 191, 10, 0.4);
+}
+
+#user_t{
+    color: #f8f8f8;
+    background-color: rgba(82, 84, 82, 0.73);
+    border: 1px solid rgba(82, 79, 79, 0.73);
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
