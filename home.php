@@ -3,13 +3,13 @@
   include "applications/function/function.php";
   include 'header.php';
 
-if(isset($_GET['logout'])){
-  unset($_SESSION['login']);
-  session_destroy();
-  /* $index = $_SERVER['REQUEST_URI']; */
-  header("location: index.php");
-  exit();
-}
+// if(isset($_GET['logout'])){
+//   unset($_SESSION['login']);
+//   session_destroy();
+//   /* $index = $_SERVER['REQUEST_URI']; */
+//   header("location: landingpage.php");
+//   exit();
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">

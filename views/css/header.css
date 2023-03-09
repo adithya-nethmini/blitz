@@ -5,6 +5,11 @@
     text-decoration: none;
     list-style: none;
     font-family: 'Raleway';
+    cursor: pointer;
+}
+
+a{
+    cursor: pointer;
 }
 
 nav{

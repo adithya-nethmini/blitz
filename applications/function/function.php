@@ -244,7 +244,7 @@ define('DATABASE', 'blitz');
                     
                     case "employee":
                     $_SESSION['user'] = $username;
-                    header('location: ../../index.php');
+                    header('location: ../../blitz/home.php');
                       break;
                     case "company_admin":
                         $_SESSION['cadmin_user'] = $username;
@@ -293,9 +293,10 @@ define('DATABASE', 'blitz');
     }
 
      function logoutUser(){
+
         unset($_SESSION['login']);
         session_destroy();
-        header("location: ../department_head/landingpage.php");
+        header("location: ../../landingpage.php"); 
         exit();
 
     } 

@@ -1,7 +1,7 @@
 <?php 
     include '../function/function.php';
     include 'sidebar.php';
-    include 'header.php';
+    include '../../header.php';
     
     if(isset($_GET['logout'])){
 		unset($_SESSION['login']);
@@ -24,6 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blitz</title>
     <link rel="stylesheet" href="../../views/css/apply-for-leave.css">
+    <link rel="stylesheet" href="../../views/css/header.css">
 </head>
 <body>
     <section>

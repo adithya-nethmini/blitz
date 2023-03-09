@@ -1,12 +1,21 @@
 <?php
 
-if(isset($_GET['logout'])){
-logoutUser();
-}
-
-$homeurl = '/blitz/index.php';                               
+$homeurl = '/blitz/home.php';                               
 $homepage = "/";
 $currentpage = $_SERVER['REQUEST_URI'];
+
+if(isset($_GET['logout'])){
+// logoutUser();
+    unset($_SESSION['login']);
+    session_destroy();
+    if($currentpage == "/github/blitz/home.php"){
+        header("location: landingpage.php"); 
+    }else{
+        header("location: landingpage.php"); 
+    }
+    exit();
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +23,7 @@ $currentpage = $_SERVER['REQUEST_URI'];
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="views/css/header.css">
+        <link rel="stylesheet" href="views/css/header.css">
     <script src="https://kit.fontawesome.com/b1cec324bd.js" crossorigin="anonymous"></script>
     <title>Blitz</title>
     <style>
@@ -84,7 +93,7 @@ $currentpage = $_SERVER['REQUEST_URI'];
                 <?php /* endif */ ?>
                 <?php else : ?>
 
-                <li><a href='applications/employee/login.php' title="Login">Login</a></li>
+                <li><a href='applications/login.php' title="Login">Login</a></li>
                 <li><a href='applications/g_signup.php' title="Register">Register</a></li>
                 
                 <?php endif ?>

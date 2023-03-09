@@ -1,7 +1,7 @@
 <?php
     include '../function/function.php';
     include 'sidebar.php';
-    include 'header.php';
+    include '../../header.php';
 ?>
 
 <!DOCTYPE html>
@@ -12,6 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blitz</title>
     <link rel="stylesheet" href="../../views/css/notification.css">
+    <link rel="stylesheet" href="../../views/css/header.css">
 </head>
 <body>
     <div class="page-content">

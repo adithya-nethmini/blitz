@@ -1,7 +1,7 @@
 <?php
 if(!isset($mysqli)){include '../function/function.php';}
 include 'sidebar.php';
-include 'header.php';
+include '../../header.php';
 
 $mysqli = connect();
 if( isset($_POST['submit']) ) {
@@ -34,6 +34,7 @@ if( isset($_POST['submit']) ) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../../views/css/view.css">
+    <link rel="stylesheet" href="../../views/css/header.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://kit.fontawesome.com/21e5980a06.js" crossorigin="anonymous"></script>
