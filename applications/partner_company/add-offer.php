@@ -26,6 +26,7 @@ if(isset($_POST['submit'])){
       <form action ="" method="post" class="box">
       <p style = "" class="error"><?php echo @$response; ?></p>
       <h1>Add Offer</h1>
+        <h1>Add Offer</h1>
         <div class="name">
             <label><b>Offer Name</b></label>
             <input type="text" id="name" name="name" value="<?php echo @$_POST['name']; ?>">
