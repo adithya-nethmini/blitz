@@ -10,6 +10,12 @@ if(!isset($_SESSION["user"])){
         header("location: ../../landingpage.php"); 
         exit();
       }
+
+      if(!isset($_SESSION["user"])){
+        header("location: ../login.php");
+    
+        exit();
+    }
 ?>
 
 <!DOCTYPE html>

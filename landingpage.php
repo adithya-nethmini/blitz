@@ -1,3 +1,32 @@
+<?php
+
+require("applications/function/function.php");
+
+if(isset($_SESSION["user"])){
+	header("location: home.php");
+
+	exit();
+}
+
+if(isset($_SESSION["cadmin_user"])){
+	header("location: applications/company_admin/Dash.php");
+
+	exit();
+}
+
+if(isset($_SESSION["dept_user"])){
+	header("location: applications/department_head/dashboard.php");
+
+	exit();
+}
+
+if(isset($_SESSION["padmin_user"])){
+	header("location: applications/partner_company/partner-profile.php");
+
+	exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

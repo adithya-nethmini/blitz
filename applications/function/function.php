@@ -248,15 +248,15 @@ define('DATABASE', 'blitz');
                       break;
                     case "company_admin":
                         $_SESSION['cadmin_user'] = $username;
-                        header('location: ../company_admin/Dash.php');
+                        header('location: ../applications/company_admin/Dash.php');
                       break;
                     case "Dept_head":
                     $_SESSION['dept_user'] = $username;
-                    header('location: ../department_head/dashboard.php'); 
+                    header('location: ../applications/department_head/dashboard.php'); 
                     break;
                     case "partner_company_admin":
                         $_SESSION['padmin_user'] = $username;
-                        header('location: ../partner_company/partner-profile.php');                  
+                        header('location: ../applications/partner_company/partner-profile.php');                  
                       break;
                     default:
                         return "Error logging in. Please try again.";

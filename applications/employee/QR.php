@@ -2,8 +2,7 @@
 include '../function/function.php';
 include 'sidebar.php';
 include '../../header.php';
-        
-
+    
 ?>
 
 <!DOCTYPE html>

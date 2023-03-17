@@ -9,6 +9,7 @@ include '../../header.php';
         header("location: ../../index.php");
         exit();
 	}
+    
 
     $mysqli = connect();
     $user = $_SESSION['user'];

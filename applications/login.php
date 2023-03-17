@@ -5,6 +5,30 @@
         $response = loginUser($_POST['username'], $_POST['password']);
     }
 
+    if(isset($_SESSION["user"])){
+        header("location: ../home.php");
+    
+        exit();
+    }
+
+    if(isset($_SESSION["cadmin_user"])){
+        header("location: company_admin/Dash.php");
+    
+        exit();
+    }
+    
+    if(isset($_SESSION["dept_user"])){
+        header("location: department_head/dashboard.php");
+    
+        exit();
+    }
+    
+    if(isset($_SESSION["padmin_user"])){
+        header("location: partner_company/partner-profile.php");
+    
+        exit();
+    }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

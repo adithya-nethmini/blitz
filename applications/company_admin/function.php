@@ -129,8 +129,8 @@ function loginUser($username, $password){
 function logoutUser(){
 
 	session_destroy();
-	header("location: ../department_head/landingpage.php");
-	exit();
+	header("location: ../../landingpage.php"); 
+        exit();
 
 }
 
