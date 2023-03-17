@@ -10,7 +10,7 @@ if(!isset($_SESSION["padmin_user"])){
       if(isset($_GET['logout'])){
         unset($_SESSION['login']);
         session_destroy();
-        header("location:../department_head/landingpage.php");
+        header("location: ../../landingpage.php");
         exit();
       }
 ?>
