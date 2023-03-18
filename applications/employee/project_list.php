@@ -91,12 +91,10 @@ if( isset($_POST['submit']) ) {
                                 if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
                                 elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
                                 elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
-                                echo ' <td><div class="dropdown">
-                                    <button class="dropbtn">Action</button>
-                                    <div class="dropdown-content">
-                                        <a href="project_view.php?id='.$id.'">View</a>
+                                echo ' <td>
+                                    <div class="">
+                                        <a href="project_view.php?id='.$id.'"><button class="view-btn">View</button></a>
                                     </div>
-                                </div>
                                 </td>';
 
                     }

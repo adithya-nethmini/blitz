@@ -2,12 +2,30 @@
 if (!isset($mysqli)) {
     include '../function/function.php';
 }
-include 'sidebar.php';
+//include 'sidebar.php';
 include '../../header.php';
 
 $mysqli = connect();
 $user = $_SESSION['user'];
+$id = $_GET['id'];
+if (isset($_POST['submit'])) {
 
+    // Update the profile picture from the database
+    $image = $_FILES['proofs']['tmp_name']; // retrieve the temporary path of the uploaded image
+    $imageData = file_get_contents($image); // read the image data from the temporary file
+
+    $sql = "UPDATE task_list SET proofs = ? WHERE id = '$id'";
+    $stmt = mysqli_prepare($mysqli, $sql);
+    mysqli_stmt_bind_param($stmt, 's', $imageData);
+    if (mysqli_stmt_execute($stmt)) {
+        return "Profile picture updated successfully to the database.</div>";
+    } else {
+        echo "No profile picture found for user ID: $user";
+    }
+
+    mysqli_stmt_close($stmt);
+    $mysqli->close();
+}
 
 ?>
 
@@ -31,31 +49,32 @@ $user = $_SESSION['user'];
 
             <div class="page-content">
                 <div class="heading">
-                    <h1>View Project</h1>
+                    <h1>View Task</h1>
                 </div>
 
 
 
                 <?php
                 $id = $_GET['id'];
-                $qry = "SELECT name,description,start_date,end_date,status,manager_id,user_ids from project_list WHERE id=$id";
+                $qry = "SELECT * from task_list WHERE id=$id";
                 if (mysqli_query($mysqli, $qry)) :
                     $row = mysqli_fetch_assoc(mysqli_query($mysqli, $qry));
-                    $name = $row['name'];
+                    $project_id = $row['project_id'];
+                    $task = $row['task'];
                     $description = $row['description'];
+                    $status = $row['status'];
+                    $emp_id = $row['emp_id'];
+                    $proofs = $row['proofs'];
                     $start_date = $row['start_date'];
                     $end_date = $row['end_date'];
-                    $status = $row['status'];
-                    $manager_id = $row['manager_id'];
-                    $user_ids = $row['user_ids'];
                 ?>
 
                     <div class="container">
                         <div class="up-outer-container">
                             <div class="up-inner-left">
                                 <div>
-                                    <h3>Project Name</h3>
-                                    <?php echo $name; ?>
+                                    <h3>Task Name</h3>
+                                    <?php echo $task; ?>
                                 </div>
                                 <div>
                                     <h3>Description</h3>
@@ -93,12 +112,17 @@ $user = $_SESSION['user'];
 
                                 </div>
                                 <div>
-                                    <h3>Project Manager</h3>
-                                    <?php echo $manager_id ?>
-                                </div>
-                                <div>
-                                    <h3>Team Members</h3>
-                                    <?php echo $user_ids; ?>
+                                    <h3>Proof of Work</h3>
+                                    <div class="tiny-container">
+                                        <form method="POST" enctype="multipart/form-data" action="">
+                                            <input type="file" name="proofs" title="Provide your proofs of work">
+                                            <button class="upload" type="submit" name="submit">Upload</button>
+                                        </form>
+                                        <?php
+                                            echo $proofs;
+                                        ?>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -106,74 +130,7 @@ $user = $_SESSION['user'];
                 <?php endif; ?>
                 <br>
 
-            </div>
-            <div class="page">
-
-                <div class="page-content1">
-                    <div class="leave-container2">
-
-                        <div class="header">
-                            <div class="topic1">
-                                <h2>Task List</h2>
-                            </div>
-
-
-
-                        </div>
-
-                        <div class="all-tasks">
-
-                            <table id="table" class="task-tbl">
-
-                        </div>
-                        <tr class="table-header">
-                            <th>Task</th>
-                            <th>Description </th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                        <?php
-                        // $qry = "SELECT task,description,status from task_list WHERE project_id=$id";
-                        $user = $_SESSION['user'];
-                        $qry = "SELECT * FROM task_list WHERE project_id=$id AND FIND_IN_SET('$user', emp_id) > 0";
-                        $result = $mysqli->query($qry);
-
-                        if ($result->num_rows > 0) :
-                            while ($row = $result->fetch_assoc()) :
-                                $id = $row['id'];
-                                echo '
-                <tr>
-                    <td>' . $row['task'] . '</td>
-                    <td style="width:50%">' . $row['description'] . '</td>';
-                                if ($row['status'] == 1) {
-                                    echo '<td><span id="started"> Started</span></td>';
-                                } elseif ($row['status'] == 3) {
-                                    echo '<td><span id="ongoing"> On-Progress</span></td>';
-                                } elseif ($row['status'] == 5) {
-                                    echo '<td><span id="done"> Done</span></td>';
-                                } 
-                                echo ' <td>
-                                    <div class="">
-                                        <a href="task_view.php?id='.$id.'"><button class="view-btn">View</button></a>
-                                    </div>
-                                </td>';
-                                ?>
-                        
-                    </div>
-                        <?php
-
-                            endwhile;
-                        else :
-                            echo mysqli_error($mysqli);
-
-                        endif;
-                        //        
-                        ?>
-
-                        </tr>
-                        </table>
-                    </div>
-                </div><br>
-            </div>
+            </div><br>
         </div>
+    </div>
     </div>

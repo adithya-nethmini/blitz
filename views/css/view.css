@@ -300,6 +300,7 @@ td{
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
 }
 .tiny-container input{
     padding-bottom: 10px;
@@ -309,6 +310,7 @@ input{
 }
 
 .upload{
+    width: 100%;
     padding: 8px 10px;
     color: #071D70;
     background-color: white;
@@ -321,4 +323,22 @@ input{
     color: white;
     background-color: #071D70;
     border: 1px solid white;
+}
+
+.view-btn {
+    padding: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border-style: none;
+    width: 100px;
+    border-radius: 4px;
+    background-color: white;
+    color: #071D70;
+    border: #071D70 solid 2px;
+}
+.view-btn:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #071D70;
+    border: 2px solid white;
 }

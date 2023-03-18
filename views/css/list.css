@@ -1,38 +1,38 @@
-
-*{
+* {
     margin: 0;
     padding: 0;
     text-decoration: none;
     list-style: none;
 }
 
-.page-content{
+.page-content {
     display: flex;
     flex-direction: column;
     margin-left: 380px;
-    
+
 }
-.leave-container{
+
+.leave-container {
     width: 950px;
     padding: 20px 10px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
-    background-color:white;
+    background-color: white;
     padding-bottom: 20px;
     color: #51619b;
 }
 
 
-.header{
+.header {
     display: flex;
-    align-items:self-end;
+    align-items: self-end;
     justify-content: space-between;
     padding: 10px 0;
     flex-direction: row;
     flex-wrap: wrap;
 }
 
-.topic h2{
+.topic h2 {
     display: flex;
     justify-content: space-between;
     font-size: 27px;
@@ -40,21 +40,21 @@
     margin-left: 30px;
 }
 
-.div-search{
+.div-search {
     width: 250px;
     height: 30px;
     font-size: 15px;
     font-weight: 500;
     border: #000000 solid 1.5px;
     border-radius: 5px;
-    color:#51619b;
+    color: #51619b;
     display: flex;
     align-items: center;
     padding: 10px;
     margin-right: 30px;
 }
 
-#search{
+#search {
     border: none;
     width: 150px;
     height: 25px;
@@ -63,16 +63,18 @@
     padding: 5px 40px;
 }
 
-#search:focus{
+#search:focus {
     outline: none;
 }
 
-.all-tasks{
-    padding: 0 ;
+.all-tasks {
+    padding: 0;
     font-size: 18px;
 }
 
-.btn-task-add, .btn-task-update, .btn-task-delete{
+.btn-task-add,
+.btn-task-update,
+.btn-task-delete {
     color: white;
     padding: 10px;
     font-weight: bold;
@@ -82,38 +84,44 @@
     border-radius: 4px;
 }
 
-.btn-task-add{
+.btn-task-add {
     background-color: black;
     border: 1px solid black;
 }
 
-.btn-task-update{
+.btn-task-update {
     background-color: #20bf6b;
     border: 1px solid #20bf6b;
 }
 
-.btn-task-delete{
+.btn-task-delete {
     background-color: #a00000;
     border: 1px solid #a00000;
 }
-.btn-task-add:hover, .btn-task-update:hover, .btn-task-delete:hover{
+
+.btn-task-add:hover,
+.btn-task-update:hover,
+.btn-task-delete:hover {
     cursor: pointer;
     background-color: white;
 }
-.btn-task-add:hover{
+
+.btn-task-add:hover {
     color: black;
-    border:1px solid black;
+    border: 1px solid black;
 }
-.btn-task-update:hover{
+
+.btn-task-update:hover {
     color: #20bf6b;
-    border:1px solid #20bf6b;
+    border: 1px solid #20bf6b;
 }
-.btn-task-delete:hover{
+
+.btn-task-delete:hover {
     color: #a00000;
     border: 1px solid #a00000;
 }
 
-.task-tbl{
+.task-tbl {
     width: 100%;
     overflow-x: auto;
     overflow-y: auto;
@@ -126,8 +134,8 @@
     font-weight: 520;
 }
 
-.task-tbl tr th{
-    border-bottom: 2px solid grey ;
+.task-tbl tr th {
+    border-bottom: 2px solid grey;
     padding: 10px 40px;
     font-size: 17px;
     position: sticky;
@@ -136,67 +144,67 @@
     z-index: 2;
 }
 
-.task-tbl tr td{
+.task-tbl tr td {
     text-align: center;
     padding: 20px;
     font-size: 14px;
-    border-bottom: 1px solid grey ;
+    border-bottom: 1px solid grey;
     z-index: -2;
 }
 
-.group{
+.group {
     display: flex;
     margin-left: 150px;
 }
 
-.button{
+.button {
     width: 150px;
     height: 100px;
     padding: 20px 30px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
-    background-color:white;
+    background-color: white;
     color: #51619b;
     margin-bottom: 50px;
     margin-left: 50px;
 }
 
-.button a{
+.button a {
     color: rgba(38, 38, 38, 0.55);
     text-align: center;
     font-size: 25px;
 }
 
-.button:hover{
+.button:hover {
     transform: scale(1.08);
     z-index: 1;
 }
 
-.button1{
+.button1 {
     width: 240px;
     height: 100px;
     padding: 20px 30px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
-    background-color:white;
+    background-color: white;
     color: #51619b;
     margin-bottom: 50px;
     margin-left: 50px;
 }
 
-.button1 a{
+.button1 a {
     color: rgba(38, 38, 38, 0.55);
     text-align: center;
     font-size: 25px;
 }
 
-.button1:hover{
+.button1:hover {
     transform: scale(1.08);
     z-index: 1;
 }
 
 .dropbtn {
-    background:none;
+    background: none;
     color: #51619b;
     padding: 5px 5px;
     font-size: 13px;
@@ -214,7 +222,7 @@
     margin-left: -50px;
     background-color: #f1f1f1;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
@@ -225,45 +233,69 @@
     display: block;
 }
 
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
 
-.dropdown:hover .dropdown-content {display: block;}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
-.dropdown:hover .dropbtn {background-color: rgba(2, 100, 162, 0.19);}
+.dropdown:hover .dropbtn {
+    background-color: rgba(2, 100, 162, 0.19);
+}
 
-.table-header th{
+.table-header th {
     background: white;
 }
-.tiny-container{
+
+.tiny-container {
     width: 200px;
-    padding: 10px ;
+    padding: 10px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
-    background-color:white;
+    background-color: white;
     padding-bottom: 10px;
     color: #51619b;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.tiny-container input{
+
+.tiny-container input {
     padding-bottom: 10px;
 }
-input{
 
-}
+input {}
 
-.upload{
-    padding: 8px 10px;
+.upload {
+
     color: #071D70;
     background-color: white;
     border: 1px solid #071D70;
     border-radius: 10px;
 }
 
-.upload:hover{
+.upload {
+    padding: 8px 10px;
+}
+
+.view-btn {
+    padding: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border-style: none;
+    width: 100px;
+    border-radius: 4px;
+    background-color: white;
+    color: #071D70;
+    border: #071D70 solid 2px;
+}
+
+.upload:hover,
+.view-btn:hover {
     cursor: pointer;
     color: white;
     background-color: #071D70;
-    border: 1px solid white;
+    border: 2px solid white;
 }
