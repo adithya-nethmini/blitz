@@ -436,11 +436,11 @@ define('DATABASE', 'blitz');
             }
         }
 
-        $stmt = $mysqli->prepare("UPDATE employee SET profilepic_e = '?' WHERE user = '$username'");
+        $stmt = $mysqli->prepare("UPDATE employee SET profilepic_e = ? WHERE username = '$username'");
         $stmt->bind_param("s", $profilepic_e);
         $stmt->execute();
         if($stmt->affected_rows != 1){
-            return "An error occurred. Please try again";
+            return mysqli_error($mysqli);
         }else{
             return "Success";
             header('location: profile.php');

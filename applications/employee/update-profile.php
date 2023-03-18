@@ -10,27 +10,21 @@ if (isset($_POST['submit'])) {
 	$email = $mysqli->real_escape_string($_POST['email']);
 	$contactno = $mysqli->real_escape_string($_POST['contactno']);
 	$address = $mysqli->real_escape_string($_POST['address']);
-	$profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
-
-	// Fetch input $_FILES
-	$profilepic_e = $_FILES['profilepic_e']['tmp_name'];
-
-	if (!empty($profilepic_e)) {
-		$profilepic_e = file_get_contents($profilepic_e);
-	}
+	// $profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
 
 	// Prepared statement
-	$stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=?, `profilepic_e`=? WHERE `username`=?");
+	$stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=? WHERE `username`=?");
 
 	// Bind params
-	$stmt->bind_param("ssssbs", $name, $email, $contactno, $address, $_SESSION['user'], $profilepic_e);
+	$stmt->bind_param("sssss", $name, $email, $contactno, $address, $_SESSION['user']);
 
 	// Execute query
 	if ($stmt->execute()) {
 		/* $alert_message = "Task has been updated."; */
 		header('location: profile.php');
 	} else {
-		$alert_message = "There was an error in saving the details. Please try again.";
+		echo "Error: " . mysqli_error($mysqli);
+		//$alert_message = "There was an error in saving the details. Please try again.";
 	}
 
 	// Close prepare statement
@@ -70,13 +64,12 @@ if (isset($_POST['submit'])) {
 										`name`, 
 										`email`, 
 										`contactno`, 
-										`address`,
-										`profilepic_e` FROM `employee` WHERE `username` = ?");
+										`address` FROM `employee` WHERE `username` = ?");
 		$stmt->bind_param("s", $_SESSION['user']);
 		$stmt->execute();
 		$stmt->store_result();
 		if ($stmt->num_rows == 1) {
-			$stmt->bind_result($name, $email, $contactno, $address, $profilepic_e);
+			$stmt->bind_result($name, $email, $contactno, $address);
 			$stmt->fetch();
 		?>
 			<div class="update-content">
@@ -102,11 +95,7 @@ if (isset($_POST['submit'])) {
 							<!-- <td class="update-label"></td> -->
 							<td class="update-input">Location<br><input required type="text" name="address" value="<?= $address ?>"></td>
 						</tr>
-						<tr>
-							<!-- <td class="update-label">Profile Picture:</td> -->
-							<td class="update-input">Profile Picture</br><img src="data:image/jpeg;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture">
-								<input type="file" id="profilepic_e" name="profilepic_e"><br>
-						</tr>
+						
 					</table>
 
 					<div style="display: flex;justify-content:right;align-items:center">
@@ -114,7 +103,8 @@ if (isset($_POST['submit'])) {
 					</div>
 
 				<?php } else {
-				echo "<p class='error' style='padding: 20px 0 20px 0;'>Invalid Employee</p>";
+					echo "Error: " . mysqli_error($mysqli);
+				// echo "<p class='error' style='padding: 20px 0 20px 0;'>Invalid Employee</p>";
 			}
 				?>
 				</form>
