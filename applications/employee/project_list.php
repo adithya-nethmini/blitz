@@ -1,8 +1,7 @@
 <?php
 if(!isset($mysqli)){include '../function/function.php';}
 include 'sidebar.php';
-include '../../header.php';
-
+include 'header.php';
 
 $mysqli = connect();
 if( isset($_POST['submit']) ) {

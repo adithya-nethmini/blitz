@@ -34,7 +34,7 @@
                         <div class="header">
                             
                             <div>
-                                <h1>Leave Status</h1>
+                                <h1>Leave Status - Month <?php echo date('F') ?></h1>
                             </div>
     
                             <div class="div-search">
@@ -52,7 +52,8 @@
                                 <thead>
     
                                     <tr>
-                                        <th>#</th>
+                                        <th class="number-h">#</th>
+                                        <th>Leave Type</th>
                                         <th>Reason</th>
                                         <th>Start&nbsp;Date</th>
                                         <th>End&nbsp;Date</th>
@@ -76,7 +77,7 @@
                                                 while($row = mysqli_fetch_assoc($result)):
                                                     $fname = $row['name'];
 
-                                        $sql = ("SELECT * FROM e_leave WHERE name = '$fname' ");
+                                        $sql = ("SELECT * FROM e_leave WHERE name = '$fname' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ");
                                                
                                         $result = mysqli_query($con, $sql);
     
@@ -89,6 +90,7 @@
                                                 while($row = mysqli_fetch_assoc($result)):
                                                    
                                                     $id = $row['id'];
+                                                    $leave_type = $row['leave_type'];
                                                     $reason = $row['reason'];
                                                     $start_date = $row['start_date'];
                                                     $last_date = $row['last_date'];
@@ -103,7 +105,8 @@
          
                                 <tbody>        
                                     <tr>
-                                        <td><?php echo $i; $i++; ?></td>
+                                        <td class="number-d"><?php echo $i; $i++; ?></td>
+                                        <td><?php echo @$leave_type ?></td>
                                         <td><?php echo $reason ?></td>
                                         <td><?php echo $start_date ?></td>
                                         <td><?php echo $last_date ?></td>
@@ -166,6 +169,150 @@
 
                         </div>        
                 </div>
+
+                <br><br>
+
+                <div class="leave-container">
+
+                        <div class="header">
+                            
+                            <div>
+                                <h1>Leave Status - Older</h1>
+                            </div>
+    
+                            <div class="div-search">
+                                <img src="../../views/images/search.png" alt="search" title="Search">
+                                <input type="text" id="search" onkeyup="searchFunction()" placeholder="Search" title="Search">
+                                <img src="../../views/images/filter.png" alt="filter" title="Filter">
+                            </div>
+
+                        </div>
+    
+                        <div class="all-tasks">
+    
+                            <table id="table" class="task-tbl">
+    
+                                <thead>
+    
+                                    <tr>
+                                        <th class="number-h">#</th>
+                                        <th>Leave Type</th>
+                                        <th>Reason</th>
+                                        <th>Start&nbsp;Date</th>
+                                        <th>End&nbsp;Date</th>
+                                        <th>Assigned&nbsp;To</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+    
+                                    <?php
+                                        $mysqli = connect();
+                                        $user = @$_SESSION['user'];
+
+                                        $query = ("SELECT * FROM employee WHERE username = '$user'");
+                                        $result = mysqli_query($mysqli, $query);
+    
+                                        if($result==TRUE):
+    
+                                            $count_rows = mysqli_num_rows($result);
+    
+                                            if($count_rows > 0):
+                                                while($row = mysqli_fetch_assoc($result)):
+                                                    $fname = $row['name'];
+
+                                        $sql = ("SELECT * FROM e_leave WHERE name = '$fname' AND MONTH(applied_date)!=MONTH(CURRENT_TIMESTAMP) ");
+                                               
+                                        $result = mysqli_query($con, $sql);
+    
+                                        if($result==TRUE):
+    
+                                            $count_rows = mysqli_num_rows($result);
+    
+                                            if($count_rows > 0):
+                                                $i = 1;
+                                                while($row = mysqli_fetch_assoc($result)):
+                                                   
+                                                    $id = $row['id'];
+                                                    $leave_type = $row['leave_type'];
+                                                    $reason = $row['reason'];
+                                                    $start_date = $row['start_date'];
+                                                    $last_date = $row['last_date'];
+                                                    $status = $row['status'];
+                                                    $name = $row['name'];
+                                                    $assigned_person = $row['assigned_person'];
+                                                    $applied_date = $row['applied_date'];
+                                                 
+                                    ?>
+                                    
+                                </thead>
+         
+                                <tbody>        
+                                    <tr>
+                                        <td class="number-d"><?php echo $i; $i++; ?></td>
+                                        <td><?php echo @$leave_type ?></td>
+                                        <td><?php echo $reason ?></td>
+                                        <td><?php echo $start_date ?></td>
+                                        <td><?php echo $last_date ?></td>
+                                        <td><?php echo $assigned_person ?></td>
+                                        <td><?php if($status == 'Pending'): ?>
+                                            <b class="status-pending" title="<?php echo $applied_date; ?>"><?php echo $status ?></b>
+                                            <?php elseif($status == 'Accepted'): ?>
+                                            <b class="status-accepted"><?php echo $status ?></b>
+                                            <?php else: ?>
+                                            <b class="status-cancel"><?php echo $status ?></b>
+                                            <?php endif ?>
+                                        </td>
+                                        <td class="action-col">
+                                            <a href="delete-leave?id=<?=$id?>"  onclick="return confirm('Are you sure you want to delete?')"><button class="btn-task-delete">Delete</button></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <?php endwhile;
+                                            endif;
+                                        endif;
+                                               endwhile ?>
+    
+                                            <?php else: ?>
+    
+                                                <tr>
+                                                    <td colspan="8">No leaves applied yet</td>
+                                                </tr>
+    
+                                            <?php endif ?>
+    
+                                        <?php endif ?>  
+    
+                            </table>
+
+                            <script>
+                                function searchFunction() {
+                                    var input, filter, table, tr, td, i;
+                                    input = document.getElementById("search");
+                                    filter = input.value.toUpperCase();
+                                    table = document.getElementById("table");
+                                    tr = table.getElementsByTagName("tr");
+                                    for (var i = 0; i < tr.length; i++) {
+                                        var tds = tr[i].getElementsByTagName("td");
+                                        var flag = false;
+                                        for(var j = 0; j < tds.length; j++){
+                                        var td = tds[j];
+                                        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                            flag = true;
+                                        } 
+                                        }
+                                        if(flag){
+                                            tr[i].style.display = "";
+                                        }
+                                        else {
+                                            tr[i].style.display = "none";
+                                        }
+                                    }
+                                }
+                            </script>
+
+                        </div>        
+                </div>
+
             </div>
 
             </div>

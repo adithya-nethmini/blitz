@@ -1,8 +1,7 @@
 <?php 
 include '../function/function.php';
 include 'sidebar.php'; 
-include '../../header.php';
-    
+include 'header.php';    
     if(isset($_GET['logout'])){
 		unset($_SESSION['login']);
         session_destroy();

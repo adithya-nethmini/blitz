@@ -9,11 +9,11 @@
 .page-content{
     display: flex;
     flex-direction: column;
-    margin-left: 340px;
+    margin-left: 335px;
 }
 .leave-container{
-    width: 1080px;
-    padding: 20px 10px;
+    width: 1070px;
+    padding: 20px 5px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
     background-color:white;
@@ -64,8 +64,7 @@
 }
 
 .all-tasks{
-    padding: 0 ;
-    font-size: 20px;    
+    padding: 0 ;   
 }
 
 .btn-task-add, .btn-task-update, .btn-task-delete{
@@ -117,13 +116,13 @@
     overflow-x: auto;
     overflow-y: auto;
     border-collapse: separate;
-    border-spacing: 20px;
+    border-spacing: 15px;
     color: #51619b;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 520;
 }
 
-.task-tbl tr th{
+.task-tbl tr th:not(.number-d,.number-h){
     border-bottom: 1px solid grey ;
     padding: 10px 30px;
     position: sticky;
@@ -132,9 +131,22 @@
     z-index: 2;
     background-color: white;
 }
-
-.task-tbl tr td{
-    padding: 20px;
+.number-h{
+    text-align: center;
+    padding: 20px 5px;
+    z-index: 2;    
+    position: -webkit-sticky;
+    top: 0px;
+}
+.number-d{
+    text-align: center;
+    padding: 20px 5px;
+    z-index: -2;    
+    position: -webkit-sticky;
+    top: 0px;
+}
+.task-tbl tr td:not(.number-d,.number-h) {
+    padding: 20px 5px;
     border-bottom: 1px solid grey ;
     z-index: -2;
 }

@@ -11,7 +11,7 @@
     text-transform: uppercase;
 }
 
-.container{
+.notification-container{
     width: 800px;
     padding: 20px 10px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
@@ -19,7 +19,7 @@
     background-color:white;
     padding-bottom: 40px;
     color: #51619b;
-    margin-top: 100px;
+    margin-top: 20px;
 }
 
 .up-outer-container{

@@ -7,7 +7,7 @@
 .page-content{
     display: flex;
     flex-direction: column;
-    margin-left: 200px;
+    margin-left: 250px;
 }
 
 .leave-container{
@@ -41,7 +41,7 @@
 }
 
 .leave-container div input{
-    height: 40px;
+    
 }
 
 .leave-container div input[type=submit]{
