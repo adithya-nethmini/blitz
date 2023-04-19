@@ -8,6 +8,8 @@ $homeurl = '/blitz/index.php';
 $homepage = "/";
 $currentpage = $_SERVER['REQUEST_URI'];
 
+$user = $_SESSION['user'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,11 +25,11 @@ $currentpage = $_SERVER['REQUEST_URI'];
         .badge {
             background-color: red;
             color: white;
-            font-size: 12px;
+            font-size: 10px;
             padding: 2.5px 5px;
             border-radius: 50%;
             position: relative;
-            top: -10px;
+            top: -20px;
             right: -5px;
         }
     </style>
@@ -45,7 +47,7 @@ $currentpage = $_SERVER['REQUEST_URI'];
                 <?php 
                 $pdo = new PDO("mysql:host=localhost;dbname=blitz", "root", "");
                 // Prepare the SQL query
-                $sql = "SELECT COUNT(*) FROM notification WHERE status = 'unseen' AND notification_type = 1";
+                $sql = "SELECT COUNT(*) FROM notification WHERE status = 'unseen' AND notification_type = 1 AND username = '$user'";
 
                 // Execute the query
                 $stmt = $pdo->query($sql);

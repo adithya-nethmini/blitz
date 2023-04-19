@@ -487,3 +487,47 @@ function sendDirectMessage($sender, $recipient, $message)
         return "Error: " . $stmt->error;
     }
 }
+
+function sendGroupMessage($sender, $recipient, $message)
+{
+    $mysqli = connect();
+    $args = func_get_args();
+
+    // Validate input data types
+    if (!is_string($sender) || !is_string($recipient) || !is_string($message)) {
+        return "Invalid data types";
+    }
+
+    $args = array_map(function ($value) use ($mysqli) {
+        // Escape special characters
+        $value = mysqli_real_escape_string($mysqli, trim($value));
+
+        // Check for disallowed characters
+        if (preg_match("/([<|>])/", $value)) {
+            return "<> characters are not allowed";
+        }
+
+        return $value;
+    }, $args);
+
+    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_details, notification_type, username, status) VALUES('Messages', 'Group Message', ?, '1', ?, 'unseen')");
+    $stmt->bind_param("ss", $sender, $recipient);
+    $stmt->execute();
+    if ($stmt->affected_rows != 1) {
+        return "An error occurred. Please try again";
+    } else {
+        echo 'Notification sent';
+    }
+    
+    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, status) VALUES('Group', ?, ?, ?, 'unseen')");
+    $stmt->bind_param("sss", $sender, $recipient, $message);
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows > 0) {
+            return true; // message sent successfully
+        } else {
+            return "Error: No rows affected";
+        }
+    } else {
+        return "Error: " . $stmt->error;
+    }
+}

@@ -223,9 +223,6 @@ if (isset($_POST['upload'])) {
 
             <!-- </div> -->
 
-            <div class="chat">
-                <a href="chat.php"><i class='fa-solid fa-message' style='color:#071d70;font-size:50px'></i></a>
-            </div>
         </div>
     </section>
 </body>

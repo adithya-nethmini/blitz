@@ -28,7 +28,7 @@ if (isset($_GET['logout'])) {
 
                 <div class="member-chat">
 
-                    <div class="member-section">
+                    <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
                         <div class="div-back-arrow">
                             <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
                         </div>
@@ -51,13 +51,37 @@ if (isset($_GET['logout'])) {
                                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 // Loop through results and display name and email
-                                foreach ($results as $row) { ?>
-                                    <a class="member-a" href="open-direct-chat.php?username=<?php echo $row['username']; ?>">
-                                        <div class="member">
-                                            <?php echo $row['name'] ?>
-                                        </div>
-                                    </a>
+                                foreach ($results as $row) {
+                                    $member = $row['username'];
+                                    $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
+
+                                    // Execute SELECT statement
+                                    $stmt2->execute();
+
+                                    // Fetch results as associative array
+                                    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Loop through results and display name and email
+                                    foreach ($results2 as $row2) {
+                                        $sender_unseen = $row2['sender'];
+                                        $count = $row2['COUNT(*)'];
+                                        // echo $sender_unseen, $member;
+                            ?>
+
+                                        <a class="member-a" href="open-direct-chat.php?username=<?php echo $member; ?>">
+                                            <div class="member">
+                                                <?php echo $row['name'];
+
+                                                if ($count > 0) : ?>
+                                                    <div class="div-badge">
+                                                    <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
+                                                </div>
+                                                    <?php endif; ?>
+                                            </div>
+                                        </a>
+
                             <?php
+                                    }
                                 }
                             } catch (PDOException $e) {
                                 echo "Database connection failed: " . $e->getMessage();
@@ -68,6 +92,7 @@ if (isset($_GET['logout'])) {
 
                         </div>
                     </div>
+                    <div class="vertical-line"></div>
                     <div class="chat-area">
                         <div class="chat-area-inner">
                             <h4>Your messages will display here</h4>
@@ -82,5 +107,20 @@ if (isset($_GET['logout'])) {
 
     </section>
 </body>
+<script>
+    // retrieve and set the saved scroll position
+    window.onload = function() {
+        var scrollY = localStorage.getItem('scroll2');
+        if (scrollY !== null) {
+            var scrollableContainer = document.querySelector('.member-section');
+            scrollableContainer.scrollTo(0, parseInt(scrollY));
+        }
+    }
+
+    // save the scroll position in localStorage
+    function saveScrollPosition(key, element) {
+        localStorage.setItem(key, element.scrollTop.toString());
+    }
+</script>
 
 </html>

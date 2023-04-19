@@ -84,36 +84,72 @@ if (!isset($_SESSION["user"])) {
 
                 <?php endif ?>
 
+
+
                 <h4 style="text-transform: capitalize;"><?php echo $_SESSION['user'] ?></h4>
+                <?php
+                try {
+                    // Establish database connection using PDO
+                    $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
+
+                    $stmt = $pdo->prepare("SELECT * FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
+
+                    // Bind values to the prepared statement
+                    $stmt->execute([$user, $user]);
+
+                    // Fetch results as associative array
+                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                    // Loop through results and display name and email
+                    foreach ($results as $row) {
+                        
+                        $project_name = $row['name'];
+                        // Prepare the SQL query
+                        $sql = "SELECT COUNT(*) FROM chat WHERE status = 'unseen' AND (recipient = '$user' OR recipient = '$project_name') AND sender != '$user'";
+
+                        // Execute the query
+                        $stmt = $pdo->query($sql);
+
+                        // Retrieve the count of unseen messages
+                        $count = $stmt->fetchColumn(); 
+                        ?>
+                <?php
+                    }
+                ?><div title="chat"><?php if ($count > 0) : ?>
+                        <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
+                    <?php else : ?>
+                        <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i></a>
+                    <?php endif; ?>
+                </div><?php
+                } catch (PDOException $e) {
+                    echo "Database connection failed: " . $e->getMessage();
+                    exit;
+                }
+                ?>
             </div>
             <div class="user-details">
                 <div class="div-logout" title="Logout">
                     <a href="?logout" class="profile-logout" onclick="return confirm('Are you sure you want to logout?')"><i class="fa fa-sign-out"></i>&nbsp;Logout</a>
                 </div>
             </div>
-            <!-- <div class="logout">
-                <button id="logout">
-                    <h4><a href="?logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a> </h4>
-                </button>
-            </div> -->
 
         </div>
     </div>
 </body>
 <script>
-// retrieve and set the saved scroll position
-window.onload = function() {
-    var scrollY = localStorage.getItem('scroll1');
-    if (scrollY !== null) {
-        var scrollableContainer = document.querySelector('.sidebar-menu');
-        scrollableContainer.scrollTo(0, parseInt(scrollY));
+    // retrieve and set the saved scroll position
+    window.onload = function() {
+        var scrollY = localStorage.getItem('scroll1');
+        if (scrollY !== null) {
+            var scrollableContainer = document.querySelector('.sidebar-menu');
+            scrollableContainer.scrollTo(0, parseInt(scrollY));
+        }
     }
-}
 
-// save the scroll position in localStorage
-function saveScrollPosition(key, element) {
-    localStorage.setItem(key, element.scrollTop.toString());
-}
+    // save the scroll position in localStorage
+    function saveScrollPosition(key, element) {
+        localStorage.setItem(key, element.scrollTop.toString());
+    }
 </script>
 
 </html>

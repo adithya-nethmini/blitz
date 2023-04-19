@@ -100,7 +100,37 @@
     border-radius: 10px;
     background-color: #D9D9D9;
     margin-bottom: 10px;
-    
+    text-transform: capitalize;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.div-badge{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.span-badge{
+    background-color: red;
+            color: white;
+            font-size: 10px;
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            top: -20px;
+            right: -5px;
+}
+
+.vertical-line{
+    height: 100%;
+    border-left: #ABB2B9 1px solid;
+    margin-right: 5px;
 }
 
 .member-section {
@@ -136,13 +166,20 @@
 }
 
 .chat-name-display{
-    height: 6%;
+    height: 8%;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color:white;
     position: sticky;
     top: 0;
+    text-transform: capitalize;
+    padding-bottom: 10px;
+}
+
+.chat-name-display h3, .chat-name-display h4{
+    padding: 3px;
 }
 
 .chat-name-display h3{
@@ -188,7 +225,7 @@
     float: right;
 }
 
-.message-details span{
+.message-details span, .sender-name{
     font-size: 8px;
 }
 
@@ -212,6 +249,15 @@
 .outgoing-messages{
     align-self: flex-end;
     float:right;
+}
+
+.sender-name{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 5px 3px 0;
+    text-transform: capitalize;
+    font-size: 10px;
 }
 
 .message-sending-section {

@@ -3,6 +3,7 @@ include '../function/function.php';
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+$user = $_SESSION['user'];
 ?>
 
 <!DOCTYPE html>
@@ -37,9 +38,8 @@ $mysqli = connect();
         <h2><i class="far fa-bell"></i>&nbsp;Notifications</h2>
 
         <?php
-        $mysqli = connect();
 
-        $sql = ("SELECT * FROM notification WHERE notification_type = '1'");
+        $sql = ("SELECT * FROM notification WHERE notification_type = '1' AND username = '$user'");
 
         $result = mysqli_query($mysqli, $sql);
 

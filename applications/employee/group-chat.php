@@ -29,44 +29,78 @@ if (isset($_GET['logout'])) {
                 <div class="member-chat">
 
                     <div class="member-section">
+
                         <div class="div-back-arrow">
                             <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
                         </div>
-                        <?php
-                        $user = $_SESSION['user'];
 
-                        try {
-                            // Establish database connection using PDO
-                            $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
+                        <div class="member-section-inner">
 
-                            // Prepare SELECT statement
-                            $stmt = $pdo->prepare("SELECT * FROM project_list WHERE FIND_IN_SET('$user', user_ids) > 0 ");
+                            <?php
+                            $user = $_SESSION['user'];
 
-                            // Execute SELECT statement
-                            $stmt->execute();
+                            try {
+                                // Establish database connection using PDO
+                                $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
 
-                            // Fetch results as associative array
-                            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                // Prepare SELECT statement
+                                $stmt = $pdo->prepare("SELECT * FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
 
-                            // Loop through results and display name and email
-                            foreach ($results as $row) { ?>
-                                <a class="member-a" href="open-group-chat.php?id=<?php echo $row['id']; ?>">
-                                    <div class="member">
-                                        <?php echo $row['name'] ?>
-                                    </div>
-                                </a>
-                        <?php
+                                // Bind values to the prepared statement
+                                $stmt->execute([$user, $user]);
+
+                                // Fetch results as associative array
+                                $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if (count($results) > 0) {
+                                    // Loop through results and display name and email
+                                    foreach ($results as $row) { 
+                                        $project_name = $row['name'];
+                                        $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$project_name' AND sender != '$user'");
+
+                                    // Execute SELECT statement
+                                    $stmt2->execute();
+
+                                    // Fetch results as associative array
+                                    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Loop through results and display name and email
+                                    foreach ($results2 as $row2) {
+                                        $sender_unseen = $row2['sender'];
+                                        $count = $row2['COUNT(*)'];
+                                        ?>
+
+                                        <a class="member-a" href="open-group-chat.php?id=<?php echo $row['id']; ?>">
+                                            <div class="member">
+                                                <?php echo $row['name']; 
+                                                if ($count > 0) : ?>
+                                                <div class="div-badge">
+                                                    <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
+                                                </div>
+
+                                                    <?php endif; ?>
+                                                    
+                                                
+                                            </div>
+                                        </a>
+                            <?php
+                                    }}
+                                }else {
+                                    // Display message when there are no projects assigned
+                                    echo "No projects assigned.";
+                                }
+                            } catch (PDOException $e) {
+                                echo "Database connection failed: " . $e->getMessage();
+                                exit;
                             }
-                        } catch (PDOException $e) {
-                            echo "Database connection failed: " . $e->getMessage();
-                            exit;
-                        }
-                        ?>
-
-
-                    </div>
+                            ?>
+                        </div>
+                        
+                    </div><div class="vertical-line"></div>
                     <div class="chat-area">
-                        <h4>Your messages will display here</h4>
+                        <div class="chat-area-inner">
+                            <h4>Your messages will display here</h4>
+                        </div>
+
                     </div>
                 </div>
             </div>
