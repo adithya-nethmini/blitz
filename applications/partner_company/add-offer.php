@@ -26,7 +26,7 @@ if(isset($_POST['submit'])){
       <form action ="" method="post" class="box">
       <p style = "" class="error"><?php echo @$response; ?></p>
       <h1>Add Offer</h1>
-        <h1>Add Offer</h1>
+      
         <div class="name">
             <label><b>Offer Name</b></label>
             <input type="text" id="name" name="name" value="<?php echo @$_POST['name']; ?>">
@@ -38,8 +38,10 @@ if(isset($_POST['submit'])){
         <div class="type">
             <label><b>Offer Type</b></label>
             <select name="type" id="type" value="<?php echo @$_POST['type']; ?>">
-                <option value="Loyalty">Loyalty Offer</option>
-                <option value="Daily">Daily Offer</option>
+                <option value="">Select an option</option>
+                <option value="gold">Gold Offer</option>
+                <option value="silver">Silver Offer</option>
+                <option value="bronze">Bronze Offer</option>
             </select>
         <div class="amount">
             <label><b>Offer Amount</b></label>

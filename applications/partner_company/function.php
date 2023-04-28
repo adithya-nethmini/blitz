@@ -3,6 +3,8 @@
 
 include "config.php";
 
+/* database connection starts here */
+
 function connect(){
 	$mysqli = new mysqli(SERVER, USERNAME, PASSWORD, DATABASE);
 	if($mysqli->connect_error != 0){
@@ -17,6 +19,28 @@ function connect(){
 	}
 }
 
+/* database connection ends here */
+/*signup selection starts here */
+
+function selectRadio($signup_Option){
+	if(isset($_POST['signup-option'])){
+		$signup_Option = $_POST['signup-option'];
+		if($signup_Option == "Employee"){
+			header("location: signup.php");
+		}else{
+			header("location: packages.php");
+		}}}
+
+function logoutUser(){
+
+	session_destroy();
+	header("location: login.php");
+	exit();
+
+}
+
+/*signup selection ends here */
+/* Register partner company starts here */
 
 function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddress, $industry, $username, $password, $repassword){
 	$mysqli = connect();
@@ -55,6 +79,7 @@ function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddr
 		return "Company Name already exists, please use a different Company Name";
 	}
 	
+
 	$stmt = $mysqli->prepare("SELECT companyemail FROM partner_company WHERE companyemail = ?");
 	$stmt->bind_param("s", $companyemail);
 	$stmt->execute();
@@ -64,16 +89,54 @@ function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddr
 		return "Email address already exists, please use a different email address";
 	}
 
+	$stmt = $mysqli->prepare("SELECT username FROM partner_company WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        if($data != NULL){
+            return "Username already exists, please use a different username";
+        }
+
+		$stmt = $mysqli->prepare("SELECT pcompanycon FROM partner_company WHERE pcompanycon = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        if($data != NULL){
+            return "Contact number already exists, please use a different contact number";
+        }
+
 	if(strlen($password) > 50){
 		return "Password is too long";
 	}
 	if(strlen($pcompanycon) > 10){
-		return "Invalid contact numbefr";
+		return "Invalid contact number";
 	}
-
 	if($password != $repassword){
 		return "Passwords don't match";
 	}
+
+	$number = preg_match('@[0-9]@', $password);
+        $uppercase = preg_match('@[A-Z]@', $password);
+        $lowercase = preg_match('@[a-z]@', $password);
+        $specialChars = preg_match('@[^\w]@', $password);
+        
+        if(strlen($password) < 8) {
+            return "Password must be at least 8 characters in length.";
+        }
+        if(strlen($password) < !$number) {
+            return "Password must contain at least one number.";
+        }
+        if(strlen($password) < !$uppercase) {
+            return "Password must contain at least one upper case letter.";
+        }
+        if(strlen($password) < !$lowercase) {
+            return "Password must contain at least one lower case letter.";
+        }
+        if(strlen($password) < !$specialChars) {
+            return "Password must contain at least one special character.";
+        }
 
 	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -99,6 +162,8 @@ function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddr
 	}
 
 }
+
+/*register compaies: parnership packages starts here*/
 
 function package_basic($amount, $companyname, $partnership_period, $package_type, $ads_space){
 	$mysqli = connect();
@@ -148,6 +213,11 @@ function package_custom($amount, $companyname, $partnership_period, $package_typ
 			}
 }		
 
+/*register compaies: parnership packages ends here*/
+/* Register partner company ends here */
+
+/*partner comopany login starts here*/
+
 function loginUser($username, $password){
 	$mysqli = connect();
 	$username = trim($username);
@@ -191,22 +261,8 @@ function loginUser($username, $password){
 				}
 			}
 
-function selectRadio($signup_Option){
-	if(isset($_POST['signup-option'])){
-		$signup_Option = $_POST['signup-option'];
-		if($signup_Option == "Employee"){
-			header("location: signup.php");
-		}else{
-			header("location: packages.php");
-		}}}
 
-function logoutUser(){
-
-	session_destroy();
-	header("location: login.php");
-	exit();
-
-}
+/*add ad starts here*/
 
 function addpromo($type, $name, $date, $description, $promotion_cover){
 
@@ -243,6 +299,9 @@ function addpromo($type, $name, $date, $description, $promotion_cover){
 
 }
 
+/*add ad ends here*/
+/*add offer starts here*/
+
 function addoffer($offer_cover, $type, $name, $date, $amount){
 
 	$mysqli = connect();
@@ -278,9 +337,32 @@ function addoffer($offer_cover, $type, $name, $date, $amount){
 
 }
 
+/*add offer ends here*/
+/* Retrieving the offers/ads from the database starts here*/
+
+function getOffers($partner_company) {
+  // Modify the SQL query to filter results based on the logged-in partner company
+  $query = "SELECT * FROM offers WHERE companyname = '$partner_company' AND start_date <= NOW() AND end_date >= NOW()";
+  
+  // Execute the query and retrieve the results
+  // ...
+}
+
+// Call the function and retrieve the offers/ads
+$offers = getOffers($_SESSION['partner_company']);
+
+// Loop through the results and display them using HTML and CSS
+foreach ($offers as $offer) {
+  echo '<div class="offer">';
+  echo '<h3>' . $offer['title'] . '</h3>';
+  echo '<p>' . $offer['description'] . '</p>';
+  echo '</div>';
+}
 
 
-// Below function will convert datetime to time elapsed string.
+
+/*convert datetime to time elapsed string starts here*/
+
 function time_elapsed_string($datetime, $full = false) {
     $now = new DateTime;
     $ago = new DateTime($datetime);
@@ -328,7 +410,7 @@ if (isset($_POST['employee'], $_POST['rating'], $_POST['content'])) {
     exit('Your review has been submitted!');
 }
 
-
+/*convert datetime to time elapsed string ends here*/
 
 ?>
 

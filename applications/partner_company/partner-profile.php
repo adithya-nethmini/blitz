@@ -2,6 +2,7 @@
     include 'header.php'; 
     include 'sidebar.php';
     $mysqli = connect();
+    $current_page = "company-profile";
 ?>
 
 <!DOCTYPE html>

@@ -28,6 +28,7 @@ define('DATABASE', 'blitz');
     /* database connection ends here */
 
     /* g_signup.php starts here */
+    
     function selectRadio($signup_Option){
         if(isset($_POST['signup-option'])){
             $signup_Option = $_POST['signup-option'];

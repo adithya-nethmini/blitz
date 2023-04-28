@@ -3,6 +3,8 @@
 include 'connect.php';
 include 'header.php';
 include 'sidebar.php';
+$current_page = "company-feed";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
