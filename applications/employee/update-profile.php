@@ -1,6 +1,7 @@
 <?php
 
 require '../function/function.php';
+
 $mysqli = connect();
 
 // Form click or submit

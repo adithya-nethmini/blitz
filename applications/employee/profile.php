@@ -26,16 +26,32 @@ if (isset($_POST['submit'])) {
         $row = mysqli_fetch_assoc($result);
         $imageData = $row['profilepic_e'];
 
-        // Delete the profile picture from the database
-        $sql = "UPDATE employee SET profilepic_e = NULL WHERE username = '$user'";
-        if (mysqli_query($mysqli, $sql)) {
-            return "Profile picture deleted successfully from the database.</br>Please refresh the";
 
-            // Free up memory
-            mysqli_free_result($result);
-        } else {
-            echo "No profile picture found for user ID: $user";
+        $sql = "UPDATE employee SET profilepic_e = NULL WHERE username = '$user'";
+        $stmt = $mysqli->prepare($sql);
+        mysqli_free_result($result);
+        if (!$stmt) {
+            echo ("Failed to prepare statement: " . $mysqli->error);
         }
+
+        // Bind the parameter to the statement and execute the update
+        if (!$stmt->execute()) {
+            echo ("Failed to execute statement: " . $stmt->error);
+        }
+
+        // Delete the profile picture from the database
+        // $sql = "UPDATE employee SET profilepic_e = NULL WHERE username = '$user'";
+        // if (mysqli_query($mysqli, $sql)) {
+        //     return "Profile picture deleted successfully from the database.";
+
+
+        //     // Free up memory
+        //     mysqli_free_result($result);
+        //     header("Location: " . $_SERVER['PHP_SELF']); // refresh the page
+        //     exit();
+        // } else {
+        //     echo "No profile picture found for user ID: $user";
+        // }
     }
     $mysqli->close();
 }
@@ -47,13 +63,45 @@ if (isset($_POST['upload'])) {
     $image = $_FILES['profilepic_e']['tmp_name']; // retrieve the temporary path of the uploaded image
     $imageData = file_get_contents($image); // read the image data from the temporary file
 
+
     $sql = "UPDATE employee SET profilepic_e = ? WHERE username = '$user'";
-    $stmt = mysqli_prepare($mysqli, $sql);
-    mysqli_stmt_bind_param($stmt, 's', $imageData);
-    if (mysqli_stmt_execute($stmt)) {
-        return "Profile picture updated successfully to the database.</div>";
-    } else {
-        echo "No profile picture found for user ID: $user";
+    $stmt = $mysqli->prepare($sql);
+    mysqli_free_result($result);
+    if (!$stmt) {
+        echo ("Failed to prepare statement: " . $mysqli->error);
+    }
+
+    // Bind the parameter to the statement and execute the update
+    $stmt->bind_param("s", $imageData);
+    if (!$stmt->execute()) {
+        echo ("Failed to execute statement: " . $stmt->error);
+    }
+
+    mysqli_stmt_close($stmt);
+    $mysqli->close();
+}
+
+if (isset($_POST['update'])) {
+	// Fetch input $_POST
+	$name = $mysqli->real_escape_string($_POST['name']);
+	$email = $mysqli->real_escape_string($_POST['email']);
+	$contactno = $mysqli->real_escape_string($_POST['contactno']);
+	$address = $mysqli->real_escape_string($_POST['address']);
+	// $profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
+
+	// Prepared statement
+	$stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=? WHERE `username`='$user'");
+
+	// Bind params
+	mysqli_free_result($result);
+    if (!$stmt) {
+        echo ("Failed to prepare statement: " . $mysqli->error);
+    }
+
+    // Bind the parameter to the statement and execute the update
+    $stmt->bind_param("ssss", $name,$email,$contactno,$address);
+    if (!$stmt->execute()) {
+        echo ("Failed to execute statement: " . $stmt->error);
     }
 
     mysqli_stmt_close($stmt);
@@ -72,7 +120,7 @@ if (isset($_POST['upload'])) {
 
     <link rel="stylesheet" href="../../views/css/profile.css">
     <link rel="stylesheet" href="../../views/css/header.css">
-    
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -130,29 +178,23 @@ if (isset($_POST['upload'])) {
                                             <?php else : ?>
                                                 <img class="profile-pic" src="data:image/png;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
                                             <?php endif ?>
-                                            <!-- <div class="popup" onclick="myFunction()"><i class='fas fa-pen'></i>
-                                    <span class="popuptext" id="myPopup">Update Profile
-                                        <input type="file" name="profilepic_e" value="<?php echo $_POST['profilepic_e'] ?>">
-                                        <button type= "submit" name="submit"><strong>UPDATE</strong></button>
-                                    </span>
-                                    </div> -->
                                         </a>
 
-                                        <div id="update-profile-pic-modal">
-                                            <form method="POST" enctype="multipart/form-data" action="">
+                                        <div id="update-profile-pic-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                                            <form method="POST" enctype="multipart/form-data" action="" style="flex-direction:column;justify-content:center;align-items: center;">
                                                 <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
-                                                    <img class="profile-pic" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
+                                                    <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
-                                                    <button class="btn-update" type="submit" name="upload">Upload</button>
+                                                    <button class="btn-upload" type="submit" name="upload">Upload</button>
                                                 <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                    <img class="profile-pic" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
+                                                    <img class="profile-pic-update" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
-                                                    <button type="submit" class="btn-update" name="upload">Upload</button>
+                                                    <button type="submit" class="btn-upload" name="upload">Upload</button>
                                                 <?php else :
                                                     $base64Image = base64_encode($profilepic_e);
                                                 ?>
 
-                                                    <img class="profile-pic" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
+                                                    <img class="profile-pic-update" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
 
                                                     <a href="" onclick="return confirm('Are you sure you want to delete?')"><button type="submit" name="submit" class="btn-delete">Delete</button></a>
                                                 <?php endif ?>
@@ -161,12 +203,79 @@ if (isset($_POST['upload'])) {
                                         </div>
                                     </th>
                                     <th class="th-edit-button">
-                                        <div class="edit-button" title="Edit Profile">
-                                            <?php echo $name ?>
-
-
-                                            <a href="update-profile.php"><button class="btn-profile-edit"><i class='fas fa-pen'></i></button></a>
+                                    <div class="edit-button" title="Edit Profile">
+                                        <?php echo $user ?>
+                                    <a id="update-profile-btn" class="edit-button" title="Edit Profile">
+                                    <button class="btn-profile-edit"><i class='fas fa-pen'></i></button>
+                                        </a>
                                         </div>
+                                        
+                                        <div id="update-profile-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                                            <div class="update-container">
+                                                <div class="update-heading">
+                                                    <div>
+                                                        <h4>Update Employee</h4>
+                                                    </div>
+
+                                                </div>
+                                                <?php
+                                                if (isset($alert_message) and !empty($alert_message)) {
+                                                    echo "<div class='alert alert-success'>" . $alert_message . "</div>";
+                                                }
+                                                ?>
+
+                                                <?php
+                                                $mysqli = connect();
+                                                // Get employee details
+                                                $stmt = $mysqli->prepare("SELECT `name`,`email`,`contactno`,`address` FROM `employee` WHERE `username` = ?");
+                                                $stmt->bind_param("s", $_SESSION['user']);
+                                                $stmt->execute();
+                                                $stmt->store_result();
+                                                if ($stmt->num_rows == 1) {
+                                                    $stmt->bind_result($name, $email, $contactno, $address);
+                                                    $stmt->fetch();
+                                                ?>
+                                                    <div class="update-content">
+                                                        <form action="" method="post" enctype="multipart/form-data">
+
+                                                            <table>
+                                                                <tr>
+                                                                    <!-- <td class="update-label"></td> -->
+                                                                    <td class="update-input"><span>Full Name</span><br><input required type="text" name="name" value="<?= $name ?>"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <!-- <td class="update-label"></td> -->
+                                                                    <td class="update-input"><span>Email</span><br><input required type="email" name="email" value="<?= $email ?>"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <!-- <td class="update-label"></td> -->
+                                                                    <td class="update-input"><span>Contact Number</span><br><input required type="text" name="contactno" value="<?= $contactno ?>"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <!-- <td class="update-label"></td> -->
+                                                                    <td class="update-input"><span>Location</span><br><input required type="text" name="address" value="<?= $address ?>"></td>
+                                                                </tr>
+
+                                                            </table>
+
+                                                            <div style="width:100%">
+                                                                <button type="submit" name="update" class="btn-update">UPDATE</button>
+                                                            </div>
+
+                                                        <?php } else {
+                                                        echo "Error: " . mysqli_error($mysqli);
+                                                        // echo "<p class='error' style='padding: 20px 0 20px 0;'>Invalid Employee</p>";
+                                                    }
+                                                        ?>
+                                                        </form>
+
+
+                                                    </div>
+                                            </div>
+                                        </div>
+                                        
+
+
                                     </th>
                                 </tr>
                                 <tr>
@@ -244,6 +353,19 @@ if (isset($_POST['upload'])) {
     window.addEventListener("click", function(event) {
         if (event.target == updateProfilePicModal) {
             updateProfilePicModal.style.display = "none";
+        }
+    });
+
+    var updateProfileBtn = document.getElementById("update-profile-btn");
+    var updateProfileModal = document.getElementById("update-profile-modal");
+
+    updateProfileBtn.addEventListener("click", function() {
+        updateProfileModal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == updateProfileModal) {
+            updateProfileModal.style.display = "none";
         }
     });
 </script>

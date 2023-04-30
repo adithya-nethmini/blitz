@@ -360,60 +360,52 @@ function addTask($username, $name, $description, $priority, $deadline, $status)
 }
 
 /* Apply Leave */
-function applyLeave($leave_type, $reason, $start_date, $last_date, $username, $assigned_person)
+function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username, $assigned_person)
 {
     $mysqli = connect();
     $args = func_get_args();
 
-    $args = array_map(function ($value) {
-        return trim($value);
-    }, $args);
+    // Validate input data types
+    // if (!is_string($leave_type) || !is_string($recipient) || !is_string($message)) {
+    //     return "Invalid data types";
+    // }
 
-    foreach ($args as $value) {
-        if (empty($value)) {
-            return "All fields are required";
-        }
-    }
+    $args = array_map(function ($value) use ($mysqli) {
+        // Escape special characters
+        $value = mysqli_real_escape_string($mysqli, trim($value));
 
-    foreach ($args as $value) {
+        // Check for disallowed characters
         if (preg_match("/([<|>])/", $value)) {
             return "<> characters are not allowed";
         }
-    }
 
-    $sql = "SELECT name FROM employee WHERE username = '$username'";
-    $result = mysqli_query($mysqli, $sql);
+        return $value;
+    }, $args);
 
-    if ($result == TRUE) :
-
-        $count_rows = mysqli_num_rows($result);
-
-        if ($count_rows > 0) :
-            while ($row = mysqli_fetch_assoc($result)) :
-                $name = $row['name'];
-            endwhile;
-        endif;
-    endif;
-
-    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name,notification_description,notification_type,username,status) VALUES('Leave Application','Apply for a leave','4',?,'unseen')");
+    
+    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
     $stmt->bind_param("s", $username);
-    $stmt->execute();
-    if ($stmt->affected_rows != 1) {
-        return "An error occurred. Please try again";
+    if (!$stmt->execute()) {
+        $error_message = "Notification insert failed: " . $stmt->error;
+        return $error_message;
     } else {
-        echo 'Notification sent';
+        $notification_id = $stmt->insert_id;
     }
-
-
-    $stmt = $mysqli->prepare("INSERT INTO e_leave(leave_type, reason, start_date, last_date, status, name, assigned_person) VALUES(?,?,?,?,'Pending',?,?)");
-    $stmt->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $name, $assigned_person);
-    $stmt->execute();
-    if ($stmt->affected_rows != 1) {
-
-        header("location: leave-status.php");
+    
+    $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person) VALUES(?, ?, ?, ?, 'Pending', ?, ?)");
+    $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
+    if (!$stmt2->execute()) {
+        $error_message = "Leave application insert failed: " . $stmt2->error;
+        return $error_message;
     } else {
+        $leave_id = $stmt2->insert_id;
+    }
+    
+    if ($notification_id && $leave_id) {
         header("location: leave-status.php");
         exit();
+    } else {
+        return "An error occurred. Please try again";
     }
 }
 
@@ -474,7 +466,7 @@ function sendDirectMessage($sender, $recipient, $message)
     } else {
         echo 'Notification sent';
     }
-    
+
     $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, status) VALUES('Direct', ?, ?, ?, 'unseen')");
     $stmt->bind_param("sss", $sender, $recipient, $message);
     if ($stmt->execute()) {
@@ -518,7 +510,7 @@ function sendGroupMessage($sender, $recipient, $message)
     } else {
         echo 'Notification sent';
     }
-    
+
     $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, status) VALUES('Group', ?, ?, ?, 'unseen')");
     $stmt->bind_param("sss", $sender, $recipient, $message);
     if ($stmt->execute()) {
@@ -531,3 +523,67 @@ function sendGroupMessage($sender, $recipient, $message)
         return "Error: " . $stmt->error;
     }
 }
+
+
+
+
+
+
+
+// /* Apply Leave */
+// function applyLeave($leave_type, $reason, $start_date, $last_date, $username, $assigned_person)
+// {
+//     $mysqli = connect();
+//     $args = func_get_args();
+
+//     $args = array_map(function ($value) {
+//         return trim($value);
+//     }, $args);
+
+//     foreach ($args as $value) {
+//         if (empty($value)) {
+//             return "All fields are required";
+//         }
+//     }
+
+//     foreach ($args as $value) {
+//         if (preg_match("/([<|>])/", $value)) {
+//             return "<> characters are not allowed";
+//         }
+//     }
+
+//     $sql = "SELECT name FROM employee WHERE username = '$username'";
+//     $result = mysqli_query($mysqli, $sql);
+
+//     if ($result == TRUE) :
+
+//         $count_rows = mysqli_num_rows($result);
+
+//         if ($count_rows > 0) :
+//             while ($row = mysqli_fetch_assoc($result)) :
+//                 $name = $row['name'];
+//             endwhile;
+//         endif;
+//     endif;
+
+//     $stmt = $mysqli->prepare("INSERT INTO notification(notification_name,notification_description,notification_type,username,status) VALUES('Leave Application','Apply for a leave','4',?,'unseen')");
+//     $stmt->bind_param("s", $username);
+//     $stmt->execute();
+//     if ($stmt->affected_rows != 1) {
+//         return "An error occurred. Please try again";
+//     } else {
+//         echo 'Notification sent';
+//     }
+
+
+//     $stmt = $mysqli->prepare("INSERT INTO e_leave(leave_type, reason, start_date, last_date, status, name, assigned_person) VALUES(?,?,?,?,'Pending',?,?)");
+//     $stmt->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $name, $assigned_person);
+//     $stmt->execute();
+//     if ($stmt->affected_rows != 1) {
+
+//         header("location: leave-status.php");
+//     } else {
+//         header("location: leave-status.php");
+//         exit();
+//     }
+// }

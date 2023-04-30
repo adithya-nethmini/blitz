@@ -1,7 +1,4 @@
-<?php
-
-
-if (isset($_GET['logout'])) {
+<?php if (isset($_GET['logout'])) {
     unset($_SESSION['login']);
     session_destroy();
     header("location: ../../landingpage.php");
@@ -12,8 +9,7 @@ if (!isset($_SESSION["user"])) {
     header("location: ../login.php");
 
     exit();
-}
-?>
+}?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,6 +32,7 @@ if (!isset($_SESSION["user"])) {
                 <li><a href="profile.php"><i class="fa fa-user"></i><b>&nbsp;Profile</b></a></li>
                 <li><a href="rewards.php"><i class="fas fa-award" aria-hidden="true"></i><b>Rewards</b></a></li>
                 <li><a href="project_list.php"><i class="fa fa-tasks"></i><b>&nbsp;Projects</b></a></li>
+                <li><a href="main_tasks.php"><i class="fa fa-list-alt"></i><b>&nbsp;Tasks</b></a></li>
                 <li><a href="performance.php"><i class="fa fa-line-chart"></i><b>&nbsp;Performance</b></a></li>
                 <li><a href="apply-leave.php"><i class='fa fa-paper-plane'></i><b>&nbsp;Apply&nbsp;For&nbsp;Leave</b></a></li>
                 <li><a href="leave-status.php"><i class="fas fa-circle-notch"></i><b>&nbsp;Leave&nbsp;Status</b></a></li>
@@ -44,9 +41,7 @@ if (!isset($_SESSION["user"])) {
 
         <div class="sidebar-bottom">
             <div class="user-details">
-                <?php
-
-                $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
+                <?php $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                 $user = $_SESSION['user'];
                 $sql = ("SELECT profilepic_e, gender FROM employee WHERE username = '$user'");
 
@@ -59,36 +54,27 @@ if (!isset($_SESSION["user"])) {
                     if ($count_rows > 0) :
                         while ($row = mysqli_fetch_assoc($result)) :
                             $profilepic_e = $row['profilepic_e'];
-                            $gender = $row['gender'];
-                ?>
+                            $gender = $row['gender'];?>
                             <!-- <img class="profile-pic" src="../../views/images/<?php /*echo  $profilepic_e */ ?>" alt="test-user"> -->
-                            <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
+                            <?php if (empty($profilepic_e) && $gender == 'Male') :?>
                                 <img class="profile-pic" src="../../views/images/pro-icon-male.png" alt="test-user" title="Profile">
-                            <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
+                            <?php elseif (empty($profilepic_e) && $gender == 'Female') :?>
                                 <img class="profile-pic" src="../../views/images/pro-icon-female.png" alt="test-user" title="Profile">
-                            <?php else : ?>
-                                <?php
-                                $base64_image = base64_encode($profilepic_e);
+                            <?php else :?>
+                                <?php $base64_image = base64_encode($profilepic_e);
 
                                 // Build the data URI
                                 $mimetype = "image/jpeg"; // Change this to the appropriate MIME type for your image
-                                $data_uri = "data:$mimetype;base64,$base64_image";
-                                ?>
+                                $data_uri = "data:$mimetype;base64,$base64_image";?>
                                 <img class="profile-pic" id="profile-pic" src="<?php echo $data_uri; ?>" alt="user" title="Profile">
-                            <?php endif ?>
-                        <?php endwhile ?>
-
-                    <?php else : ?>
+                            <?php endif?>
+                        <?php endwhile?>
+                    <?php else :?>
                         <div>No data is found</div>
-                    <?php endif ?>
-
-                <?php endif ?>
-
-
-
-                <h4 style="text-transform: capitalize;"><?php echo $_SESSION['user'] ?></h4>
-                <?php
-                try {
+                    <?php endif?>
+                <?php endif?>
+                <h4 style="text-transform: capitalize;"><?php echo $_SESSION['user']?></h4>
+                <?php try {
                     // Establish database connection using PDO
                     $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
 
@@ -111,21 +97,17 @@ if (!isset($_SESSION["user"])) {
                         $stmt = $pdo->query($sql);
 
                         // Retrieve the count of unseen messages
-                        $count = $stmt->fetchColumn(); 
-                        ?>
-                <?php
-                    }
-                ?><div title="chat"><?php if ($count > 0) : ?>
-                        <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
-                    <?php else : ?>
+                        $count = $stmt->fetchColumn();?>
+                <?php }?>
+                <div title="chat"><?php if ($count > 0) :?>
+                        <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count?></span></a>
+                    <?php else :?>
                         <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i></a>
-                    <?php endif; ?>
-                </div><?php
-                } catch (PDOException $e) {
+                    <?php endif;?>
+                </div><?php } catch (PDOException $e) {
                     echo "Database connection failed: " . $e->getMessage();
                     exit;
-                }
-                ?>
+                }?>
             </div>
             <div class="user-details">
                 <div class="div-logout" title="Logout">

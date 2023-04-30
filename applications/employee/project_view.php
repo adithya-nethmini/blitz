@@ -30,6 +30,9 @@ $user = $_SESSION['user'];
 
             <div class="page-content">
                 <div class="heading">
+                    <div class="div-back-arrow">
+                        <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
+                    </div>
                     <h1>View Project</h1>
                 </div>
 
@@ -48,6 +51,7 @@ $user = $_SESSION['user'];
                     $manager_id = $row['manager_id'];
                     $user_ids = $row['user_ids'];
                 ?>
+
 
                     <div class="container">
                         <div class="up-outer-container">
@@ -75,15 +79,15 @@ $user = $_SESSION['user'];
                                     <?php
                                     if ($status == '0') :
                                         $status = 'started'; ?>
-                                        <span id="started"><?php echo $status; ?></span>
+                                        <span class="started"><?php echo $status; ?></span>
                                     <?php
                                     elseif ($status == 3) :
                                         $status = 'On-Progress'; ?>
-                                        <span id="ongoing"><?php echo $status; ?></span>
+                                        <span class="ongoing"><?php echo $status; ?></span>
                                     <?php
                                     elseif ($status == 5) :
                                         $status = 'Done'; ?>
-                                        <span id="done"><?php echo $status; ?></span>
+                                        <span class="done"><?php echo $status; ?></span>
                                     <?php
                                     else :
                                     ?>
@@ -127,7 +131,6 @@ $user = $_SESSION['user'];
                         </div>
                         <tr class="table-header">
                             <th>Task</th>
-                            <th>Description </th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -142,24 +145,23 @@ $user = $_SESSION['user'];
                                 $id = $row['id'];
                                 echo '
                 <tr>
-                    <td>' . $row['task'] . '</td>
-                    <td style="width:50%">' . $row['description'] . '</td>';
-                                if ($row['status'] == 1) {
-                                    echo '<td><span id="started"> Started</span></td>';
+                    <td>' . $row['task'] . '</td>';
+                                if ($row['status'] == 0) {
+                                    echo '<td><span class="started"> Started</span></td>';
                                 } elseif ($row['status'] == 3) {
-                                    echo '<td><span id="ongoing"> On-Progress</span></td>';
+                                    echo '<td><span class="ongoing"> On-Progress</span></td>';
                                 } elseif ($row['status'] == 5) {
-                                    echo '<td><span id="done"> Done</span></td>';
-                                } 
+                                    echo '<td><span class="done"> Done</span></td>';
+                                }
                                 echo ' <td>
                                     <div class="">
-                                        <a href="task_view.php?id='.$id.'"><button class="view-btn">View</button></a>
+                                        <a href="task_view.php?id=' . $id . '"><button class="view-btn">View</button></a>
                                     </div>
                                 </td>';
-                                ?>
-                        
+                        ?>
+
                     </div>
-                        <?php
+            <?php
 
                             endwhile;
                         else :
@@ -167,12 +169,12 @@ $user = $_SESSION['user'];
 
                         endif;
                         //        
-                        ?>
+            ?>
 
-                        </tr>
-                        </table>
-                    </div>
-                </div><br>
-            </div>
+            </tr>
+            </table>
+                </div>
+            </div><br>
         </div>
+    </div>
     </div>

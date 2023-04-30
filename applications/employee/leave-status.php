@@ -77,7 +77,7 @@
                                                 while($row = mysqli_fetch_assoc($result)):
                                                     $fname = $row['name'];
 
-                                        $sql = ("SELECT * FROM e_leave WHERE name = '$fname' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ");
+                                        $sql = ("SELECT * FROM e_leave WHERE name = '$fname' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ORDER BY applied_date");
                                                
                                         $result = mysqli_query($con, $sql);
     

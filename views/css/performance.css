@@ -9,11 +9,11 @@
 .page-content{
     display: flex;
     flex-direction: column;
-    margin-left: 400px;
+    margin-left: 350px;
 }
 
 .container{
-    width: 1090px;
+    width: 1100px;
     padding: 20px 40px;
     padding-top: 50px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
@@ -109,27 +109,11 @@
 .get-pdf:hover{
     cursor: pointer;
     background-color: white ;
-    border: 2px solid #071D70;
+    border: 2px solid rgb(7, 29, 112);
     color: #071D70;
 }
 
 
-
-
-
-
-*{
-    margin: 0;
-    padding: 0;
-    text-decoration: none;
-    list-style: none;
-}
-
-.page-content{
-    display: flex;
-    flex-direction: column;
-    margin-left: 380px;
-}
 .leave-container1{
     width: 1080px;
     padding: 20px 30px;
@@ -141,7 +125,7 @@
 }
 
 .leave-container2{
-    width: 1000px;
+    width: 1050px;
     padding: 20px 30px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;
@@ -154,19 +138,18 @@
 
 .header{
     display: flex;
-    align-items:self-end;
-    justify-content: space-between;
-    padding: 10px 0;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
+    align-items:flex-end;
+    padding: 10px 0;
 }
 
-.topic h3{
+.topic h2{
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
+    font-size: 25px;
     color: #022D66;
-    margin-left: 30px;
 }
 
 
@@ -278,7 +261,7 @@
 
 .task-tbl tr th{
     border-bottom: 2px solid grey ;
-    padding: 10px 40px;
+    padding: 10px 20px;
     font-size: 17px;
     position: sticky;
     position: -webkit-sticky;
@@ -341,7 +324,8 @@
 .button_p{
     color: #fafafa;
     border: none;
-    background: rgba(26, 191, 10, 0.73);
+    background-color: rgba(26, 191, 10, 0.4);
+    
     float: right;
     margin-left: 20px;
     margin-bottom: 20px;
@@ -353,8 +337,13 @@
     cursor: pointer;
 }
 
+.button_p a{
+    color: white;
+    text-decoration: none;
+}
+
 .button_p:hover{
-    background-color: rgba(26, 191, 10, 0.4);
+    background: rgba(26, 191, 10);
 }
 
 #user_t{

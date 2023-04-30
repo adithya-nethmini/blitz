@@ -23,7 +23,7 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->bind_result($username);
     while ($stmt->fetch()) {
-
+  
         // Prepare the SQL statement with a parameterized query
         $sql2 = "UPDATE chat SET status = 'seen' WHERE recipient = ? AND sender = '$user'";
         $stmt2 = $mysqli->prepare($sql2);

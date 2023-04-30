@@ -156,7 +156,7 @@ $stmt->close();
                                     $stmt->bind_result($id, $sender, $recipient, $message, $created_date_time, $status);
                                     $current_date = NULL;
                                     while ($stmt->fetch()) {
-                                        if ($sender == $_SESSION['user']) { // Check if sender is current user
+                                        if (strtolower($sender) == strtolower($_SESSION['user'])) { // Check if sender is current user
                                 ?>
                                             <div class="outgoing-messages">
                                                 <?php
