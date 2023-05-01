@@ -1,7 +1,7 @@
 <?php
 include '../function/function.php';
 include 'sidebar.php';
-include '../../header.php';
+include 'header.php';
 
 if (!isset($_SESSION["user"])) {
     header("location: login.php");
@@ -32,47 +32,47 @@ if (!isset($_SESSION["user"])) {
 
     <section>
 
-            <div class="page-content">
+        <div class="page-content">
             <div class="topic">
-                            <h2>Member Performance Evaluation</h2>
-                        </div>
-                <div class="leave-container2">
+                <h2>Member Performance Evaluation</h2>
+            </div>
+            <div class="leave-container2">
 
-                    <div class="header">
-                        
+                <div class="header">
 
 
-                        <div class="button_p">
-                            <button style="background-color:transparent;border:none;color:white" id="PrintButton" onclick="PrintTable()"><i class='fa-solid fa-print'></i>Print</button>
-                            <!-- <a href=""><i class='fa-solid fa-print'></i>Print</a> -->
-                        </div>
+
+                    <div class="button_p" style="float:right">
+                        <button style="background-color:transparent;border:none;color:white" id="PrintButton" onclick="PrintTable()"><i class='fa-solid fa-print'></i>Print</button>
+                        <!-- <a href=""><i class='fa-solid fa-print'></i>Print</a> -->
                     </div>
+                </div>
 
-                    <div class="all-tasks">
+                <div class="all-tasks">
 
-                        <table id="table" class="task-tbl">
-                            <?php $current_date = date('F');?>
-                            <caption style="padding-bottom:10px">Performance Result Report - Month <?php echo $current_date?></caption>
+                    <table id="table" class="task-tbl">
+                        <?php $current_date = date('F'); ?>
+                        <caption style="padding-bottom:10px">Performance Result Report - Month <?php echo $current_date ?></caption>
 
-                    </div>
-                    <tr class="table-header">
-                        <th>Employee ID</th>
-                        <th>Employee Name </th>
-                        <th>No.of Tasks Assigned</th>
-                        <th>Completed Tasks</th>
-                        <th>Attendance</th>
-                        <th>Performance</th>
-                        <th>User Type</th>
-                    </tr>
-                    <?php
-                    $mysqli = connect();
-                    $user = $_SESSION['user'];
-                    $qry = "SELECT employeeid,name from employee WHERE username = '$user'";
-                    $result = $mysqli->query($qry);
+                </div>
+                <tr class="table-header">
+                    <th>Employee ID</th>
+                    <th>Employee Name </th>
+                    <th>No.of Tasks Assigned</th>
+                    <th>Completed Tasks</th>
+                    <th>Attendance</th>
+                    <th>Performance</th>
+                    <th>User Type</th>
+                </tr>
+                <?php
+                $mysqli = connect();
+                $user = $_SESSION['user'];
+                $qry = "SELECT employeeid,name from employee WHERE username = '$user'";
+                $result = $mysqli->query($qry);
 
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            echo '
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '
 <tr>
     <td>' . $row['employeeid'] . '</td>
     <td>' . $row['name'] . '</td>
@@ -81,22 +81,70 @@ if (!isset($_SESSION["user"])) {
     <td>70%</td>
     <td>70%</td>
     <td><span id="user_t">Silver</span></td>';
-                        }
-                    } else {
-                        echo mysqli_error($mysqli);
                     }
+                } else {
+                    echo mysqli_error($mysqli);
+                }
+                ?>
+
+                </tr>
+                </table>
+            </div>
+            <br><br>
+
+        </div>
+        <div class="leave-container2">
+            <table id="table" class="task-tbl">
+
+        </div>
+        <tr class="table-header">
+            <th>No.of Tasks Assigned</th>
+            <th>Completed Tasks</th>
+            <th>Attendance</th>
+            <th>Performance</th>
+            <th>User Type</th>
+        </tr>
+        <?php
+        $mysqli = connect();
+        $user = $_SESSION['user'];
+        $stmt = $mysqli->prepare("SELECT employeeid FROM `employee` WHERE username = ?");
+        $stmt->bind_param("s", $user);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $stmt->bind_result($employeeid);
+            $current_date = NULL;
+            while ($stmt->fetch()) {
+                $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE empid = ?-?");
+                $stmt->bind_param("ss", $emp_id, $user);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                $count = $result->num_rows;?>
+                <tr>
+                    <td><?php echo $count; ?></td>
+                    <?php
+                    $qry = "SELECT * FROM task WHERE empid='$emp_id-$user'";
+                    $result = $mysqli->query($qry);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $status = $row['status'];
+
                     ?>
+                            <td><?php echo $status ?></td>
+                </tr>
+<?php
+                        }
+                    }
+                }
+            }
 
-                    </tr>
-                    </table>
-                </div>
-                <br><br>
+?>
 
-            </div>
-            <div class="leave-container2">
-
-            </div>
-
+</tr>
+</table>
+</div>
+<br>
     </section>
 
 

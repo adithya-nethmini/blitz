@@ -6,6 +6,7 @@ include 'sidebar.php';
 include 'header.php';
 
 $mysqli = connect();
+$user = $_SESSION['user'];
 if (isset($_POST['submit'])) {
     // Fetch input $_POST
     $name = $mysqli->real_escape_string($_POST['proof_of_work']);
@@ -73,8 +74,8 @@ if (isset($_POST['submit'])) {
                             // Get the employeeid value from the query result
                             $emp_id_row = $emp_id_result->fetch_assoc();
                             $emp_id = $emp_id_row['employeeid'];
-                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE employeeid = ?");
-                            $stmt->bind_param("i", $emp_id);
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE empid = ?-?");
+                            $stmt->bind_param("is", $emp_id,$user);
                             $stmt->execute();
                             $result = $stmt->get_result();
                             $count = $result->num_rows;
@@ -124,7 +125,7 @@ if (isset($_POST['submit'])) {
                             $emp_id = $emp_id_row['employeeid'];
 
                             // Use the employeeid in the $qry query
-                            $qry = "SELECT * FROM task WHERE employeeid='$emp_id'";
+                            $qry = "SELECT * FROM task WHERE empid='$emp_id-$user'";
                             $result = $mysqli->query($qry);
 
                             if ($result->num_rows > 0) :

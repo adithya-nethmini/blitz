@@ -12,8 +12,9 @@ if (isset($_POST['submit'])) {
     $proof_name = $_POST['proof_name'];
     $proof_name = $proof_name . '.pdf';
     $proofs = file_get_contents($_FILES['proofs']['tmp_name']);
+    $proof_uploaded_date = date('Y-m-d H:i:s');
 
-    $sql = "UPDATE task SET proofs = ?, proof_name = ? WHERE id = '$id'";
+    $sql = "UPDATE task SET proofs = ?, proof_name = ?, proof_uploaded_date = '$proof_uploaded_date' WHERE id = '$id'";
     $stmt = $mysqli->prepare($sql);
     if (!$stmt) {
         echo ("Failed to prepare statement: " . $mysqli->error);
@@ -56,7 +57,7 @@ if (isset($_POST['submit'])) {
             }
 
             // prepare and execute the SQL query to fetch task data
-            $stmt = $mysqli->prepare("SELECT employeeid, name, description, status, start_date, end_date, proofs, proof_name FROM `task` WHERE id = ?");
+            $stmt = $mysqli->prepare("SELECT empid, name, description, status, start_date, end_date, proofs, proof_name FROM `task` WHERE id = ?");
             $stmt->bind_param("i", $_GET['id']);
             $stmt->execute();
             $result = $stmt->get_result();
