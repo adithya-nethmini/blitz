@@ -3,27 +3,34 @@ if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+$id=$_GET['id'];
+$sql="SELECT * from task WHERE id='$id'";
+$result=mysqli_query($mysqli,$sql);
+$row=mysqli_fetch_assoc($result);
+$employeeid = $row['employeeid'];
+$name = $row['name'];
+$description = $row['description'];
+$status = $row['status'];
+$start_date = $row['start_date'];
+$end_date = $row['end_date'];
 if(isset($_POST['submit'])) {
+    $task_assigned = $_POST['task_assigned'];
     $name = $_POST['name'];
     $description = $_POST['description'];
     $status = $_POST['status'];
     $start_date = $_POST['start_date'];
     $end_date = $_POST['end_date'];
-    $manager_id = $_POST['manager_id'];
-    $user_ids = $_POST['user_ids'];
-    $data = '';
-    if(isset($user_ids)) {
-        $data = implode(',', $user_ids);
-    }
-    $qry = "INSERT INTO `project_list`(`name`, `description`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`) VALUES ('$name','$description','$status','$start_date','$end_date','$manager_id','$data')";
-    $SQL = "UPDATE login SET user_type = 'project_manager' WHERE username = '$manager_id'";
+
+
+    $qry = "UPDATE `task` SET employeeid='$task_assigned',name='$name',description='$description', status='$status',start_date='$start_date', end_date='$end_date'WHERE id='$id'";
     if(mysqli_query($mysqli,$qry)){
-        header('location:project_list.php');
+        header('location:task_list.php');
     }
     else{
         echo mysqli_error($mysqli);
     }
 }
+
 ?>
 
 <!--<div class="col-lg-12">-->
@@ -42,9 +49,7 @@ if(isset($_POST['submit'])) {
 <!--                    <div class="col-md-6">-->
 <!--                        <div class="form-group">-->
 <!--                            <label for="">Status</label>-->
-<!--                            <select name="status" id="status" class="custom-select custom-select-sm">-->
 <!--
-<!--                            </select>-->
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
@@ -90,7 +95,7 @@ if(isset($_POST['submit'])) {
 //                                $employees = $mysqli->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
 //                                while($row= $employees->fetch_assoc()):
 //                                    ?>
-<!--                                    <option value="--><?php //echo $row['id'] ?><!--" --><?php //echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?><!-->--><?php //echo ucwords($row['name']) ?><!--</option>-->
+<!--                                    <option value="--><?php //echo $row['id'] ?><!--" --><?php //echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?><!-<?php //echo ucwords($row['name']) ?><!--</option>-->
 <!--                                --><?php //endwhile; ?>
 <!--                            </select>-->
 <!--                        </div>-->
@@ -139,12 +144,22 @@ if(isset($_POST['submit'])) {
 <!--        })-->
 <!--    })-->
 <!--</script>-->
-<link rel="stylesheet" href="newproject.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project List</title>
+    <link rel="stylesheet" href="newproject.css">
+    <script src="https://kit.fontawesome.com/b1cec324bd.js" crossorigin="anonymous"></script>
+</head>
 <title>Blitz</title>
-<h2>New Project</h2>
+<body>
+<h2>New Task</h2>
 <form class="form-inline" action="" method="post" autocomplete="off">
     <label for="name">Name:</label>
-    <input type="text" id="name" placeholder="Enter Project Name" name="name" required>
+    <input type="text" id="name" placeholder="Enter Task Name" name="name" value="<?php echo $name; ?>" required>
     <label for="status">Status:</label>
     <select name="status" id="status" class="custom-select custom-select-sm">
         <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Started</option>
@@ -168,23 +183,22 @@ if(isset($_POST['submit'])) {
     <br>
     <br>
     <br>
-    <label for="manager_id">Project Manager:</label>
-    <select required name="manager_id" id="manager_id" class="custom-select custom-select-sm">
+    <label for="task_assigned">Task Assigned To:</label>
+    <select required name="task_assigned" id="task_assigned" class="custom-select custom-select-sm" >
         <option></option>
         <?php
-        $sql = ("SELECT employeeid,username,name,jobrole FROM employee") ;
+        $sql = ("SELECT employeeid,name,jobrole FROM employee") ;
         $result = mysqli_query($mysqli, $sql);
         if($result){
             $count_rows = mysqli_num_rows($result);
             if($count_rows > 0){
                 while($row = mysqli_fetch_assoc($result)){
-                    $username = $row['username'];
+                    $employeeid = $row['employeeid'];
                     $name= $row['name'];
                     $jobrole = $row['jobrole'];
-                    $employeeid = $row['employeeid'];
                     ?>
-                    <option value="<?php echo $row['employeeid']."-".$row['name'] ?>" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>><?php echo $employeeid ."". " - " .$name ."". " - " . $jobrole?></option>
-                <?php
+                    <option value="<?php echo $row['employeeid']."-".$row['name'] ?>" <?php echo isset($task_assigned) && $task_assigned == $row['employeeid']."-".$row['name'] ? 'selected' : '' ?> ><?php echo $employeeid ."". " - " .$name ."". " - " . $jobrole?></option>
+                    <?php
                 }
             }
         }
@@ -192,35 +206,18 @@ if(isset($_POST['submit'])) {
     </select>
     <br>
     <br>
-    <label for="user_ids[]">Project Members:</label>
-    <select required multiple="multiple" name="user_ids[]" id="user_ids[]">
-        <option></option>
-        <?php
-        $employees = $mysqli->query("SELECT *,concat(employeeid,'',' - ',name,'',' - ',jobrole) as name FROM employee ");
-        while($row= $employees->fetch_assoc()){
-            $employeeid= $row['employeeid'];
-            $username = $row['username'];
-            $name = $row['name'];
-            $jobrole = $row['jobrole'];
-            ?>
-            <option value="<?php echo $row['employeeid']."-".$row['username'] ?>"><?php echo ucwords($row['name']) ?></option>
-        <?php
-        }
-        ?>
-    </select>
-    <script>
-        new MultiSelectTag('user_ids[]', {
-            rounded: true
-        })
-    </script>
-    <br>
-    <label for="description">Description:</label>
-    <textarea required id="description" name="description"></textarea>
+    <label for="">Description:</label>
+    <textarea required id="description" name="description"><?php echo $description; ?> </textarea>
     <div class="inline-block">
         <div class="bar">
-            <button class="inner1" type="submit" name="submit"><b>Save</b></button>
-            <button class="inner2" type="submit" name="submit1"><b>Cancel</b></button>
+            <button class="inner1" type="submit" name="submit"><b>Update</b></button>
+            <button class="inner2" type="submit" name="submit1"><b><a href="project_list.php" >Cancel</a></b></button>
         </div>
     </div>
+    <script>
+
+
+    </script>
 </form>
 </body>
+

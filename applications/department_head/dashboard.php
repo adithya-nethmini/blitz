@@ -3,6 +3,12 @@ if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+$sql = "SELECT count(*) as total FROM project_list";
+$result = mysqli_query($mysqli, $sql);
+$row = mysqli_fetch_assoc($result);
+$qry = "SELECT count(*) as sum FROM task";
+$result = mysqli_query($mysqli, $qry);
+$row1 = mysqli_fetch_assoc($result);
 ?>
 <!--<div class="col-lg-12">-->
 <!--    <div class="card card-outline card-primary">-->
@@ -83,10 +89,10 @@ $mysqli = connect();
             <div class="page-content">
                 <div class="group">
                     <div class= "button">
-                    <a href="project_list.php"><i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;4 Projects</a>
+                    <a href="project_list.php"><i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;<?= $row['total'] ?> Projects</a>
                     </div>
                     <div class= "button">
-                        <a href="task_list.php"><i class="fa-solid fa-list-check"></i> &nbsp;&nbsp;2 Tasks</a>
+                        <a href="task_list.php"><i class="fa-solid fa-list-check"></i> &nbsp;&nbsp;<?= $row1['sum'] ?> Tasks</a>
                     </div>
                     <div class= "button1">
                     <a href="emp_details.php"><i class="fa-solid fa-users"></i> &nbsp;&nbsp;Employee details</a>
@@ -118,10 +124,29 @@ $mysqli = connect();
                             $id = $row ['id'];
                             echo '
                 <tr>
-                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>
-                    <td><div class="container_pro">
-                        <div class="project progress">70%</div>
+                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>';
+                            $completed_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id' AND status = 5";
+                            $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
+                            $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
+                            $completed_tasks = $completed_tasks_row[0];
+
+                            $total_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id'";
+                            $total_tasks_result = mysqli_query($mysqli, $total_tasks_query);
+                            $total_tasks_row = mysqli_fetch_array($total_tasks_result);
+                            $total_tasks = $total_tasks_row[0];
+
+                            $project_progress = ($completed_tasks / $total_tasks) * 100;
+
+                            $project_progress = number_format($project_progress, 1);
+
+                            echo '<td><div class="container_pro">
+                        <div class="project progress project_' . $id . ' "> '. $project_progress .' %</div>
                         </div></td>';
+                            echo '<style>
+                                  .progress.project_' . $id . ' {
+                                    width: ' . $project_progress . '%;
+                                   }
+                                  </style>';
                             if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
                             elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
                             elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
@@ -154,23 +179,30 @@ $mysqli = connect();
                     </div>
                     <tr  class="table-header">
                         <th>Task</th>
-                        <th>Progress </th>
+                        <th>Proof Of Work </th>
                         <th>Status</th>
                         <th>View Task</th>
                     </tr>
                     <?php
-                    $qry = "SELECT id,name,start_date,end_date,status from task";
+                    $qry = "SELECT id,name,start_date,end_date,status,proofs from task";
                     $result = $mysqli->query($qry);
 
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
                             $id = $row ['id'];
+                            $proofs = $row['proofs'];
                             echo '
                 <tr>
                     <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>
-                    <td><div class="container_pro">
-                        <div class="project progress">70%</div>
-                        </div></td>';
+                    <td>
+                        ';if (!is_null($proofs)) {
+                            echo '<span id="upload"> Uploaded</span>';
+                        }
+                        else{
+                            echo '<span id="upload1"> Not Uploaded</span>';
+                        }
+                        echo'
+                    </td>';
                             if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
                             elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
                             elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}

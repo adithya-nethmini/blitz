@@ -125,8 +125,8 @@ $mysqli = connect();
                         <button class="dropbtn">Action</button>
                         <div class="dropdown-content">
                             <a href="task_view.php?id='.$id.'">View</a>
-                            <a href="#">Update</a>
-                            <a href="#">Delete</a>
+                            <a href="update1.php?id='.$id.'">Update</a>
+                            <a href="delete1.php?id='.$id.'" onclick="deleteItem()">Delete</a>
                         </div>
                     </div>
                     </td>';
@@ -163,6 +163,15 @@ $mysqli = connect();
                                 else {
                                     tr[i].style.display = "none";
                                 }
+                            }
+                        }
+                    </script>
+                    <script>
+                        function deleteItem() {
+                            if (confirm("Are you sure you want to permanently delete the details?")) {
+                                return true;
+                            }  else {
+                                return false;
                             }
                         }
                     </script>

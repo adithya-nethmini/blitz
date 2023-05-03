@@ -104,7 +104,7 @@ $mysqli = connect();
                         <th>Project</th>
                         <th>Total No. of Tasks </th>
                         <th>Completed Tasks</th>
-                        <th>Work Duration</th>
+                        <th>Overdue Tasks</th>
                         <th>Progress</th>
                         <th>Status</th>
                     </tr>
@@ -117,13 +117,41 @@ $mysqli = connect();
                             $id = $row ['id'];
                             echo '
                 <tr>
-                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>
-                    <td>10</td>
-                    <td>7</td>
-                    <td>6Hr/s</td>
+                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>';
+
+                            $total_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id'";
+                            $total_tasks_result = mysqli_query($mysqli, $total_tasks_query);
+                            $total_tasks_row = mysqli_fetch_array($total_tasks_result);
+                            $total_tasks = $total_tasks_row[0];
+
+                      echo' <td>' . $total_tasks . '</td>';
+
+                            $completed_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id' AND status = 5";
+                            $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
+                            $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
+                            $completed_tasks = $completed_tasks_row[0];
+
+                            $project_progress = ($completed_tasks / $total_tasks) * 100;
+
+                            $project_progress = number_format($project_progress, 1);
+
+                            $overdue_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id' AND overdue = 1";
+                            $overdue_tasks_result = mysqli_query($mysqli, $overdue_tasks_query);
+                            $overdue_tasks_row = mysqli_fetch_array($overdue_tasks_result);
+                            $overdue_tasks = $overdue_tasks_row[0];
+
+                      echo' <td>' . $completed_tasks . '</td>';
+
+                      echo' <td>' . $overdue_tasks . '</td>  
+                      
                     <td><div class="container_pro">
-                        <div class="project progress">70%</div>
+                        <div class="project progress project_' . $id . ' "> '. $project_progress .' %</div>
                         </div></td>';
+                            echo '<style>
+                                  .progress.project_' . $id . ' {
+                                    width: ' . $project_progress . '%;
+                                   }
+                                  </style>';
                             if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
                             elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
                             elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
@@ -163,17 +191,47 @@ $mysqli = connect();
                     <th>User Type</th>
                 </tr>
                 <?php
-                $qry = "SELECT employeeid,name from employee";
+                $qry = "SELECT employeeid,name,username from employee";
                 $result = $mysqli->query($qry);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        $employeeid = $row['employeeid'];
+                        $name = $row['name'];
+                        $username = $row['username'];
+
                         echo '
                 <tr>
                     <td>' . $row['employeeid'] . '</td>
-                    <td>' . $row['name'] . '</td>
-                    <td>10</td>
-                    <td>7</td>
+                    <td>' . $row['name'] . '</td>';
+
+                        $assigned_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name'";
+                        $assigned_tasks_result = mysqli_query($mysqli, $assigned_tasks_query);
+                        $assigned_tasks_row = mysqli_fetch_array($assigned_tasks_result);
+                        $assigned_tasks = $assigned_tasks_row[0];
+
+                        $assigned_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username'";
+                        $assigned_tasklist_result = mysqli_query($mysqli, $assigned_tasklist_query);
+                        $assigned_tasklist_row = mysqli_fetch_array($assigned_tasklist_result);
+                        $assigned_tasklist = $assigned_tasklist_row[0];
+
+                        $total_assigned_tasks = $assigned_tasks + $assigned_tasklist;
+
+                        echo ' <td>' . $total_assigned_tasks . '</td>';
+
+                        $completed_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name' AND status = 5";
+                        $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
+                        $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
+                        $completed_tasks = $completed_tasks_row[0];
+
+                        $completed_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username' AND status = 5";
+                        $completed_tasklist_result = mysqli_query($mysqli, $completed_tasklist_query);
+                        $completed_tasklist_row = mysqli_fetch_array($completed_tasklist_result);
+                        $completed_tasklist = $completed_tasklist_row[0];
+
+                        $total_completed_tasks = $completed_tasks + $completed_tasklist;
+
+                        echo ' <td>' . $total_completed_tasks . '</td>
                     <td>70%</td>
                     <td>70%</td>
                     <td><span id="user_t">Silver</span></td>';

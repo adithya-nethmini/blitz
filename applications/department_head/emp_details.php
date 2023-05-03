@@ -99,10 +99,14 @@ $mysqli = connect();
                     <tr  class="table-header">
                         <th>Employee ID</th>
                         <th>Employee Name </th>
+                        <th>Jobrole </th>
+                        <th>Email </th>
+                        <th>Contact number </th>
+                        <th>Address </th>
                         <th>Action</th>
                     </tr>
                     <?php
-                    $qry = "SELECT username,employeeid,name from employee";
+                    $qry = "SELECT username,employeeid,name,jobrole,email,contactno,address from employee";
                     $result = $mysqli->query($qry);
 
                     if ($result->num_rows > 0) {
@@ -112,6 +116,10 @@ $mysqli = connect();
                 <tr>
                     <td>' . $row['employeeid'] . '</td>
                     <td>' . $row['name'] . '</td>
+                    <td>' . $row['jobrole'] . '</td>
+                    <td>' . $row['email'] . '</td>
+                    <td>' . $row['contactno'] . '</td>
+                    <td>' . $row['address'] . '</td>
                     <td><div class="dropdown">
                         <button class="dropbtn1">Remove</button>
                     </div>

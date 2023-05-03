@@ -90,7 +90,8 @@ $mysqli = connect();
 
                     <?php
                     $id = $_GET['id'];
-                    $qry = "SELECT project_id,task,description,status,emp_id from task_list WHERE id= '$id'";
+                    $current_date = date('Y-m-d');
+                    $qry = "SELECT project_id,task,description,status,emp_id,start_date,end_date,proof_uploaded_date,proofs from task_list WHERE id= '$id'";
                     if(mysqli_query($mysqli,$qry)){
                         $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
                         $project_id= $row['project_id'];
@@ -98,31 +99,80 @@ $mysqli = connect();
                         $description= $row['description'];
                         $status = $row['status'];
                         $emp_id = $row['emp_id'];
+                        $start_date = $row['start_date'];
+                        $end_date = $row['end_date'];
+                        $proofs = $row['proofs'];
+                        $proof_uploaded_date = $row['proof_uploaded_date'];
                         echo '
 <table class="table1">
                 <tr>
                 <td><label>Task Name </label><br><br>'.$task.'</td>
+                <td><label>Start Date </label><br><br>'.$start_date.' </td> </tr>
+                <tr>
+                <td><label>End Date </label><br><br>'.$end_date.'</td> 
                 <td><label>Description </label><br><br>'.$description.' </td> </tr>
                 <tr>
                 <td><label>Task Assigned To </label><br><br>'.$emp_id.'</td> 
                 <td><label>Status </label><br><br>';if($row['status']==0){echo '<span id="started"> Started</span>';}
                         elseif ($row['status']==3){echo'<span id="ongoing"> On-Progress</span>';}
                         elseif ($row['status']==5){echo'<span id="done"> Done</span>';}
-                        echo ' </td></tr>
+                        echo '
+                <br><br>';if ($end_date < $current_date && $proof_uploaded_date==NULL) {
+                            echo '<span id="overdue"> Overdue</span>';
+                            $SQL = "UPDATE task_list SET overdue = 1 WHERE id = '$id'";
+                            $result = mysqli_query($mysqli, $SQL);
+                            if (!$result) {
+                                echo mysqli_error($mysqli);
+                            }
+
+                        }
+                        elseif ($end_date < $proof_uploaded_date) {
+                            echo '<span id="overdue"> Overdue</span>';
+                            $SQL = "UPDATE task_list SET overdue = 1 WHERE id = '$id'";
+                            $result = mysqli_query($mysqli, $SQL);
+                            if (!$result) {
+                                echo mysqli_error($mysqli);
+                            }
+                        }  echo'
+                </td></tr>
                 </table>'; }
                     ?>
                     <br>
                     <br>
                     <div class="foot">
-                        <label>Proof Of Work :</label>
-                        <div class= "button_d">
-                            <a href="#"><i class="fa-solid fa-download"></i> Download here</a>
-                        </div>
-                        <label class="container">Verified
-                            <input type="checkbox" checked="checked">
-                            <span class="checkmark"></span>
-                        </label>
+                        <?php
+                        if (!is_null($proofs)) {
+                            echo ' 
+                    <label>Proof Of Work :</label>
+                    <div class= "button_d">
+                    <a href="download.php?id='.$id.'"><i class="fa-solid fa-download"></i> Download here</a>
+                </div>
+                <form id="myForm" method="post" action="update_status1.php">
+                <label class="container" >Verified ';
+                            $qry = "SELECT * from task_list WHERE id= '$id'";
+                            if(mysqli_query($mysqli,$qry)) {
+                                $row = mysqli_fetch_assoc(mysqli_query($mysqli, $qry));
+                                $checked = isset($_GET['checked']) ? $_GET['checked'] : '';
+                                if ($row['status'] == 5) {
+                                    $checked = 'checked';
+                                }
+                            }
+
+                            echo '<input type="checkbox" id="myCheckbox" name="id" value="' . $id . '" ' . $checked . '>
+                    <span class="checkmark"></span>
+                </label>' ;} ?>
                     </div>
                 </div>
             </div>
         </div>
+        <script>
+            var form = document.getElementById("myForm");
+            var checkbox = document.getElementById("myCheckbox");
+
+            checkbox.addEventListener("click", function() {
+                if (checkbox.checked) {
+                    form.submit();
+                }
+            });
+
+        </script>
