@@ -191,6 +191,7 @@ $mysqli = connect();
                     <th>User Type</th>
                 </tr>
                 <?php
+                $current_month = date('m');
                 $qry = "SELECT employeeid,name,username from employee";
                 $result = $mysqli->query($qry);
 
@@ -205,12 +206,12 @@ $mysqli = connect();
                     <td>' . $row['employeeid'] . '</td>
                     <td>' . $row['name'] . '</td>';
 
-                        $assigned_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name'";
+                        $assigned_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name' AND MONTH(end_date) = $current_month ";
                         $assigned_tasks_result = mysqli_query($mysqli, $assigned_tasks_query);
                         $assigned_tasks_row = mysqli_fetch_array($assigned_tasks_result);
                         $assigned_tasks = $assigned_tasks_row[0];
 
-                        $assigned_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username'";
+                        $assigned_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username' AND MONTH(end_date) = $current_month ";
                         $assigned_tasklist_result = mysqli_query($mysqli, $assigned_tasklist_query);
                         $assigned_tasklist_row = mysqli_fetch_array($assigned_tasklist_result);
                         $assigned_tasklist = $assigned_tasklist_row[0];
@@ -219,22 +220,88 @@ $mysqli = connect();
 
                         echo ' <td>' . $total_assigned_tasks . '</td>';
 
-                        $completed_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name' AND status = 5";
+                        $completed_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$employeeid-$name' AND status = 5 AND MONTH(end_date) = $current_month ";
                         $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
                         $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
                         $completed_tasks = $completed_tasks_row[0];
 
-                        $completed_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username' AND status = 5";
+                        $completed_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$employeeid-$username' AND status = 5 AND MONTH(end_date) = $current_month ";
                         $completed_tasklist_result = mysqli_query($mysqli, $completed_tasklist_query);
                         $completed_tasklist_row = mysqli_fetch_array($completed_tasklist_result);
                         $completed_tasklist = $completed_tasklist_row[0];
 
                         $total_completed_tasks = $completed_tasks + $completed_tasklist;
 
-                        echo ' <td>' . $total_completed_tasks . '</td>
-                    <td>70%</td>
-                    <td>70%</td>
-                    <td><span id="user_t">Silver</span></td>';
+                        if ($total_assigned_tasks == 0) {
+                            $total_task_progress = 0;
+                        } else {
+                            $total_task_progress = ($total_completed_tasks / $total_assigned_tasks) * 100;;
+                        }
+
+                        $total_task_progress = number_format($total_task_progress, 1);
+
+                        echo ' <td>' . $total_completed_tasks . '</td>';
+
+                        $month = date('m');
+                        $year = date('Y');
+
+                        $leave_query = "SELECT SUM(DATEDIFF(last_date, start_date) + 1) as total_leave FROM e_leave WHERE name = '$name' AND (start_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR last_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR (start_date < '$year-$month-01' AND last_date > LAST_DAY('$year-$month-01'))) AND status = 'Accepted'";
+                        $leave_result = mysqli_query($mysqli, $leave_query);
+                        $leave_row = mysqli_fetch_assoc($leave_result);
+                        $total_leave = $leave_row['total_leave'];
+
+                        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                        $total_working_days = 0;
+
+                        $leave_query = "SELECT * FROM e_leave WHERE name = '$name' AND (start_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month' OR last_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month'AND status = 'Accepted')";
+                        $leave_result = mysqli_query($mysqli, $leave_query);
+                        $leave_count = mysqli_num_rows($leave_result);
+
+                        for ($day = 1; $day <= $days_in_month; $day++) {
+                            $date = "$year-$month-$day";
+                            $day_of_week = date('N', strtotime($date));
+                            if ($day_of_week <= 5) {
+                                $is_leave_day = false;
+                                $leave_from = '';
+                                $leave_to = '';
+                                mysqli_data_seek($leave_result, 0); // reset pointer to beginning of result set
+                                while ($leave_row = mysqli_fetch_assoc($leave_result)) {
+                                    $leave_date_from = date_create($leave_row['start_date']);
+                                    $leave_date_to = date_create($leave_row['last_date']);
+                                    if ($leave_date_from->format('m') == $month && $leave_date_from->format('d') <= $day && $leave_date_to->format('m') == $month && $leave_date_to->format('d') >= $day) {
+                                        $is_leave_day = true;
+                                        $leave_from = $leave_date_from->format('Y-m-d');
+                                        $leave_to = $leave_date_to->format('Y-m-d');
+                                        break; // exit loop if leave spans only current month
+                                    } else if ($leave_date_from->format('m') < $month && $leave_date_to->format('m') > $month) {
+                                        $is_leave_day = true;
+                                        $leave_from = date_create("$year-$month-01")->format('Y-m-d');
+                                        $leave_to = date_create("$year-$month-$days_in_month")->format('Y-m-d');
+                                        break; // exit loop if leave spans across two months
+                                    }
+                                }
+                                if (!$is_leave_day) {
+                                    $total_working_days++;
+                                }
+                            }
+                        }
+
+
+                        $attendance = ($total_working_days - $total_leave) / $total_working_days * 100;
+
+                        $attendance = number_format($attendance, 1);
+
+                        echo ' <td>' . $attendance . '%</td>';
+
+                        $employee_performance = ($total_task_progress + $attendance) / 2;
+
+                        echo ' <td>' . $employee_performance . '%</td>';
+                        if(70 <= $employee_performance && $employee_performance <= 80){echo '<td><span id="user_t">Silver</span></td>';}
+                        elseif (80 <= $employee_performance && $employee_performance <= 90){echo'<td><span id="user_t1">Gold</span></td>';}
+                        elseif (90 <= $employee_performance && $employee_performance <= 100){echo'<td><span id="user_t2">Platinum</span></td>';}
+                        else{
+                            echo '<td><span id="user_t3">Not Applicable</span></td>';
+                        }
 
                     }
                 }

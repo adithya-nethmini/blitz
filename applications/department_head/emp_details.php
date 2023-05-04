@@ -103,7 +103,6 @@ $mysqli = connect();
                         <th>Email </th>
                         <th>Contact number </th>
                         <th>Address </th>
-                        <th>Action</th>
                     </tr>
                     <?php
                     $qry = "SELECT username,employeeid,name,jobrole,email,contactno,address from employee";
@@ -119,11 +118,7 @@ $mysqli = connect();
                     <td>' . $row['jobrole'] . '</td>
                     <td>' . $row['email'] . '</td>
                     <td>' . $row['contactno'] . '</td>
-                    <td>' . $row['address'] . '</td>
-                    <td><div class="dropdown">
-                        <button class="dropbtn1">Remove</button>
-                    </div>
-                    </td>';
+                    <td>' . $row['address'] . '</td>';
 
                         }
                     }
