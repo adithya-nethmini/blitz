@@ -9,7 +9,40 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
+$mysqli = connect();
+$user = $_SESSION['user'];
+
+if (isset($_POST['submit'])) {
+    @$response = sendDirectMessage($_SESSION['user'], $_POST['recipient'], $_POST['message']);
+}
+
+$stmt = $mysqli->prepare("SELECT username FROM `employee` WHERE username = ?");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$stmt->store_result();
+if ($stmt->num_rows > 0) {
+    $stmt->bind_result($username);
+    while ($stmt->fetch()) {
+
+        // Prepare the SQL statement with a parameterized query
+        $sql2 = "UPDATE chat SET status = 'seen' WHERE recipient = ? AND sender = '$user'";
+        $stmt2 = $mysqli->prepare($sql2);
+        if (!$stmt2) {
+            echo ("Failed to prepare statement: " . $mysqli->error);
+        }
+
+        // Bind the parameter to the statement and execute the update
+        $stmt2->bind_param("i", $username);
+        if (!$stmt2->execute()) {
+            echo ("Failed to execute statement: " . $stmt->error);
+        }
+    }
+    error_log("Error: " . $mysqli->error);
+}
+
+
 ?>
+
 
 <html>
 
@@ -17,23 +50,20 @@ if (isset($_GET['logout'])) {
     <link rel="stylesheet" href="../../views/css/chat.css">
     <link rel="stylesheet" href="../../views/css/notification.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-L6U8bFP+JQ6U2PzXkypJZ8d+UKErfxUx1v4D4g3q72xtlFRA0sHnTD/d9S2oTfEKnT1Tn+Rv75VwIdt8DnsJzA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
     <section>
-
         <div class="page-content">
             <div class="chat-container">
-
                 <div class="member-chat">
-
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
                         <div class="div-back-arrow">
-                            <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
+                            <a class="back-arrow" href="chat.php"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
                         </div>
-                        <div class="member-section-inner">
 
+                        <div class="member-section-inner">
                             <?php
                             $user = $_SESSION['user'];
 
@@ -68,15 +98,21 @@ if (isset($_GET['logout'])) {
                                         // echo $sender_unseen, $member;
                             ?>
 
-                                        <a class="member-a" href="open-direct-chat-test.php?username=<?php echo $member; ?>">
+                                        <a class="member-a" href="open-direct-chat.php?username=<?php echo $member; ?>">
                                             <div class="member">
                                                 <?php echo $row['name'];
 
                                                 if ($count > 0) : ?>
-                                                    <div class="div-badge">
-                                                    <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
-                                                </div>
-                                                    <?php endif; ?>
+                                                    <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
+
+                                                    <?php endif; ?><?php
+
+                                                                    if ($count > 0 && $sender_unseen == $member) {
+                                                                        echo $count;
+                                                                    }
+
+                                                                    ?>
+
                                             </div>
                                         </a>
 
@@ -88,39 +124,31 @@ if (isset($_GET['logout'])) {
                                 exit;
                             }
                             ?>
-
-
                         </div>
+
                     </div>
                     <div class="vertical-line"></div>
-                    <div class="chat-area">
-                        <div class="chat-area-inner">
-                            <h4>Your messages will display here</h4>
-                        </div>
+                    <div class="chat-area" id="chat-area">
+
+                        
+                        
                     </div>
                 </div>
             </div>
-
         </div>
-
-        </div>
-
     </section>
 </body>
 <script>
-    // retrieve and set the saved scroll position
-    window.onload = function() {
-        var scrollY = localStorage.getItem('scroll2');
-        if (scrollY !== null) {
-            var scrollableContainer = document.querySelector('.member-section');
-            scrollableContainer.scrollTo(0, parseInt(scrollY));
-        }
-    }
-
-    // save the scroll position in localStorage
-    function saveScrollPosition(key, element) {
-        localStorage.setItem(key, element.scrollTop.toString());
-    }
+    $(document).ready(function() {
+        $.ajax({
+            url: "get_msgs.php",
+            type: "GET",
+            data: {
+                username: "<?php echo $_GET['username']; ?>"
+            },
+            success: function(data) {
+                $("#chat-area").html(data);
+            }
+        });
+    });
 </script>
-
-</html>

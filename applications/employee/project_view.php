@@ -30,9 +30,7 @@ $user = $_SESSION['user'];
 
             <div class="page-content">
                 <div class="heading">
-                    <div class="div-back-arrow">
-                        <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
-                    </div>
+                    
                     <h1>View Project</h1>
                 </div>
 

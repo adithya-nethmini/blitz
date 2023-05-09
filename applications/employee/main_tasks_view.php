@@ -43,6 +43,7 @@ if (isset($_POST['submit'])) {
     <link rel="stylesheet" href="../../views/css/header.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json">
     <script src="https://kit.fontawesome.com/21e5980a06.js" crossorigin="anonymous"></script>
 </head>
 <section>
@@ -69,9 +70,6 @@ if (isset($_POST['submit'])) {
 
                 <div class="page-content">
                     <div class="heading">
-                        <div class="div-back-arrow">
-                            <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
-                        </div>
                         <h1>View Task</h1>
                     </div>
 
@@ -125,14 +123,22 @@ if (isset($_POST['submit'])) {
                                             <div class="div-pdf">
                                                 <img src="proofs/pdf.png" class="pdf-icon" alt="Proof Pdf">
                                                 <span><?php echo $task['proof_name']; ?></span>
+                                                <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json"  background="transparent"  speed="1"  style="width: 45px; height: 45px;"  loop autoplay></lottie-player>
                                             </div>
-                                            <div>
-                                                <a href="delete-proofs.php?id=<?php echo $id ?>" onclick="return confirm('Are you sure you want to delete?')"><button type="submit" name="submit" class="btn-delete">Delete</button></a>
-                                            </div>
+                                            <form method="POST" enctype="multipart/form-data" action="">
+                                                <div class="div-upload">
+                                                    <input type="file" name="proofs" title="Provide your proofs of work">
+                                                    <input type="hidden" name="proof_name" value="<?php echo $task['name']; ?>">
+                                                    <button class="upload" type="submit" name="submit">Upload</button>
+                                                </div>
+                                            </form>
                                         <?php
                                         } else { ?>
                                             <form method="POST" enctype="multipart/form-data" action="">
                                                 <div class="div-upload">
+                                                    <div style="display: flex;justify-content: center;align-items: center">
+                                                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_0iuu9o.json"  background="transparent"  speed="1"  style="width: 40px; height: 40px;"  loop  autoplay></lottie-player>
+                                                    </div>
                                                     <input type="file" name="proofs" title="Provide your proofs of work">
                                                     <input type="hidden" name="proof_name" value="<?php echo $task['name']; ?>">
                                                     <button class="upload" type="submit" name="submit">Upload</button>
@@ -160,3 +166,4 @@ if (isset($_POST['submit'])) {
         </div>
     </div>
     </div>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>

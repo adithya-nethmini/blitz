@@ -9,8 +9,16 @@
 .page-content{
     display: flex;
     flex-direction: column;
-    margin-left: 335px;
+    margin-left: 400px;
 }
+
+.chart{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 .leave-container{
     width: 1070px;
     padding: 20px 5px;
@@ -50,7 +58,7 @@
     padding: 10px;
 }
 
-#search{
+#search, #search-old{
     border: none;
     width: 390px;
     height: 30px;
@@ -59,7 +67,7 @@
     padding: 5px 40px;
 }
 
-#search:focus{
+#search:focus,#search-old:focus{
     outline: none;
 }
 
@@ -68,7 +76,6 @@
 }
 
 .btn-task-add, .btn-task-update, .btn-task-delete{
-    color: white;
     padding: 10px;
     font-weight: bold;
     text-decoration: none;
@@ -88,7 +95,8 @@
 }
 
 .btn-task-delete{
-    background-color: #a00000;
+    color: #a00000;
+    background-color: white;
     border: 1px solid #a00000;
 }
 .btn-task-add:hover, .btn-task-update:hover, .btn-task-delete:hover{
@@ -104,7 +112,8 @@
     border:1px solid #20bf6b;
 }
 .btn-task-delete:hover{
-    color: #a00000;
+    color: white;
+    background-color: #a00000;
     border: 1px solid #a00000;
 }
 
@@ -152,15 +161,25 @@
 }
 
 .status-pending,.status-accepted,.status-cancel{
-    padding: 5px 8px;
-    border-radius: 20px;
+    border-radius: 8px;
+    padding: 8px;
+    height: 30px;
+    width: 60px;
+    font-size: 12px;
+    
 }
 .status-pending{
-    background-color: greenyellow;
+    background-color: rgb(26,191,10,0.73);
+    color: white;
+    border: 1px solid rgb(25, 191, 10);
 }
 .status-accepted{
-    background-color: rgb(252, 255, 47);
+    background-color: #027da284;
+    color: white;
+    border: 1px solid #027da284;
 }
 .status-cancel{
     background-color: rgb(255, 47, 47);
+    color: white;
+    border: 1px solid #a2020284;
 }

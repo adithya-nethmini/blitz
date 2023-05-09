@@ -10,7 +10,14 @@
 .page-content{
     display: flex;
     flex-direction: column;
-    margin-left: 340px;
+    margin-left: 400px;
+}
+
+.chart{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .heading{
@@ -20,7 +27,7 @@
 }
 
 .container{
-    max-width: 1070px;
+    max-width: 1080px;
     padding: 10px 5px;
     box-shadow: 0px 0px 15px 2px #ABB2B9;
     border-radius: 10px;

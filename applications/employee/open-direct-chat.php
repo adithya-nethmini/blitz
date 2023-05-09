@@ -276,5 +276,13 @@ if ($stmt->num_rows > 0) {
         localStorage.setItem(key, element.scrollTop.toString());
     }
 </script>
-
+<script>
+    // Reload the page if the message input field loses focus
+    document.addEventListener("click", function(event) {
+        var messageInput = document.getElementById("message");
+        if (document.activeElement !== messageInput) {
+            location.reload();
+        }
+    });
+</script>
 </html>

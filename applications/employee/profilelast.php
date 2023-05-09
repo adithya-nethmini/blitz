@@ -59,43 +59,27 @@ if (isset($_POST['submit'])) {
 
 if (isset($_POST['upload'])) {
 
-    // Sanitize and validate the $user variable to prevent SQL injection
-    $user = $_SESSION['user'];
+    // Update the profile picture from the database
+    $image = $_FILES['profilepic_e']['tmp_name']; // retrieve the temporary path of the uploaded image
+    $imageData = file_get_contents($image); // read the image data from the temporary file
 
-    // Check that the uploaded file is an image and validate its size
-    $image = $_FILES['profilepic_e']['tmp_name'];
-    $imageType = exif_imagetype($image);
-    $allowedTypes = array(IMAGETYPE_JPEG, IMAGETYPE_PNG, IMAGETYPE_GIF);
-    $maxFileSize = 5242880; // 5 MB in bytes
-    if (!in_array($imageType, $allowedTypes) || filesize($image) > $maxFileSize) {
-        echo "Error: Invalid image file or file size exceeded maximum limit.";
-        exit();
-    }
 
-    // Read the image data from the temporary file
-    $imageData = file_get_contents($image);
-
-    // Prepare and execute the SQL query to update the profile picture
-    $sql = "UPDATE employee SET profilepic_e = ? WHERE username = ?";
+    $sql = "UPDATE employee SET profilepic_e = ? WHERE username = '$user'";
     $stmt = $mysqli->prepare($sql);
+    mysqli_free_result($result);
     if (!$stmt) {
-        echo "Error: Failed to prepare statement.";
-        exit();
+        echo ("Failed to prepare statement: " . $mysqli->error);
     }
-    $stmt->bind_param("ss", $imageData, $user);
-    if (!$stmt->execute()) {
-        echo "Error: Failed to update profile picture.";
-        exit();
-    }
-    $stmt->close();
-    
-    $mysqli->close();
-    
-    echo '<meta http-equiv="refresh" content="0;url='.$_SERVER['PHP_SELF'].'">';
-    echo '<meta http-equiv="refresh" content="1;url='.$_SERVER['PHP_SELF'].'">';
-    exit();
-}
 
+    // Bind the parameter to the statement and execute the update
+    $stmt->bind_param("s", $imageData);
+    if (!$stmt->execute()) {
+        echo ("Failed to execute statement: " . $stmt->error);
+    }
+
+    mysqli_stmt_close($stmt);
+    $mysqli->close();
+}
 
 if (isset($_POST['update'])) {
 	// Fetch input $_POST
@@ -197,7 +181,7 @@ if (isset($_POST['update'])) {
                                         </a>
 
                                         <div id="update-profile-pic-modal" style="flex-direction:column;justify-content:center;align-items: center;">
-                                            <form id="update-pro-pic" method="POST" enctype="multipart/form-data" action="" style="flex-direction:column;justify-content:center;align-items: center;">
+                                            <form method="POST" enctype="multipart/form-data" action="" style="flex-direction:column;justify-content:center;align-items: center;">
                                                 <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
                                                     <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
@@ -211,8 +195,8 @@ if (isset($_POST['update'])) {
                                                 ?>
 
                                                     <img class="profile-pic-update" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
-                                                    <input type="file" name="profilepic_e">
-                                                    <button type="submit" class="btn-upload" name="upload">Upload</button>
+
+                                                    <a href="" onclick="return confirm('Are you sure you want to delete?')"><button type="submit" name="submit" class="btn-delete">Delete</button></a>
                                                 <?php endif ?>
 
                                             </form>

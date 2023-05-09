@@ -23,7 +23,7 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->bind_result($username);
     while ($stmt->fetch()) {
-
+  
         // Prepare the SQL statement with a parameterized query
         $sql2 = "UPDATE chat SET status = 'seen' WHERE recipient = ? AND sender = '$user'";
         $stmt2 = $mysqli->prepare($sql2);
@@ -36,9 +36,6 @@ if ($stmt->num_rows > 0) {
         if (!$stmt2->execute()) {
             echo ("Failed to execute statement: " . $stmt->error);
         }
-
-        echo 'recipient: ' . $username;
-        echo 'sender: ' . $user;
     }
     error_log("Error: " . $mysqli->error);
 }
@@ -83,13 +80,43 @@ if ($stmt->num_rows > 0) {
                                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                 // Loop through results and display name and email
-                                foreach ($results as $row) { ?>
-                                    <a class="member-a" href="open-direct-chat.php?username=<?php echo $row['username']; ?>">
-                                        <div class="member">
-                                            <?php echo $row['name'] ?>
-                                        </div>
-                                    </a>
+                                foreach ($results as $row) {
+                                    $member = $row['username'];
+                                    $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
+
+                                    // Execute SELECT statement
+                                    $stmt2->execute();
+
+                                    // Fetch results as associative array
+                                    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                    // Loop through results and display name and email
+                                    foreach ($results2 as $row2) {
+                                        $sender_unseen = $row2['sender'];
+                                        $count = $row2['COUNT(*)'];
+                                        // echo $sender_unseen, $member;
+                            ?>
+
+                                        <a class="member-a" href="open-direct-chat.php?username=<?php echo $member; ?>">
+                                            <div class="member">
+                                                <?php echo $row['name'];
+
+                                                if ($count > 0) : ?>
+                                                    <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
+
+                                                    <?php endif; ?><?php
+
+                                                                    if ($count > 0 && $sender_unseen == $member) {
+                                                                        echo $count;
+                                                                    }
+
+                                                                    ?>
+
+                                            </div>
+                                        </a>
+
                             <?php
+                                    }
                                 }
                             } catch (PDOException $e) {
                                 echo "Database connection failed: " . $e->getMessage();
@@ -99,6 +126,7 @@ if ($stmt->num_rows > 0) {
                         </div>
 
                     </div>
+                    <div class="vertical-line"></div>
                     <div class="chat-area">
 
                         <?php
@@ -115,79 +143,66 @@ if ($stmt->num_rows > 0) {
                             <div class="chat-name-display">
                                 <h3><?php echo $name; ?></h3>
                             </div>
+                            <hr>
                             <div class="display-message">
-
-
                                 <?php
                                 $first_sender = "";
-                                $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
-                                $stmt->bind_param("ss", $_SESSION['user'], $username);
+                                $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE chat_type = 'Direct' AND (`recipient` = ? AND `sender` = ?) OR (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
+                                $stmt->bind_param("ssss", $_SESSION['user'], $username, $username, $_SESSION['user']);
                                 $stmt->execute();
                                 $stmt->store_result();
                                 if ($stmt->num_rows > 0) {
                                     $stmt->bind_result($id, $sender, $recipient, $message, $created_date_time, $status);
                                     $current_date = NULL;
                                     while ($stmt->fetch()) {
+                                        if ($sender == $_SESSION['user']) { // Check if sender is current user
                                 ?>
-                                        <div class="incoming-messages">
-                                            <?php
-                                            $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
+                                            <div class="outgoing-messages">
+                                                <?php
+                                                $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
 
-                                            // display the date if it's different from the current date
-                                            if ($current_date === null || $message_date !== $current_date) {
-                                                echo '<div class="message-date">' . date("F j, Y", strtotime($created_date_time)) . '</div>';
-                                                $current_date = $message_date;
-                                            }
-                                            ?>
-                                            <h6 title="<?php echo date("H:i:s", strtotime($created_date_time)); ?>">
-                                                <?php echo $message; ?>
-                                            </h6>
-                                        </div>
-                                <?php
-                                    }
-                                    error_log("Error: " . $mysqli->error);
-                                }
-                                ?>
-                                <?php
-                                $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
-                                $stmt->bind_param("ss", $username, $_SESSION['user']);
-                                $stmt->execute();
-                                $stmt->store_result();
-                                if ($stmt->num_rows > 0) {
-                                    $stmt->bind_result($id, $sender, $recipient, $message, $created_date_time, $status);
-                                    $current_date = NULL;
-                                    while ($stmt->fetch()) {
+                                                // display the date if it's different from the current date
+                                                if ($current_date === null || $message_date !== $current_date) {
+                                                    echo '<div class="message-date">' . date("F j, Y", strtotime($created_date_time)) . '</div>';
+                                                    $current_date = $message_date;
+                                                }
+                                                ?>
+                                                <h6 title="<?php echo date("H:i:s", strtotime($created_date_time)); ?>">
+                                                    <span><?php echo $message; ?></span>
+                                                    <span class="message-details">
+                                                        <?php if ($status == 'seen') : ?>
+                                                            <span class="status-seen"><?php echo $status; ?></span>
+                                                        <?php else : ?>
+                                                            <span class="status-unseen"><?php echo $status; ?></span>
+                                                        <?php endif; ?>
+                                                    </span>
 
-                                ?>
-                                        <div class="outgoing-messages">
-                                            <?php 
-                                            $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
+                                                </h6>
 
-                                            // display the date if it's different from the current date
-                                            if ($current_date === null || $message_date !== $current_date) {
-                                                echo '<div class="message-date">' . date("F j, Y", strtotime($created_date_time)) . '</div>';
-                                                $current_date = $message_date;
-                                            }
-                                            ?>
-                                            <h6 title="<?php echo date("H:i:s", strtotime($created_date_time)); ?>">
-                                                <span><?php echo $message; ?></span>
-                                                <span class="message-details">
-                                                    <?php if ($status = 'seen') : ?>
-                                                        <span class="status-seen"><?php echo $status; ?></span>
-                                                    <?php else : ?>
-                                                        <span class="status-unseen"><?php echo $status; ?></span>
-                                                    <?php endif; ?>
-                                                </span>
+                                            </div>
+                                        <?php } else { // Messages from receiver 
+                                        ?>
+                                            <div class="incoming-messages">
+                                                <?php
+                                                $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
 
-                                            </h6>
-
-                                        </div>
-                                <?php
+                                                // display the date if it's different from the current date
+                                                if ($current_date === null || $message_date !== $current_date) {
+                                                    echo '<div class="message-date">' . date("F j, Y", strtotime($created_date_time)) . '</div>';
+                                                    $current_date = $message_date;
+                                                }
+                                                ?>
+                                                <h6 title="<?php echo date("H:i:s", strtotime($created_date_time)); ?>">
+                                                    <?php echo $message; ?>
+                                                </h6>
+                                            </div>
+                                <?php }
                                     }
                                     error_log("Error: " . $mysqli->error);
                                 }
                                 ?>
                             </div>
+
 
 
                             <div class="message-sending-section">
@@ -204,7 +219,9 @@ if ($stmt->num_rows > 0) {
 
                         <?php } else {
                             error_log("Error: " . $mysqli->error);
-                            echo "<p class='error' style='padding: 20px 0 20px 0;'>Invalid</p>";
+                            echo "<div class='chat-area-inner'>
+                            <h4>Your messages will display here</h4>
+                        </div>";
                         }
                         ?>
                     </div>

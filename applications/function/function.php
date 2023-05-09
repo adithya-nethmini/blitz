@@ -362,6 +362,7 @@ function addTask($username, $name, $description, $priority, $deadline, $status)
 /* Apply Leave */
 function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username, $assigned_person)
 {
+    $user = $_SESSION['user'];
     $mysqli = connect();
     $args = func_get_args();
 
@@ -382,32 +383,83 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
         return $value;
     }, $args);
 
-    
-    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
-    $stmt->bind_param("s", $username);
-    if (!$stmt->execute()) {
-        $error_message = "Notification insert failed: " . $stmt->error;
-        return $error_message;
+
+
+
+    $sql = "SELECT * FROM e_leave WHERE name = '$user' AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))";
+    $result = mysqli_query($mysqli, $sql);
+    $count_rows = mysqli_num_rows($result);
+
+    if ($count_rows > 0) {
+        // User has already taken a leave during requested time period
+        echo "<div id='error-popup' class='error-popup'>
+        <span class='error-popup-close'>&times;</span>
+        <div>
+            <i class='fa-solid fa-triangle-exclamation' style='font-size:50px'></i>
+        </div>
+        <div class='popup-inner'>
+            <p>You have already taken a leave during the requested time period</p>
+        </div>
+    </div>
+    <script>
+    const errorPopup = document.getElementById('error-popup');
+    const errorPopupClose = errorPopup.querySelector('.error-popup-close');
+    errorPopup.style.display = 'block';
+    errorPopupClose.addEventListener('click', function() {
+      errorPopup.style.display = 'none';
+    });
+    </script>";
     } else {
-        $notification_id = $stmt->insert_id;
-    }
-    
-    $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person) VALUES(?, ?, ?, ?, 'Pending', ?, ?)");
-    $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
-    if (!$stmt2->execute()) {
-        $error_message = "Leave application insert failed: " . $stmt2->error;
-        return $error_message;
-    } else {
-        $leave_id = $stmt2->insert_id;
-    }
-    
-    if ($notification_id && $leave_id) {
-        header("location: leave-status.php");
-        exit();
-    } else {
-        return "An error occurred. Please try again";
+        $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
+        $stmt->bind_param("s", $username);
+        if (!$stmt->execute()) {
+            $error_message = "Notification insert failed: " . $stmt->error;
+            return $error_message;
+        } else {
+            $notification_id = $stmt->insert_id;
+        }
+
+        date_default_timezone_set('Asia/Kolkata');
+        $current_date = date('Y-m-d H:i:s');
+        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
+        $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
+        if (!$stmt2->execute()) {
+            $error_message = "Leave application insert failed: " . $stmt2->error;
+            return $error_message;
+        } else {
+            $leave_id = $stmt2->insert_id;
+        }
+
+        if ($notification_id && $leave_id) {
+            echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
+        } else {
+            return "An error occurred. Please try again";
+        }
     }
 }
+
+function check_availability($start_date, $last_date, $assigned_person)
+{
+    $mysqli = connect();
+    $user = $_SESSION['user'];
+    $stmt = $mysqli->prepare("SELECT assigned_person FROM `e_leave` WHERE assigned_person = '$assigned_person' AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))");
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($database_assigned_person);
+        while ($stmt->fetch()) {
+            if ($assigned_person == $database_assigned_person) {
+                return 'no';
+                return 'Assigned Person: ' . $assigned_person;
+                return 'Assigned to be: ' . $database_assigned_person;
+            } else {
+                return 'ok';
+            }
+        }
+    }
+}
+//     }
+// }
 
 function updateProfilePic($profilepic_e, $username)
 {
@@ -467,7 +519,9 @@ function sendDirectMessage($sender, $recipient, $message)
         echo 'Notification sent';
     }
 
-    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, status) VALUES('Direct', ?, ?, ?, 'unseen')");
+    date_default_timezone_set('Asia/Kolkata');
+    $current_date = date('Y-m-d H:i:s');
+    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Direct', ?, ?, ?, '$current_date', 'unseen')");
     $stmt->bind_param("sss", $sender, $recipient, $message);
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {
@@ -510,8 +564,9 @@ function sendGroupMessage($sender, $recipient, $message)
     } else {
         echo 'Notification sent';
     }
-
-    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, status) VALUES('Group', ?, ?, ?, 'unseen')");
+    date_default_timezone_set('Asia/Kolkata');
+    $current_date = date('Y-m-d H:i:s');
+    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Group', ?, ?, ?, '$current_date', 'unseen')");
     $stmt->bind_param("sss", $sender, $recipient, $message);
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {

@@ -5,6 +5,37 @@ if (!isset($mysqli)) {
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+
+// Connect to the database
+$pdo = new PDO('mysql:host=localhost;dbname=blitz', 'root', '');
+
+// Query the data
+$query = $pdo->query("SELECT leave_type, SUM(1) AS total_leaves FROM e_leave WHERE (status = 'Accepted' OR status = 'Taken') GROUP BY leave_type");
+
+// Fetch the results as an associative array
+$data = $query->fetchAll(PDO::FETCH_ASSOC);
+
+// Format the data for charting
+$chart_data = array(
+    array('Leave Type', 'Total Leaves')
+);
+
+foreach ($data as $row) {
+    $chart_data[] = array($row['leave_type'], (int)$row['total_leaves']);
+}
+
+$chart_data = json_encode($chart_data);
+
+$query = "SELECT DATE_FORMAT(applied_date, '%M') AS month, COUNT(*) AS num_leaves FROM e_leave WHERE (status = 'Accepted' OR status = 'Taken') GROUP BY MONTH(applied_date)";
+
+$result = mysqli_query($mysqli, $query);
+$data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Step 3: Format the data for the chart (example assumes two columns: 'label' and 'value')
+$chartData = [];
+foreach ($data as $row) {
+    $chartData[] = [$row['month'], (int)$row['num_leaves']];
+}
 ?>
 
 <!DOCTYPE html>
@@ -24,6 +55,10 @@ $mysqli = connect();
 
         <div class="page-content">
             <br><br><br><br><br><br>
+            <div class="chart">
+                    <div id="pie_chart_div" style="width: 500px; height: 200px;"></div>
+                    <div id="column_chart_div" style="width: 500px; height: 200px;"></div>
+                    </div>
             <div class="heading">
                 <h1>Manage Employee Leaves</h1>
             </div>
@@ -63,7 +98,7 @@ $mysqli = connect();
 
                             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                             /* $user = $_SESSION['user']; */
-                            $sql = "SELECT * FROM e_leave WHERE status = 'Pending'";
+                            $sql = "SELECT * FROM e_leave WHERE status = 'Pending' ORDER BY applied_date";
 
                             $result = mysqli_query($con, $sql);
 
@@ -201,7 +236,7 @@ $mysqli = connect();
 
                             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                             /* $user = $_SESSION['user']; */
-                            $sql = "SELECT * FROM e_leave WHERE status = 'Accepted'";
+                            $sql = "SELECT * FROM e_leave WHERE status = 'Accepted' ORDER BY applied_date";
 
                             $result = mysqli_query($con, $sql);
 
@@ -312,7 +347,7 @@ $mysqli = connect();
 
                             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                             /* $user = $_SESSION['user']; */
-                            $sql = "SELECT * FROM e_leave WHERE status = 'Canceled'";
+                            $sql = "SELECT * FROM e_leave WHERE status = 'Canceled' ORDER BY applied_date";
 
                             $result = mysqli_query($con, $sql);
 
@@ -394,5 +429,50 @@ $mysqli = connect();
     </section>
 
 </body>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load("current", {
+        packages: ["corechart"]
+    });
+    google.charts.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = google.visualization.arrayToDataTable(<?php echo $chart_data; ?>);
+
+        var options = {
+            title: 'Leaves by Type',
+            is3D: true,
+            legend: {
+                position: 'bottom'
+            }
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+
+        chart.draw(data, options);
+    }
+</script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
+    google.charts.setOnLoadCallback(drawColumnChart);
+
+    function drawColumnChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Label');
+        data.addColumn('number', 'Value');
+        data.addRows(<?php echo json_encode($chartData); ?>);
+
+        var options = {
+            title: 'Monthly Leave Allocation and Consumption: A Comparative Analysis',
+            // Set additional chart options here
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('column_chart_div'));
+        chart.draw(data, options);
+    }
+</script>
 
 </html>
