@@ -106,6 +106,22 @@ if (mysqli_query($mysqli,$sql)) {
         <div class="page">
 
             <div class="page-content">
+                <div class="group">
+                    <?php
+                    $id = $_GET['id'];
+                    $qry = "SELECT id,name,start_date,end_date,status from project_list WHERE id= '$id'";
+                    $result = $mysqli->query($qry);
+
+                    if ($result->num_rows > 0) {
+                            $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
+                            $id = $row ['id'];
+                            echo '
+                    <div class= "button_new">
+                        <a href="progress.php?id=' . $id . '"><i class="fa-solid fa-bars-progress"></i>&nbsp;&nbsp;Progress</a>
+                    </div>';
+                    }
+                    ?>
+                </div>
                 <div class="leave-container1">
 
                     <div class="header">

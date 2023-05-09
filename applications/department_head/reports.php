@@ -245,7 +245,7 @@ $mysqli = connect();
                         $month = date('m');
                         $year = date('Y');
 
-                        $leave_query = "SELECT SUM(DATEDIFF(last_date, start_date) + 1) as total_leave FROM e_leave WHERE name = '$name' AND (start_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR last_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR (start_date < '$year-$month-01' AND last_date > LAST_DAY('$year-$month-01'))) AND status = 'Accepted'";
+                        $leave_query = "SELECT SUM(DATEDIFF(last_date, start_date) + 1) as total_leave FROM e_leave WHERE name = '$username' AND (start_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR last_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR (start_date < '$year-$month-01' AND last_date > LAST_DAY('$year-$month-01'))) AND status = 'Accepted'";
                         $leave_result = mysqli_query($mysqli, $leave_query);
                         $leave_row = mysqli_fetch_assoc($leave_result);
                         $total_leave = $leave_row['total_leave'];
@@ -253,7 +253,7 @@ $mysqli = connect();
                         $days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
                         $total_working_days = 0;
 
-                        $leave_query = "SELECT * FROM e_leave WHERE name = '$name' AND (start_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month' OR last_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month'AND status = 'Accepted')";
+                        $leave_query = "SELECT * FROM e_leave WHERE name = '$username' AND (start_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month' OR last_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month'AND status = 'Accepted')";
                         $leave_result = mysqli_query($mysqli, $leave_query);
                         $leave_count = mysqli_num_rows($leave_result);
 
@@ -264,7 +264,7 @@ $mysqli = connect();
                                 $is_leave_day = false;
                                 $leave_from = '';
                                 $leave_to = '';
-                                mysqli_data_seek($leave_result, 0); // reset pointer to beginning of result set
+                                mysqli_data_seek($leave_result, 0);
                                 while ($leave_row = mysqli_fetch_assoc($leave_result)) {
                                     $leave_date_from = date_create($leave_row['start_date']);
                                     $leave_date_to = date_create($leave_row['last_date']);
