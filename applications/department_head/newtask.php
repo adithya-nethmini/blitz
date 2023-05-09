@@ -152,8 +152,8 @@ if(isset($_POST['submit'])) {
     <input type="text" id="name" placeholder="Enter Task Name" name="name" required>
     <label for="status">Status:</label>
     <select name="status" id="status" class="custom-select custom-select-sm">
-        <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Pending</option>
-        <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>On-Hold</option>
+        <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Started</option>
+        <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>On-Progress</option>
         <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Done</option>
     </select>
     <br>
@@ -174,7 +174,7 @@ if(isset($_POST['submit'])) {
     <br>
     <br>
     <label for="task_assigned">Task Assigned To:</label>
-    <select required name="task_assigned" id="task_assigned" class="custom-select custom-select-sm">
+    <select required name="task_assigned" id="task_assigned" class="custom-select custom-select-sm" >
         <option></option>
         <?php
         $sql = ("SELECT employeeid,name,jobrole FROM employee") ;
@@ -187,7 +187,7 @@ if(isset($_POST['submit'])) {
                     $name= $row['name'];
                     $jobrole = $row['jobrole'];
                     ?>
-                    <option value="<?php echo $row['employeeid'] ?>" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>><?php echo $name . " - " . $jobrole?></option>
+                    <option value="<?php echo $row['employeeid']."-".$row['name'] ?>" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>><?php echo $employeeid ."". " - " .$name ."". " - " . $jobrole?></option>
                     <?php
                 }
             }
@@ -204,5 +204,9 @@ if(isset($_POST['submit'])) {
             <button class="inner2" type="submit" name="submit1"><b><a href="project_list.php" >Cancel</a></b></button>
         </div>
     </div>
+    <script>
+
+
+    </script>
 </form>
 </body>

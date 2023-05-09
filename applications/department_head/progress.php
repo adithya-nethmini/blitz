@@ -1,15 +1,11 @@
 <?php
 if(!isset($mysqli)){include 'functions.php';}
-include 'sidebar.php';
+//include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
-$sql = "SELECT count(*) as total FROM project_list";
-$result = mysqli_query($mysqli, $sql);
-$row = mysqli_fetch_assoc($result);
-$qry = "SELECT count(*) as sum FROM task";
-$result = mysqli_query($mysqli, $qry);
-$row1 = mysqli_fetch_assoc($result);
+$current_date = date('Y-m-d');
 ?>
+
 <!--<div class="col-lg-12">-->
 <!--    <div class="card card-outline card-primary">-->
 <!--        <div class="card-body">-->
@@ -76,55 +72,48 @@ $row1 = mysqli_fetch_assoc($result);
     <title>Blitz</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="progress.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://kit.fontawesome.com/21e5980a06.js" crossorigin="anonymous"></script>
 </head>
-<section>
-    <div class="profile-container">
 
-        <div class="page">
+    <div class="page">
 
-            <div class="page-content">
-                <div class="group">
-                    <div class= "button">
-                    <a href="project_list.php"><i class="fa-solid fa-sheet-plastic"></i> &nbsp;&nbsp;<?= $row['total'] ?> Projects</a>
-                    </div>
-                    <div class= "button">
-                        <a href="task_list.php"><i class="fa-solid fa-list-check"></i> &nbsp;&nbsp;<?= $row1['sum'] ?> Tasks</a>
-                    </div>
-                    <div class= "button1">
-                    <a href="emp_details.php"><i class="fa-solid fa-users"></i> &nbsp;&nbsp;Employee details</a>
-                    </div>
+        <div class="page-content">
+            <div class="group">
+                <?php
+                $id = $_GET['id'];
+                $qry = "SELECT id,name,start_date,end_date,status from project_list WHERE id= '$id'";
+                $result = $mysqli->query($qry);
+
+                if ($result->num_rows > 0) {
+                    $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
+                    $id = $row ['id'];
+                    $start_date = $row ['start_date'];
+                    $end_date = $row ['end_date'];
+                    echo '
+                    <div class= "button_new">
+                        <a href="project_view.php?id=' . $id . '"><i class="fa-sharp fa-solid fa-arrow-left"></i>&nbsp;&nbsp;Back</a>
+                    </div>';
+                }
+                ?>
+            </div>
+        <div class="containers">
+            <div class="leave-container1">
+
+                <div class="header">
+                    <div class="topic"><h3>Overall Project Progress Up To <?php
+                            echo $current_date;
+                            ?> </h3></div>
                 </div>
-                <div class="leave-container1">
-
-                    <div class="header">
-                        <div class="topic"><h3>Project Progress</h3></div>
-                    </div>
-
-                    <div class="all-tasks">
-
-                        <table id="table" class="task-tbl">
-
-                    </div>
-                    <tr  class="table-header">
-                        <th>Project</th>
-                        <th>Progress </th>
-                        <th>Status</th>
-                        <th>View Project</th>
-                    </tr>
-                    <?php
-                    $qry = "SELECT id,name,start_date,end_date,status from project_list";
+                 <?php
+                    $id = $_GET['id'];
+                    $qry = "SELECT id,name,start_date,end_date,status from project_list WHERE id= '$id' ";
                     $result = $mysqli->query($qry);
 
                     if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $id = $row ['id'];
-                            echo '
-                <tr>
-                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>';
+                        $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
                             $completed_tasks_query = "SELECT COUNT(*) FROM task_list WHERE project_id = '$id' AND status = 5";
                             $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
                             $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
@@ -139,85 +128,71 @@ $row1 = mysqli_fetch_assoc($result);
 
                             $project_progress = number_format($project_progress, 1);
 
-                            echo '<td><div class="container_pro">
-                        <div class="project progress project_' . $id . ' "> '. $project_progress .' %</div>
-                        </div></td>';
+                            $remaining_tasks = $total_tasks - $completed_tasks;
+
+                            echo '<div class="container_pro">
+                        <div id="bar" class="project progress project_' . $id . ' "> '. $project_progress .' %</div>
+                        </div>';
                             echo '<style>
                                   .progress.project_' . $id . ' {
                                     width: ' . $project_progress . '%;
                                    }
                                   </style>';
-                            if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
-                            elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
-                            elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
-                            echo ' <td><div class="dropdown">
-                        <div class="dropbtn"><a href="project_view.php?id='.$id.'">View</a></div>
-                    </div>
-                    </td>';
-
-                        }
-                    }
-                    else{
-                        echo mysqli_error($mysqli);
-                    }
-                    ?>
-
-                    </tr>
-                    </table>
-                </div></div>
-
-                <div class="leave-container2">
-
-                    <div class="header">
-                        <div class="topic"><h3>Task Progress</h3></div>
-                    </div>
-
-                    <div class="all-tasks">
-
-                        <table id="table" class="task-tbl">
-
-                    </div>
-                    <tr  class="table-header">
-                        <th>Task</th>
-                        <th>Proof Of Work </th>
-                        <th>Status</th>
-                        <th>View Task</th>
-                    </tr>
-                    <?php
-                    $qry = "SELECT id,name,start_date,end_date,status,proofs from task";
-                    $result = $mysqli->query($qry);
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $id = $row ['id'];
-                            $proofs = $row['proofs'];
                             echo '
-                <tr>
-                    <td>' . $row['name'] . '<br>Due date : ' . $row['end_date'] . '</td>
-                    <td>
-                        ';if (!is_null($proofs)) {
-                            echo '<span id="upload"> Uploaded</span>';
-                        }
-                        else{
-                            echo '<span id="upload1"> Not Uploaded</span>';
-                        }
-                        echo'
-                    </td>';
-                            if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
-                            elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
-                            elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
-                            echo ' <td><div class="dropdown">
-                        <div class="dropbtn"><a href="task_view.php?id='.$id.'">View</a></div>
-                    </div>
-                    </td>';
+                                <div class="task_pro">
+                                        <div class ="total"><i class="fa-solid fa-list-check"></i><br>Total Tasks:&nbsp;'.$total_tasks.'</div>
+                                        <div class="vl"></div>
+                                        <div class ="total1"><i class="fa-solid fa-square-check"></i><br>Completed Tasks:&nbsp;'.$completed_tasks.'</div>
+                                        <div class="vl"></div>
+                                        <div class ="total1"><i class="fa-solid fa-stopwatch"></i><br>Remaining Tasks:&nbsp;'.$remaining_tasks.'</div>
+                                        <div class="vl"></div>
+                                        <div class ="total1"><i class="fa-solid fa-circle-half-stroke"></i><br>Overall Progress:&nbsp;'.$project_progress.'%</div>
+                                </div>
+                                
+                                ';
 
-                        }
-                    }
-                    else{
-                        echo mysqli_error($mysqli);
-                    }
-                    ?>
+}?>
+            </div>
+            <div class="leave-container2">
 
-                    </tr>
-                    </table>
+                <div class="header">
+                    <div class="topic1"><h3>Project Launched Date </h3></div>
+                <?php
+                $formatted_date = date('jS \of F Y', strtotime($start_date));
+                 echo '<div class ="total2">&nbsp;'.$formatted_date.'</div>';
+                ?>
                 </div>
+                    <br>
+                    <div class="topic1"><h3>Remaining Days </h3></div>
+                    <?php
+                    $current_timestamp = time();
+                    $end_timestamp = strtotime($end_date);
+
+                    $days = ($end_timestamp > $current_timestamp) ?
+                        floor(abs($end_timestamp - $current_timestamp) / (60 * 60 * 24)) :
+                        0;
+
+                    echo '<div class ="total2"><div class="inside1">&nbsp;'.$days.'</div>Days</div>';
+                    ?>
+                </div>
+
+            </div>
+        </div>
+<script>
+function move() {
+  var elem = document.getElementById("bar");
+  var width = 0;
+  var id = setInterval(frame, 20);
+  function frame() {
+    if (width >= <?php echo $project_progress; ?>) {
+      clearInterval(id);
+    } else {
+      width++;
+      elem.style.width = width + '%';
+      elem.innerHTML = width * 1  + '%';
+    }
+  }
+}
+
+move();
+</script>
