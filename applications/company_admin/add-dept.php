@@ -179,6 +179,7 @@ function input_data($data) {
     <span class="error">* </span>  
 </div>
     <div class="error"> <?php echo $nameErr; ?> </div>  
+    <div class="error"> <?php echo $nameErr; ?> </div>  
 </div>
 <br><br>  
 </div>
