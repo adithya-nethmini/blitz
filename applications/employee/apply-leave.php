@@ -41,14 +41,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                     <div>
                         <h3>Apply&nbsp;For&nbsp;Leave</h3>
                     </div>
-                    
+
                     <form action="" method="POST" id="availability-form">
 
                         <!-- <div style="display: flex;flex-direction:row"> -->
                         <div name="first">
-
+                        <label for="">Leave Type&nbsp;:</label>
                             <select name="leave_type" onchange="showSecondDiv()" id="leave-select" required>
-                                <option value="none" selected disabled hidden>Select an Option</option>
+                                <option value="" selected disabled hidden>Select an Option</option>
                                 <option value="Annual Leave">Annual Leave</option>
                                 <option value="Sick Leave">Sick Leave</option>
                                 <option value="Casual Leave">Casual Leave</option>
@@ -72,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
 
                             <div name="end">
                                 <label for="">Last&nbsp;Date&nbsp;:</label>
-
                                 <input type="date" id="last-date" name="last_date" min="<?php echo date("Y-m-d") ?>" max="<?php echo date("Y-m-d", strtotime('+14 days')) ?>" required>
 
                             </div>
@@ -80,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                             <div>
                                 <label for="">Assigned&nbsp;Person&nbsp;:</label>
                                 <select name="assigned_person" id="assigned_person">
-                                    <option value="none" selected disabled hidden>Select an Option</option>
+                                    <option selected disabled hidden>Select an Option</option>
                                     <?php
                                     $mysqli = connect();
                                     $sql = "SELECT name FROM employee WHERE username NOT IN (SELECT name FROM e_leave WHERE status IN (?, ?))";
@@ -206,6 +205,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
         const assigned_person_select = document.getElementById("assigned_person");
         const availability_span = document.getElementById("availability");
 
+        // const assigned_person_select = document.getElementById("assigned_person");
+        const default_option = document.createElement("option");
+        default_option.value = "";
+        default_option.text = "Select an Option";
+        default_option.disabled = true;
+        default_option.hidden = true;
+        default_option.selected = true;
+        assigned_person_select.insertBefore(default_option, assigned_person_select.firstChild);
+
+
         start_date_input.addEventListener("change", checkAvailability);
         last_date_input.addEventListener("change", checkAvailability);
         assigned_person_select.addEventListener("change", checkAvailability);
@@ -215,7 +224,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
             const start_date = start_date_input.value;
             const last_date = last_date_input.value;
 
-            if (assigned_person !== '' && start_date !== '' && last_date !== '') {
+            if (start_date === '' || last_date === '') {
+                availability_span.innerHTML = "Please select both start date and last date";
+            } else if (assigned_person === '') {
+                availability_span.innerHTML = "Please select an employee";
+            } else {
                 const xhttp = new XMLHttpRequest();
                 xhttp.onreadystatechange = function() {
                     if (this.readyState === 4 && this.status === 200) {
@@ -224,8 +237,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                 };
                 xhttp.open("GET", "check.php?assigned_person=" + assigned_person + "&start_date=" + start_date + "&last_date=" + last_date, true);
                 xhttp.send();
-            } else {
-                availability_span.innerHTML = "Please select both start date and last date";
             }
         }
     </script>

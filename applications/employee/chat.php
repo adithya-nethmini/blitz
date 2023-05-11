@@ -23,7 +23,7 @@ if (isset($_GET['logout'])) {
     <section>
 
         <div class="page-content">
-            <div class="chat-container">
+            <!-- <div class="chat-container"> -->
                 <div class="main-chat-container-inner">
                     <a class="member-a" href="group-chat.php">
                         <div class="main-chat-member">

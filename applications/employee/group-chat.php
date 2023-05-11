@@ -28,12 +28,26 @@ if (isset($_GET['logout'])) {
 
                 <div class="member-chat">
 
-                    <div class="member-section">
+                    
 
-                        <div class="div-back-arrow">
+                    <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
+                        <!-- <div class="div-back-arrow">
                             <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
-                        </div>
+                        </div> -->
+                        <div class="main-chat-container-inner">
 
+                    <a class="member-a" href="direct-chat.php">
+                        <div class="main-chat-member" style="background-color: #ffffff;">
+                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
+                        </div>
+                    </a>
+                    <a class="member-a" href="group-chat.php">
+                        <div class="main-chat-member">
+                            <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
+                        </div>
+                    </a>
+                    
+                </div>
                         <div class="member-section-inner">
 
                             <?php
@@ -70,7 +84,7 @@ if (isset($_GET['logout'])) {
                                         ?>
 
                                         <a class="member-a" href="open-group-chat.php?id=<?php echo $row['id']; ?>">
-                                            <div class="member">
+                                            <div class="member" style="width: 275px;">
                                                 <?php echo $row['name']; 
                                                 if ($count > 0) : ?>
                                                 <div class="div-badge">

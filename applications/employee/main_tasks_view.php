@@ -120,10 +120,10 @@ if (isset($_POST['submit'])) {
                                         <?php if (!empty($task['proofs']) && !empty($task['proof_name'])) {
                                             // display the proofs and proof_name
                                             $pdf_data = $task['proofs']; ?>
+                                                <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json"  background="transparent"  speed="1"  style="width: 45px; height: 45px;"  loop autoplay></lottie-player>
                                             <div class="div-pdf">
                                                 <img src="proofs/pdf.png" class="pdf-icon" alt="Proof Pdf">
                                                 <span><?php echo $task['proof_name']; ?></span>
-                                                <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json"  background="transparent"  speed="1"  style="width: 45px; height: 45px;"  loop autoplay></lottie-player>
                                             </div>
                                             <form method="POST" enctype="multipart/form-data" action="">
                                                 <div class="div-upload">

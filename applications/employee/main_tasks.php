@@ -125,7 +125,7 @@ if (isset($_POST['submit'])) {
                             $emp_id = $emp_id_row['employeeid'];
 
                             // Use the employeeid in the $qry query
-                            $qry = "SELECT * FROM task WHERE empid='$emp_id-$user'";
+                            $qry = "SELECT * FROM task WHERE empid='$user'";
                             $result = $mysqli->query($qry);
 
                             if ($result->num_rows > 0) :

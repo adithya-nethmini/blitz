@@ -23,7 +23,7 @@
         exit();
     }
     
-    if(isset($_SESSION["padmin_user"])){
+    if(isset($_SESSION["company_id"])){
         header("location: partner_company/partner-profile.php");
     
         exit();
@@ -65,7 +65,7 @@
                         </div>
 
                         <div>
-                            <a href="forgot-password.php"><strong>Forgot&nbsp;Password?</strong></a>
+                            <a href="forgot_password.php"><strong>Forgot&nbsp;Password?</strong></a>
                         </div>
 
                         <div class="button-container">

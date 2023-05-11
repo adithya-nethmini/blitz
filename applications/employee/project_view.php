@@ -111,6 +111,7 @@ $user = $_SESSION['user'];
             <div class="page">
 
                 <div class="page-content1">
+                    <!-- <div class="leave-container2"></div> -->
                     <div class="leave-container2">
 
                         <div class="header">

@@ -57,16 +57,22 @@ if (!$stmt->execute()) {
                         <div class="up-outer-container">
                             <div class="up-inner-left">
                                 <h3>Description</h3>
-                                <?php if ($notification_description == "Direct Message") : ?>
+                                <?php if ($notification_description == "Direct Message") { ?>
                                     <?php echo $notification_name . ' - ' . $notification_description . ' - ' . $notification_details . 'just messaged'; ?>
-                                <?php else : ?>
+                                <?php }else { ?>
                                     <?php echo $notification_name . ' - ' . $notification_description ; ?>
-                                <?php endif; ?>
-                                <?php if ($notification_name == "Leave Cancelled" || $notification_name == "Leave Accepted") : ?>
+                                <?php } ?>
+                                <?php if ($notification_name == "Leave Cancelled" || $notification_name == "Leave Accepted") { ?>
                                     <a href="leave-status.php"><button class="btn">Leave&nbsp;Status</button></a>
-                                <?php elseif ($notification_name == "Messages") : ?>
-                                    <a href="chat.php"><button class="btn">View&nbsp;Messages</button></a>
-                                <?php endif; ?>
+                                <?php }elseif ($notification_name == "Messages"){ 
+                                    if($notification_description == "Direct Message"){?>
+                                        <a href="direct-chat.php"><button class="btn">View&nbsp;Messages</button></a>
+                                    <?php }else{?>
+                                        <a href="group-chat.php"><button class="btn">View&nbsp;Messages</button></a>
+                                    <?php }
+                                    ?>
+                                    
+                                <?php } ?>
                             </div>
 
                             <div class="up-inner-mid">

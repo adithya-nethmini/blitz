@@ -81,7 +81,7 @@ function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddr
         $stmt->bind_param("ss", $username, $hashed_password);
         $stmt->execute();
         if($stmt->affected_rows != 1){
-            return mysqli_error($mysqli);
+            echo 'error: ' . $mysqli->error;
         }else{
             echo 'success';
 		}
@@ -91,7 +91,7 @@ function registerCompany($companyname, $companyemail, $pcompanycon, $companyaddr
 	$stmt->bind_param("sssssss", $companyname, $companyemail, $pcompanycon, $companyaddress, $industry, $username, $hashed_password);
 	$stmt->execute();
 	if($stmt->affected_rows != 1){
-		return "An error occurred. Please try again";
+		echo 'error: ' . $mysqli->error;
 	}else{
 		 $_SESSION["user"] = $username; 
 		header("location: login.php");

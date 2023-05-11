@@ -308,7 +308,7 @@ function logoutUser()
 
     unset($_SESSION['login']);
     session_destroy();
-    header("location: ../../landingpage.php");
+    header("location: ../../index.php");
     exit();
 }
 /*   function logoutUser(){
@@ -371,6 +371,8 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
     //     return "Invalid data types";
     // }
 
+
+
     $args = array_map(function ($value) use ($mysqli) {
         // Escape special characters
         $value = mysqli_real_escape_string($mysqli, trim($value));
@@ -379,6 +381,7 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
         if (preg_match("/([<|>])/", $value)) {
             return "<> characters are not allowed";
         }
+
 
         return $value;
     }, $args);
@@ -410,30 +413,58 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
     });
     </script>";
     } else {
-        $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
-        $stmt->bind_param("s", $username);
-        if (!$stmt->execute()) {
-            $error_message = "Notification insert failed: " . $stmt->error;
-            return $error_message;
-        } else {
-            $notification_id = $stmt->insert_id;
-        }
+        $stmt = $mysqli->prepare("SELECT assigned_person FROM `e_leave` WHERE assigned_person = ? AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))");
+        $stmt->bind_param("s", $assigned_person);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
 
-        date_default_timezone_set('Asia/Kolkata');
-        $current_date = date('Y-m-d H:i:s');
-        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
-        $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
-        if (!$stmt2->execute()) {
-            $error_message = "Leave application insert failed: " . $stmt2->error;
-            return $error_message;
+        if (!$row) {
+            // Assigned person is not available
+            echo "<div id='error-popup' class='error-popup'>
+                <span class='error-popup-close'>&times;</span>
+                <div>
+                    <i class='fa-solid fa-triangle-exclamation' style='font-size:50px'></i>
+                </div>
+                <div class='popup-inner'>
+                    <p>The assigned person is not available. Please choose another person.</p>
+                </div>
+            </div>
+            <script>
+            const errorPopup = document.getElementById('error-popup');
+            const errorPopupClose = errorPopup.querySelector('.error-popup-close');
+            errorPopup.style.display = 'block';
+            errorPopupClose.addEventListener('click', function() {
+              errorPopup.style.display = 'none';
+            });
+            </script>";
         } else {
-            $leave_id = $stmt2->insert_id;
-        }
 
-        if ($notification_id && $leave_id) {
-            echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
-        } else {
-            return "An error occurred. Please try again";
+            $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
+            $stmt->bind_param("s", $username);
+            if (!$stmt->execute()) {
+                $error_message = "Notification insert failed: " . $stmt->error;
+                return $error_message;
+            } else {
+                $notification_id = $stmt->insert_id;
+            }
+
+            date_default_timezone_set('Asia/Kolkata');
+            $current_date = date('Y-m-d H:i:s');
+            $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
+            $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
+            if (!$stmt2->execute()) {
+                $error_message = "Leave application insert failed: " . $stmt2->error;
+                return $error_message;
+            } else {
+                $leave_id = $stmt2->insert_id;
+            }
+
+            if ($notification_id && $leave_id) {
+                echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
+            } else {
+                return "An error occurred. Please try again";
+            }
         }
     }
 }
@@ -488,51 +519,51 @@ function updateProfilePic($profilepic_e, $username)
     }
 }
 
-function sendDirectMessage($sender, $recipient, $message)
-{
-    $mysqli = connect();
-    $args = func_get_args();
+// function sendDirectMessage($sender, $recipient, $message)
+// {
+//     $mysqli = connect();
+//     $args = func_get_args();
 
-    // Validate input data types
-    if (!is_string($sender) || !is_string($recipient) || !is_string($message)) {
-        return "Invalid data types";
-    }
+//     // Validate input data types
+//     if (!is_string($sender) || !is_string($recipient) || !is_string($message)) {
+//         return "Invalid data types";
+//     }
 
-    $args = array_map(function ($value) use ($mysqli) {
-        // Escape special characters
-        $value = mysqli_real_escape_string($mysqli, trim($value));
+//     $args = array_map(function ($value) use ($mysqli) {
+//         // Escape special characters
+//         $value = mysqli_real_escape_string($mysqli, trim($value));
 
-        // Check for disallowed characters
-        if (preg_match("/([<|>])/", $value)) {
-            return "<> characters are not allowed";
-        }
+//         // Check for disallowed characters
+//         if (preg_match("/([<|>])/", $value)) {
+//             return "<> characters are not allowed";
+//         }
 
-        return $value;
-    }, $args);
+//         return $value;
+//     }, $args);
 
-    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_details, notification_type, username, status) VALUES('Messages', 'Direct Message', ?, '1', ?, 'unseen')");
-    $stmt->bind_param("ss", $sender, $recipient);
-    $stmt->execute();
-    if ($stmt->affected_rows != 1) {
-        return "An error occurred. Please try again";
-    } else {
-        echo 'Notification sent';
-    }
+//     $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_details, notification_type, username, status) VALUES('Messages', 'Direct Message', ?, '1', ?, 'unseen')");
+//     $stmt->bind_param("ss", $sender, $recipient);
+//     $stmt->execute();
+//     if ($stmt->affected_rows != 1) {
+//         return "An error occurred. Please try again";
+//     } else {
+//         echo 'Notification sent';
+//     }
 
-    date_default_timezone_set('Asia/Kolkata');
-    $current_date = date('Y-m-d H:i:s');
-    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Direct', ?, ?, ?, '$current_date', 'unseen')");
-    $stmt->bind_param("sss", $sender, $recipient, $message);
-    if ($stmt->execute()) {
-        if ($stmt->affected_rows > 0) {
-            return true; // message sent successfully
-        } else {
-            return "Error: No rows affected";
-        }
-    } else {
-        return "Error: " . $stmt->error;
-    }
-}
+//     date_default_timezone_set('Asia/Kolkata');
+//     $current_date = date('Y-m-d H:i:s');
+//     $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Direct', ?, ?, ?, '$current_date', 'unseen')");
+//     $stmt->bind_param("sss", $sender, $recipient, $message);
+//     if ($stmt->execute()) {
+//         if ($stmt->affected_rows > 0) {
+//             return true; // message sent successfully
+//         } else {
+//             return "Error: No rows affected";
+//         }
+//     } else {
+//         return "Error: " . $stmt->error;
+//     }
+// }
 
 function sendGroupMessage($sender, $recipient, $message)
 {
@@ -567,6 +598,51 @@ function sendGroupMessage($sender, $recipient, $message)
     date_default_timezone_set('Asia/Kolkata');
     $current_date = date('Y-m-d H:i:s');
     $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Group', ?, ?, ?, '$current_date', 'unseen')");
+    $stmt->bind_param("sss", $sender, $recipient, $message);
+    if ($stmt->execute()) {
+        if ($stmt->affected_rows > 0) {
+            return true; // message sent successfully
+        } else {
+            return "Error: No rows affected";
+        }
+    } else {
+        return "Error: " . $stmt->error;
+    }
+}
+
+function sendDirectMessage($sender, $recipient, $message)
+{
+    $mysqli = connect();
+    $args = func_get_args();
+
+    // Validate input data types
+    if (!is_string($sender) || !is_string($recipient) || !is_string($message)) {
+        return "Invalid data types";
+    }
+
+    $args = array_map(function ($value) use ($mysqli) {
+        //     // Escape special characters
+        //     $value = mysqli_real_escape_string($mysqli, trim($value));
+
+        //     // Check for disallowed characters
+        //     if (preg_match("/([<|>])/", $value)) {
+        //         return "<> characters are not allowed";
+        //     }
+
+        return $value;
+    }, $args);
+
+    $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_details, notification_type, username, status) VALUES('Messages', 'Direct Message', ?, '1', ?, 'unseen')");
+    $stmt->bind_param("ss", $sender, $recipient);
+    $stmt->execute();
+    if ($stmt->affected_rows != 1) {
+        return "An error occurred. Please try again";
+    } else {
+        echo 'Notification sent';
+    }
+    date_default_timezone_set('Asia/Kolkata');
+    $current_date = date('Y-m-d H:i:s');
+    $stmt = $mysqli->prepare("INSERT INTO chat(chat_type, sender, recipient, message, created_date_time, status) VALUES('Direct', ?, ?, ?, '$current_date', 'unseen')");
     $stmt->bind_param("sss", $sender, $recipient, $message);
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {

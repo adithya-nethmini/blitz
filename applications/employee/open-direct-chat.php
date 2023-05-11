@@ -23,7 +23,7 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->bind_result($username);
     while ($stmt->fetch()) {
-  
+
         // Prepare the SQL statement with a parameterized query
         $sql2 = "UPDATE chat SET status = 'seen' WHERE recipient = ? AND sender = '$user'";
         $stmt2 = $mysqli->prepare($sql2);
@@ -58,8 +58,19 @@ if ($stmt->num_rows > 0) {
             <div class="chat-container">
                 <div class="member-chat">
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
-                        <div class="div-back-arrow">
-                            <a class="back-arrow" href="chat.php"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
+                        <div class="main-chat-container-inner">
+
+                            <a class="member-a" href="direct-chat.php">
+                                <div class="main-chat-member">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
+                                </div>
+                            </a>
+                            <a class="member-a" href="group-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
+                                </div>
+                            </a>
+
                         </div>
 
                         <div class="member-section-inner">
@@ -81,7 +92,7 @@ if ($stmt->num_rows > 0) {
 
                                 // Loop through results and display name and email
                                 foreach ($results as $row) {
-                                    $member = $row['username'];
+                                    $member = strtolower($row['username']);
                                     $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
 
                                     // Execute SELECT statement
@@ -144,6 +155,8 @@ if ($stmt->num_rows > 0) {
                                 <h3><?php echo $name; ?></h3>
                             </div>
                             <hr>
+
+
                             <div class="display-message">
                                 <?php
                                 $first_sender = "";
@@ -158,7 +171,9 @@ if ($stmt->num_rows > 0) {
                                         if ($sender == $_SESSION['user']) { // Check if sender is current user
                                 ?>
                                             <div class="outgoing-messages">
+
                                                 <?php
+
                                                 $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
 
                                                 // display the date if it's different from the current date
@@ -216,6 +231,18 @@ if ($stmt->num_rows > 0) {
                                 </div>
                                 </form>
                             </div>
+                            <!-- 
+                            <div class="message-sending-section">
+                                <div class="type-message">
+                                    <form action="" method="POST">
+                                        <input type="text" name="message" id="message" class="message" required placeholder="Type your message here..." autocomplete="nope-123456789">
+                                        <input type="hidden" name="recipient" value="<?php echo $name; ?>">
+                                </div>
+                                <div class="send-message">
+                                    <button type="submit" name="submit" class="msg-send-btn">Send</button>
+                                </div>
+                                </form>
+                            </div> -->
 
                         <?php } else {
                             error_log("Error: " . $mysqli->error);
@@ -230,7 +257,6 @@ if ($stmt->num_rows > 0) {
 
         </div>
 
-        </div>
 
         <?php
 
@@ -285,4 +311,5 @@ if ($stmt->num_rows > 0) {
         }
     });
 </script>
+
 </html>

@@ -3,6 +3,7 @@
 include 'connect.php';
 include 'header.php';
 include 'sidebar.php';
+$user = $_SESSION['company_id'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +30,7 @@ include 'sidebar.php';
 <div class="flex grid-container">
         <?php
 
-$sql="SELECT offer_cover,type, name, date, amount FROM offers";
+$sql="SELECT offer_cover,type, name, date, amount FROM offers WHERE company_id='$user'";
 $result=mysqli_query($con,$sql);
 
 if($result){

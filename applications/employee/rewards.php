@@ -43,7 +43,7 @@ $user = $_SESSION['user'];
  -->
     <section>
         <div class="profile-container">
-        <div class="sharethis-sticky-share-buttons"></div>
+            <div class="sharethis-sticky-share-buttons"></div>
             <?php
 
             $mysqli = connect();
@@ -68,10 +68,12 @@ $user = $_SESSION['user'];
                                 <?php
                                 $mysqli = connect();
                                 $user = $_SESSION['user'];
-                                $sql = ("SELECT * FROM loyalty WHERE username = '$user'");
+                                date_default_timezone_set('Asia/Kolkata');
+                                $current_month = date('n');
+                                $sql = ("SELECT * FROM loyalty WHERE username = '$user' AND MONTH(month) = '$current_month'");
 
                                 $result = mysqli_query($mysqli, $sql);
-
+                                
                                 if ($result == TRUE) :
 
                                     $count_rows = mysqli_num_rows($result);
@@ -132,7 +134,7 @@ $user = $_SESSION['user'];
                                             </div>
 
                             </div>
-                            
+
 
 
                             <div class="page-content-right">
@@ -167,7 +169,7 @@ $user = $_SESSION['user'];
                 </div>
 
 
-                
+
 
         </div>
 

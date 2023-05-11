@@ -39,7 +39,7 @@ $user = $_SESSION['user'];
 
         <?php
 
-        $sql = ("SELECT * FROM notification WHERE notification_type = '1' AND username = '$user'");
+        $sql = ("SELECT * FROM notification WHERE notification_type = '1' AND username = '$user' OR username IN (SELECT name FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0)");
 
         $result = mysqli_query($mysqli, $sql);
 
@@ -81,7 +81,7 @@ $user = $_SESSION['user'];
                                                     echo $i;
                                                     $i++; ?></h3>
                                 <h4 class="read">
-                                    <?php if ($notification_description == 'Direct Message') {
+                                    <?php if ($notification_description == 'Direct Message' || $notification_description == 'Group Message') {
                                         echo  $notification_name . ' - ' . $notification_description . ' From ' . $notification_details;
                                     } else {
                                         echo  $notification_name . ' - ' . $notification_description;
@@ -94,7 +94,7 @@ $user = $_SESSION['user'];
                                                     echo $i;
                                                     $i++; ?></h3>
                                 <h4 class="unseen">
-                                    <?php if ($notification_description == 'Direct Message') {
+                                    <?php if ($notification_description == 'Direct Message' || $notification_description == 'Group Message') {
                                         echo  $notification_name . ' - ' . $notification_description . ' From ' . $notification_details;
                                     } else {
                                         echo  $notification_name . ' - ' . $notification_description;

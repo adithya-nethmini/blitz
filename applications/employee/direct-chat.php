@@ -29,8 +29,19 @@ if (isset($_GET['logout'])) {
                 <div class="member-chat">
 
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
-                        <div class="div-back-arrow">
-                            <a class="back-arrow" href="javascript:history.back()"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
+                        <div class="main-chat-container-inner">
+
+                            <a class="member-a" href="direct-chat.php">
+                                <div class="main-chat-member">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
+                                </div>
+                            </a>
+                            <a class="member-a" href="group-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
+                                </div>
+                            </a>
+
                         </div>
                         <div class="member-section-inner">
 
@@ -52,7 +63,7 @@ if (isset($_GET['logout'])) {
 
                                 // Loop through results and display name and email
                                 foreach ($results as $row) {
-                                    $member = $row['username'];
+                                    $member = strtolower($row['username']);
                                     $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
 
                                     // Execute SELECT statement
@@ -68,15 +79,15 @@ if (isset($_GET['logout'])) {
                                         // echo $sender_unseen, $member;
                             ?>
 
-                                        <a class="member-a" href="open-direct-chat-test.php?username=<?php echo $member; ?>">
+                                        <a class="member-a" href="open-direct-chat.php?username=<?php echo $member; ?>">
                                             <div class="member">
                                                 <?php echo $row['name'];
 
                                                 if ($count > 0) : ?>
                                                     <div class="div-badge">
-                                                    <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
-                                                </div>
-                                                    <?php endif; ?>
+                                                        <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
+                                                    </div>
+                                                <?php endif; ?>
                                             </div>
                                         </a>
 

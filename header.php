@@ -9,9 +9,9 @@ if(isset($_GET['logout'])){
     unset($_SESSION['login']);
     session_destroy();
     if($currentpage == "/github/blitz/home.php"){
-        header("location: landingpage.php"); 
+        header("location: index.php"); 
     }else{
-        header("location: landingpage.php"); 
+        header("location: index.php"); 
     }
     exit();
 }

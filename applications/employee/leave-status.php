@@ -64,8 +64,8 @@ foreach ($data as $row) {
                 <div class="page-content">
 
                     <div class="chart">
-                    <div id="pie_chart_div" style="width: 500px; height: 200px;"></div>
-                    <div id="column_chart_div" style="width: 500px; height: 200px;"></div>
+                        <div id="pie_chart_div" style="width: 500px; height: 200px;"></div>
+                        <div id="column_chart_div" style="width: 500px; height: 200px;"></div>
                     </div>
 
                     <div class="leave-container">
@@ -159,8 +159,13 @@ foreach ($data as $row) {
                                                 <b class="status-cancel"><?php echo $status ?></b>
                                             <?php endif ?>
                                         </td>
-                                        <td class="action-col">
-                                            <a href="delete-leave?id=<?= $id ?>" onclick="return confirm('Are you sure you want to delete?')"><button class="btn-task-delete">Delete</button></a>
+                                        <td class="action">
+                                            <?php if ($status == 'Pending') { ?>
+                                                <a href="update-leave.php?id=<?= $id ?>"><button class="btn-task-update">Update</button></a>
+                                                <a href="delete-leave?id=<?= $id ?>" onclick="return confirm('Are you sure you want to delete?')"><button class="btn-task-delete">Delete</button></a>
+                                            <?php } else { ?>
+                                                <i class='fa-solid fa-circle-check'></i>
+                                            <?php                                        } ?>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -241,7 +246,6 @@ foreach ($data as $row) {
                                         <th>End&nbsp;Date</th>
                                         <th>Assigned&nbsp;To</th>
                                         <th>Status</th>
-                                        <th>Action</th>
                                     </tr>
 
                                     <?php
@@ -301,9 +305,6 @@ foreach ($data as $row) {
                                             <?php else : ?>
                                                 <b class="status-cancel"><?php echo $status ?></b>
                                             <?php endif ?>
-                                        </td>
-                                        <td class="action-col">
-                                            <a href="delete-leave?id=<?= $id ?>" onclick="return confirm('Are you sure you want to delete?')"><button class="btn-task-delete">Delete</button></a>
                                         </td>
                                     </tr>
                                 </tbody>
