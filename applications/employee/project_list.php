@@ -103,6 +103,7 @@ if (isset($_POST['submit'])) {
                     </tr>
                     <?php
                     $user = $_SESSION['user'];
+                    
                     $qry = "SELECT * FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0";
                     $result = $mysqli->query($qry);
 

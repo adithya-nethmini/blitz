@@ -46,7 +46,23 @@ if (isset($_GET['logout'])) {
                             <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
                         </div>
                     </a>
-                    
+                    <?php
+                            $mysqli = connect();
+                            $stmt = $mysqli->prepare("SELECT manager_id FROM project_list WHERE manager_id = '$user'");
+                            $stmt->execute();
+                            $stmt->store_result();
+                            if ($stmt->num_rows > 0) {
+                                $stmt->bind_result($manager);
+                                while ($stmt->fetch()) {?>
+                            <a class="member-a" href="dept_head-chat.php">
+                                <div class="main-chat-member" style="background-color: #D9D9D9;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                </div>
+                            </a>
+                                <?php }
+                            }
+                            ?>
+
                 </div>
                         <div class="member-section-inner">
 
@@ -83,7 +99,7 @@ if (isset($_GET['logout'])) {
                                         $count = $row2['COUNT(*)'];
                                         ?>
 
-                                        <a class="member-a" href="open-group-chat.php?id=<?php echo $row['id']; ?>">
+                                        <a class="member-a" href="open-depat_head-chat.php?id=<?php echo $row['id']; ?>">
                                             <div class="member" style="width: 275px;">
                                                 <?php echo $row['name']; 
                                                 if ($count > 0) : ?>

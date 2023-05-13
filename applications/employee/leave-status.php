@@ -426,7 +426,6 @@ foreach ($data as $row) {
 
         var options = {
             title: 'Monthly Leave Allocation and Consumption: A Comparative Analysis',
-            // Set additional chart options here
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('column_chart_div'));

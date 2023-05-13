@@ -23,7 +23,7 @@ $stmt->store_result();
 if ($stmt->num_rows > 0) {
     $stmt->bind_result($username);
     while ($stmt->fetch()) {
-  
+
         // Prepare the SQL statement with a parameterized query
         $sql2 = "UPDATE chat SET status = 'seen' WHERE recipient = ? AND sender = '$user'";
         $stmt2 = $mysqli->prepare($sql2);
@@ -58,73 +58,103 @@ if ($stmt->num_rows > 0) {
             <div class="chat-container">
                 <div class="member-chat">
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
-                        <div class="div-back-arrow">
-                            <a class="back-arrow" href="chat.php"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
-                        </div>
-
-                        <div class="member-section-inner">
+                        <div class="main-chat-container-inner">
+                            <a class="member-a" href="direct-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Direct Messages</h3>
+                                </div>
+                            </a>
+                            <a class="member-a" href="group-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Group Chat</h3>
+                                </div>
+                            </a>
                             <?php
-                            $user = $_SESSION['user'];
-
-                            try {
-                                // Establish database connection using PDO
-                                $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
-
-                                // Prepare SELECT statement
-                                $stmt = $pdo->prepare("SELECT * FROM employee");
-
-                                // Execute SELECT statement
-                                $stmt->execute();
-
-                                // Fetch results as associative array
-                                $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                                // Loop through results and display name and email
-                                foreach ($results as $row) {
-                                    $member = $row['username'];
-                                    $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
-
-                                    // Execute SELECT statement
-                                    $stmt2->execute();
-
-                                    // Fetch results as associative array
-                                    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
-
-                                    // Loop through results and display name and email
-                                    foreach ($results2 as $row2) {
-                                        $sender_unseen = $row2['sender'];
-                                        $count = $row2['COUNT(*)'];
-                                        // echo $sender_unseen, $member;
-                            ?>
-
-                                        <a class="member-a" href="open-direct-chat.php?username=<?php echo $member; ?>">
-                                            <div class="member">
-                                                <?php echo $row['name'];
-
-                                                if ($count > 0) : ?>
-                                                    <a href="chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
-
-                                                    <?php endif; ?><?php
-
-                                                                    if ($count > 0 && $sender_unseen == $member) {
-                                                                        echo $count;
-                                                                    }
-
-                                                                    ?>
-
-                                            </div>
-                                        </a>
-
-                            <?php
-                                    }
-                                }
-                            } catch (PDOException $e) {
-                                echo "Database connection failed: " . $e->getMessage();
-                                exit;
+                            $mysqli = connect();
+                            $stmt = $mysqli->prepare("SELECT manager_id FROM project_list WHERE manager_id = '$user'");
+                            $stmt->execute();
+                            $stmt->store_result();
+                            if ($stmt->num_rows > 0) {
+                                $stmt->bind_result($manager);
+                                while ($stmt->fetch()) { ?>
+                                    <a class="member-a" href="depat_head-chat.php">
+                                        <div class="main-chat-member" style="background-color: #D9D9D9;">
+                                            <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                        </div>
+                                    </a>
+                            <?php }
                             }
                             ?>
-                        </div>
 
+                        </div>
+                        <div class="member-section-inner">
+
+                            <?php
+                            $user = $_SESSION['user'];
+                            $stmt = $mysqli->prepare("SELECT department FROM employee WHERE username = '$user'");
+                            $stmt->execute();
+                            $stmt->store_result();
+                            if ($stmt->num_rows > 0) {
+                                $stmt->bind_result($department);
+                                while ($stmt->fetch()) {
+
+                                    try {
+                                        // Establish database connection using PDO
+                                        $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
+
+
+                                        // Prepare SELECT statement
+                                        $stmt = $pdo->prepare("SELECT * FROM dept_head WHERE department = '$department'");
+
+                                        // Execute SELECT statement
+                                        $stmt->execute();
+
+                                        // Fetch results as associative array
+                                        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                                        // Loop through results and display name and email
+                                        foreach ($results as $row) {
+                                            $member = strtolower($row['name']);
+                                            $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$user' AND sender = '$member'");
+
+                                            // Execute SELECT statement
+                                            $stmt2->execute();
+
+                                            // Fetch results as associative array
+                                            $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+                                            // Loop through results and display name and email
+                                            foreach ($results2 as $row2) {
+                                                $sender_unseen = $row2['sender'];
+                                                $count = $row2['COUNT(*)'];
+                                                // echo $sender_unseen, $member;
+                            ?>
+
+                                                <a class="member-a" href="open-dept_head-chat.php?name=<?php echo $member; ?>">
+                                                    <div class="member">
+                                                        <?php echo $row['name'];
+
+                                                        if ($count > 0) : ?>
+                                                            <div class="div-badge">
+                                                                <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </a>
+
+                            <?php
+                                            }
+                                        }
+                                    } catch (PDOException $e) {
+                                        echo "Database connection failed: " . $e->getMessage();
+                                        exit;
+                                    }
+                                }
+                            }
+                            ?>
+
+
+                        </div>
                     </div>
                     <div class="vertical-line"></div>
                     <div class="chat-area">
@@ -132,23 +162,25 @@ if ($stmt->num_rows > 0) {
                         <?php
 
                         $user = $_SESSION['user'];
-                        $stmt = $mysqli->prepare("SELECT name,username FROM `employee` WHERE `username` = ?");
-                        $stmt->bind_param("s", $_GET['username']);
+                        $stmt = $mysqli->prepare("SELECT name FROM `dept_head` WHERE `name` = ?");
+                        $stmt->bind_param("s", $_GET['name']);
                         $stmt->execute();
                         $stmt->store_result();
                         if ($stmt->num_rows == 1) {
-                            $stmt->bind_result($name, $username);
+                            $stmt->bind_result($name);
                             $stmt->fetch();
                         ?>
                             <div class="chat-name-display">
                                 <h3><?php echo $name; ?></h3>
                             </div>
                             <hr>
+
+
                             <div class="display-message">
                                 <?php
                                 $first_sender = "";
                                 $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE chat_type = 'Direct' AND (`recipient` = ? AND `sender` = ?) OR (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
-                                $stmt->bind_param("ssss", $_SESSION['user'], $username, $username, $_SESSION['user']);
+                                $stmt->bind_param("ssss", $_SESSION['user'], $name, $name, $_SESSION['user']);
                                 $stmt->execute();
                                 $stmt->store_result();
                                 if ($stmt->num_rows > 0) {
@@ -158,7 +190,9 @@ if ($stmt->num_rows > 0) {
                                         if ($sender == $_SESSION['user']) { // Check if sender is current user
                                 ?>
                                             <div class="outgoing-messages">
+
                                                 <?php
+
                                                 $message_date = date("Y-m-d", strtotime($created_date_time)); // extract the date from the created_date_time
 
                                                 // display the date if it's different from the current date
@@ -206,17 +240,17 @@ if ($stmt->num_rows > 0) {
 
 
                             <div class="message-sending-section">
+                                <?=$name?>
                                 <div class="type-message">
                                     <form action="" method="POST">
                                         <input type="text" name="message" id="message" class="message" required placeholder="Type your message here..." autocomplete="nope-123456789">
-                                        <input type="hidden" name="recipient" value="<?php echo $username; ?>">
+                                        <input type="hidden" name="recipient" value="<?php echo $name; ?>">
                                 </div>
                                 <div class="send-message">
                                     <button type="submit" name="submit" class="msg-send-btn">Send</button>
                                 </div>
                                 </form>
                             </div>
-
                         <?php } else {
                             error_log("Error: " . $mysqli->error);
                             echo "<div class='chat-area-inner'>
@@ -230,7 +264,6 @@ if ($stmt->num_rows > 0) {
 
         </div>
 
-        </div>
 
         <?php
 
@@ -275,6 +308,15 @@ if ($stmt->num_rows > 0) {
     function saveScrollPosition(key, element) {
         localStorage.setItem(key, element.scrollTop.toString());
     }
+</script>
+<script>
+    // Reload the page if the message input field loses focus
+    document.addEventListener("click", function(event) {
+        var messageInput = document.getElementById("message");
+        if (document.activeElement !== messageInput) {
+            location.reload();
+        }
+    });
 </script>
 
 </html>

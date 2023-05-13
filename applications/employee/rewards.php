@@ -73,7 +73,7 @@ $user = $_SESSION['user'];
                                 $sql = ("SELECT * FROM loyalty WHERE username = '$user' AND MONTH(month) = '$current_month'");
 
                                 $result = mysqli_query($mysqli, $sql);
-                                
+
                                 if ($result == TRUE) :
 
                                     $count_rows = mysqli_num_rows($result);

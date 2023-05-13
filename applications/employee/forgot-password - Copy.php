@@ -1,6 +1,6 @@
 <?php 
 
-    require("../function/function.php");
+require("function/function.php");
     if(isset($_POST['submit'])){
         $response = forgotPassword(@$_POST['email']);
     }

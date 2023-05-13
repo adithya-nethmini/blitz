@@ -2,60 +2,43 @@
 include '../function/function.php';
 include 'sidebar.php';
 include 'header.php';
-
-if (!isset($_SESSION["user"])) {
-    header("location: login.php");
-
-    exit();
-}
-
-
+$mysqli = connect();
+$user = $_SESSION['user'];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <title>Blitz</title>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance</title>
-    <link rel="stylesheet" href="../../views/css/performance.css">
-    <link rel="stylesheet" href="../../views/css/header.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="stylesheet" href="../../views/css/reports.css">
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
+    <script src="https://kit.fontawesome.com/21e5980a06.js" crossorigin="anonymous"></script>
 </head>
+<section>
+    <div class="profile-container">
 
-<body>
+        <div class="page">
 
-    <section>
+            <div class="page-content">                              
 
-        <div class="page-content">
-            <div class="topic">
-                <h2>Member Performance Evaluation</h2>
-            </div>
             <div class="leave-container2">
 
                 <div class="header">
-
-
-
-                    <div class="button_p" style="float:right">
+                    <div class="topic"><h3>Member Performance Evaluation</h3></div>
+                    <div class= "button_p">
                         <button style="background-color:transparent;border:none;color:white" id="PrintButton" onclick="PrintTable()"><i class='fa-solid fa-print'></i>Print</button>
-                        <!-- <a href=""><i class='fa-solid fa-print'></i>Print</a> -->
                     </div>
                 </div>
 
                 <div class="all-tasks">
 
                     <table id="table" class="task-tbl">
-                        <?php $current_date = date('F'); ?>
-                        <caption style="padding-bottom:10px">Performance Result Report - Month <?php echo $current_date ?></caption>
 
                 </div>
-                <tr class="table-header">
+                <tr  class="table-header">
                     <th>Employee ID</th>
                     <th>Employee Name </th>
                     <th>No.of Tasks Assigned</th>
@@ -65,24 +48,121 @@ if (!isset($_SESSION["user"])) {
                     <th>User Type</th>
                 </tr>
                 <?php
-                $mysqli = connect();
-                $user = $_SESSION['user'];
-                $qry = "SELECT employeeid,name from employee WHERE username = '$user'";
+                $current_month = date('m');
+                $qry = "SELECT employeeid,name,username from employee WHERE username = '$user'";
                 $result = $mysqli->query($qry);
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
+                        $employeeid = $row['employeeid'];
+                        $name = $row['name'];
+                        $username = $row['username'];
+
                         echo '
-<tr>
-    <td>' . $row['employeeid'] . '</td>
-    <td>' . $row['name'] . '</td>
-    <td>10</td>
-    <td>7</td>
-    <td>70%</td>
-    <td>70%</td>
-    <td><span id="user_t">Silver</span></td>';
+                <tr>
+                    <td>' . $user . '</td>
+                    <td>' . $row['name'] . '</td>';
+
+                        $assigned_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$user' AND MONTH(end_date) = $current_month ";
+                        $assigned_tasks_result = mysqli_query($mysqli, $assigned_tasks_query);
+                        $assigned_tasks_row = mysqli_fetch_array($assigned_tasks_result);
+                        $assigned_tasks = $assigned_tasks_row[0];
+
+                        $assigned_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$user' AND MONTH(end_date) = $current_month ";
+                        $assigned_tasklist_result = mysqli_query($mysqli, $assigned_tasklist_query);
+                        $assigned_tasklist_row = mysqli_fetch_array($assigned_tasklist_result);
+                        $assigned_tasklist = $assigned_tasklist_row[0];
+
+                        $total_assigned_tasks = $assigned_tasks + $assigned_tasklist;
+
+                        echo ' <td>' . $total_assigned_tasks . '</td>';
+
+                        $completed_tasks_query = "SELECT COUNT(*) FROM task WHERE employeeid = '$user' AND status = 5 AND MONTH(end_date) = $current_month ";
+                        $completed_tasks_result = mysqli_query($mysqli, $completed_tasks_query);
+                        $completed_tasks_row = mysqli_fetch_array($completed_tasks_result);
+                        $completed_tasks = $completed_tasks_row[0];
+
+                        $completed_tasklist_query = "SELECT COUNT(*) FROM task_list WHERE emp_id = '$user' AND status = 5 AND MONTH(end_date) = $current_month ";
+                        $completed_tasklist_result = mysqli_query($mysqli, $completed_tasklist_query);
+                        $completed_tasklist_row = mysqli_fetch_array($completed_tasklist_result);
+                        $completed_tasklist = $completed_tasklist_row[0];
+
+                        $total_completed_tasks = $completed_tasks + $completed_tasklist;
+
+                        if ($total_assigned_tasks == 0) {
+                            $total_task_progress = 0;
+                        } else {
+                            $total_task_progress = ($total_completed_tasks / $total_assigned_tasks) * 100;;
+                        }
+
+                        $total_task_progress = number_format($total_task_progress, 1);
+
+                        echo ' <td>' . $total_completed_tasks . '</td>';
+
+                        $month = date('m');
+                        $year = date('Y');
+
+                        $leave_query = "SELECT SUM(DATEDIFF(last_date, start_date) + 1) as total_leave FROM e_leave WHERE name = '$user' AND (start_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR last_date BETWEEN '$year-$month-01' AND LAST_DAY('$year-$month-01') OR (start_date < '$year-$month-01' AND last_date > LAST_DAY('$year-$month-01'))) AND status = 'Accepted'";
+                        $leave_result = mysqli_query($mysqli, $leave_query);
+                        $leave_row = mysqli_fetch_assoc($leave_result);
+                        $total_leave = $leave_row['total_leave'];
+
+                        $days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+                        $total_working_days = 0;
+
+                        $leave_query = "SELECT * FROM e_leave WHERE name = '$user' AND (start_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month' OR last_date BETWEEN '$year-$month-01' AND '$year-$month-$days_in_month'AND status = 'Accepted')";
+                        $leave_result = mysqli_query($mysqli, $leave_query);
+                        $leave_count = mysqli_num_rows($leave_result);
+
+                        for ($day = 1; $day <= $days_in_month; $day++) {
+                            $date = "$year-$month-$day";
+                            $day_of_week = date('N', strtotime($date));
+                            if ($day_of_week <= 5) {
+                                $is_leave_day = false;
+                                $leave_from = '';
+                                $leave_to = '';
+                                mysqli_data_seek($leave_result, 0);
+                                while ($leave_row = mysqli_fetch_assoc($leave_result)) {
+                                    $leave_date_from = date_create($leave_row['start_date']);
+                                    $leave_date_to = date_create($leave_row['last_date']);
+                                    if ($leave_date_from->format('m') == $month && $leave_date_from->format('d') <= $day && $leave_date_to->format('m') == $month && $leave_date_to->format('d') >= $day) {
+                                        $is_leave_day = true;
+                                        $leave_from = $leave_date_from->format('Y-m-d');
+                                        $leave_to = $leave_date_to->format('Y-m-d');
+                                        break; // exit loop if leave spans only current month
+                                    } else if ($leave_date_from->format('m') < $month && $leave_date_to->format('m') > $month) {
+                                        $is_leave_day = true;
+                                        $leave_from = date_create("$year-$month-01")->format('Y-m-d');
+                                        $leave_to = date_create("$year-$month-$days_in_month")->format('Y-m-d');
+                                        break; // exit loop if leave spans across two months
+                                    }
+                                }
+                                if (!$is_leave_day) {
+                                    $total_working_days++;
+                                }
+                            }
+                        }
+
+
+                        $attendance = ($total_working_days - $total_leave) / $total_working_days * 100;
+
+                        $attendance = number_format($attendance, 1);
+
+                        echo ' <td>' . $attendance . '%</td>';
+
+                        $employee_performance = ($total_task_progress + $attendance) / 2;
+
+                        echo ' <td>' . $employee_performance . '%</td>';
+                        if(70 <= $employee_performance && $employee_performance <= 80){echo '<td><span id="user_t">Silver</span></td>';}
+                        elseif (80 <= $employee_performance && $employee_performance <= 90){echo'<td><span id="user_t1">Gold</span></td>';}
+                        elseif (90 <= $employee_performance && $employee_performance <= 100){echo'<td><span id="user_t2">Platinum</span></td>';}
+                        else{
+                            echo '<td><span id="user_t3">Not Applicable</span></td>';
+                        }
+
                     }
-                } else {
+                }
+                else{
                     echo mysqli_error($mysqli);
                 }
                 ?>
@@ -90,68 +170,8 @@ if (!isset($_SESSION["user"])) {
                 </tr>
                 </table>
             </div>
-            <br><br>
-
         </div>
-        <div class="leave-container2">
-            <table id="table" class="task-tbl">
-
-        </div>
-        <tr class="table-header">
-            <th>No.of Tasks Assigned</th>
-            <th>Completed Tasks</th>
-            <th>Attendance</th>
-            <th>Performance</th>
-            <th>User Type</th>
-        </tr>
-        <?php
-        $mysqli = connect();
-        $user = $_SESSION['user'];
-        $stmt = $mysqli->prepare("SELECT employeeid FROM `employee` WHERE username = ?");
-        $stmt->bind_param("s", $user);
-        $stmt->execute();
-        $stmt->store_result();
-        if ($stmt->num_rows > 0) {
-            $stmt->bind_result($employeeid);
-            $current_date = NULL;
-            while ($stmt->fetch()) {
-                $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE empid = ?-?");
-                $stmt->bind_param("ss", $emp_id, $user);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $count = $result->num_rows;?>
-                <tr>
-                    <td><?php echo $count; ?></td>
-                    <?php
-                    $qry = "SELECT * FROM task WHERE empid='$emp_id-$user'";
-                    $result = $mysqli->query($qry);
-
-                    if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                            $status = $row['status'];
-
-                    ?>
-                            <td><?php echo $status ?></td>
-                </tr>
-<?php
-                        }
-                    }
-                }
-            }
-
-?>
-
-</tr>
-</table>
-</div>
-<br>
-    </section>
-
-
-
-</body>
-<script src="../../views/js/main.js"></script>
-<script type="text/javascript">
+        <script type="text/javascript">
     function PrintTable() {
         var printContents = document.getElementById('table').outerHTML;
         var originalContents = document.body.innerHTML;
@@ -213,5 +233,3 @@ if (!isset($_SESSION["user"])) {
         }, 750)
     });
 </script>
-
-</html>

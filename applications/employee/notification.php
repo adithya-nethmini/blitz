@@ -39,7 +39,7 @@ $user = $_SESSION['user'];
 
         <?php
 
-        $sql = ("SELECT * FROM notification WHERE notification_type = '1' AND username = '$user' OR username IN (SELECT name FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0)");
+        $sql = ("SELECT * FROM notification WHERE notification_type = '1' AND username = '$user' OR username IN (SELECT name FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0) ORDER BY date_time DESC");
 
         $result = mysqli_query($mysqli, $sql);
 

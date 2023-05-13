@@ -74,7 +74,7 @@ if (isset($_POST['submit'])) {
                             // Get the employeeid value from the query result
                             $emp_id_row = $emp_id_result->fetch_assoc();
                             $emp_id = $emp_id_row['employeeid'];
-                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE empid = ?-?");
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE employeeid = ?-?");
                             $stmt->bind_param("is", $emp_id,$user);
                             $stmt->execute();
                             $result = $stmt->get_result();
@@ -125,7 +125,7 @@ if (isset($_POST['submit'])) {
                             $emp_id = $emp_id_row['employeeid'];
 
                             // Use the employeeid in the $qry query
-                            $qry = "SELECT * FROM task WHERE empid='$user'";
+                            $qry = "SELECT * FROM task WHERE employeeid='$user'";
                             $result = $mysqli->query($qry);
 
                             if ($result->num_rows > 0) :

@@ -41,7 +41,7 @@ $mysqli = connect();
         <?php
         $mysqli = connect();
 
-        $sql = ("SELECT id,notification_description,notification_type,username,date_time,status FROM notification WHERE notification_type = '4'");
+        $sql = ("SELECT id,notification_description,notification_type,username,date_time,status FROM notification WHERE notification_type = '4' ORDER BY date_time DESC");
 
         $result = mysqli_query($mysqli, $sql);
 

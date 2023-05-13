@@ -59,10 +59,20 @@ $stmt->close();
             <div class="chat-container">
                 <div class="member-chat">
                     <div class="member-section">
-                        <div class="div-back-arrow">
-                            <a class="back-arrow" href="chat.php"><i class='fa fa-long-arrow-left'></i>&nbsp;&nbsp;Back</a>
+                    <div class="main-chat-container-inner">
 
-                        </div>
+<a class="member-a" href="direct-chat.php">
+    <div class="main-chat-member" style="background-color: #ffffff;">
+        <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
+    </div>
+</a>
+<a class="member-a" href="group-chat.php">
+    <div class="main-chat-member">
+        <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
+    </div>
+</a>
+
+</div>
                         <div class="member-section-inner">
 
                             <?php

@@ -1,0 +1,134 @@
+
+/* Style the form - display items horizontally */
+
+.contain{
+    margin-top: 50000px;
+}
+.form-inline {
+    display: inline-block;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-left: 500px;
+    margin-top: -200px;
+    
+}
+
+/* Add some margins for each label */
+.form-inline label {
+    margin: 10px 15px 10px 0px;
+}
+
+/* Style the input fields */
+.form-inline input {
+    vertical-align: middle;
+    margin: 5px 100px 5px 0;
+    padding: 10px 50px;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    text-align: center;
+}
+
+
+.form-inline button:hover {
+    background-color: royalblue;
+}
+
+@media (max-width: 800px) {
+    .form-inline input {
+        margin: 10px 0;
+    }
+
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+h2{
+    color: #071D70;
+    margin-left: 400px;
+
+}
+
+.form-inline select {
+    vertical-align: middle;
+    margin: 5px 100px 5px 0;
+    padding: 10px 77px;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    text-align: left;
+}
+
+.form-inline select option{
+    text-align: left;
+}
+
+textarea {
+    width: 100%;
+    height: 250px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+
+.inner1 {
+    background-color: #4CAF50; /* set background color */
+    border: none; /* remove border */
+    color: white; /* set font color */
+    padding: 10px 20px; /* set padding */
+    text-align: center; /* center text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    cursor: pointer; /* change cursor to pointer on hover */
+    border-radius: 5px; /* round the corners */
+  }
+  
+  .inner1:hover {
+    background-color: #3e8e41; /* darken background color on hover */
+  }
+  
+  .inner2 {
+    background-color: #f44336; /* set background color */
+    border: none; /* remove border */
+    color: white; /* set font color */
+    padding: 10px 20px; /* set padding */
+    text-align: center; /* center text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    cursor: pointer; /* change cursor to pointer on hover */
+    border-radius: 5px; /* round the corners */
+  }
+  
+  .inner2:hover {
+    background-color: #c6372c; /* darken background color on hover */
+  }
+  
+.bar{
+    margin-left: 200px;
+}
+
+.custom-select-sm{
+    vertical-align: middle;
+    margin: 5px 100px 5px 0;
+    padding: 10px 50px;
+    background-color: #fff;
+    border: 2px solid #ddd;
+    text-align: left;
+}
+.error {
+    color: #FF0001;
+    text-align: center;
+    
+} 
+/* .up{
+    margin-top: 150px;
+} */
+
+
+

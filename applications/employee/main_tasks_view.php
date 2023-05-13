@@ -57,8 +57,11 @@ if (isset($_POST['submit'])) {
                 die('Connection failed: ' . $mysqli->connect_error);
             }
 
-            // prepare and execute the SQL query to fetch task data
-            $stmt = $mysqli->prepare("SELECT empid, name, description, status, start_date, end_date, proofs, proof_name FROM `task` WHERE id = ?");
+            $stmt = $mysqli->prepare("SELECT employeeid, name, description, status, start_date, end_date, proofs, proof_name FROM `task` WHERE id = ?");
+            if (!$stmt) {
+                echo "Error in preparing SQL statement: " . $mysqli->error;
+                exit;
+            }
             $stmt->bind_param("i", $_GET['id']);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -120,7 +123,7 @@ if (isset($_POST['submit'])) {
                                         <?php if (!empty($task['proofs']) && !empty($task['proof_name'])) {
                                             // display the proofs and proof_name
                                             $pdf_data = $task['proofs']; ?>
-                                                <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json"  background="transparent"  speed="1"  style="width: 45px; height: 45px;"  loop autoplay></lottie-player>
+                                            <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_65DYreJ7ru.json" background="transparent" speed="1" style="width: 45px; height: 45px;" loop autoplay></lottie-player>
                                             <div class="div-pdf">
                                                 <img src="proofs/pdf.png" class="pdf-icon" alt="Proof Pdf">
                                                 <span><?php echo $task['proof_name']; ?></span>
@@ -137,7 +140,7 @@ if (isset($_POST['submit'])) {
                                             <form method="POST" enctype="multipart/form-data" action="">
                                                 <div class="div-upload">
                                                     <div style="display: flex;justify-content: center;align-items: center">
-                                                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_0iuu9o.json"  background="transparent"  speed="1"  style="width: 40px; height: 40px;"  loop  autoplay></lottie-player>
+                                                        <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_0iuu9o.json" background="transparent" speed="1" style="width: 40px; height: 40px;" loop autoplay></lottie-player>
                                                     </div>
                                                     <input type="file" name="proofs" title="Provide your proofs of work">
                                                     <input type="hidden" name="proof_name" value="<?php echo $task['name']; ?>">

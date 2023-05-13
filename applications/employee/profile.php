@@ -88,34 +88,34 @@ if (isset($_POST['upload'])) {
         exit();
     }
     $stmt->close();
-    
+
     $mysqli->close();
-    
-    echo '<meta http-equiv="refresh" content="0;url='.$_SERVER['PHP_SELF'].'">';
-    echo '<meta http-equiv="refresh" content="1;url='.$_SERVER['PHP_SELF'].'">';
+
+    echo '<meta http-equiv="refresh" content="0;url=' . $_SERVER['PHP_SELF'] . '">';
+    echo '<meta http-equiv="refresh" content="1;url=' . $_SERVER['PHP_SELF'] . '">';
     exit();
 }
 
 
 if (isset($_POST['update'])) {
-	// Fetch input $_POST
-	$name = $mysqli->real_escape_string($_POST['name']);
-	$email = $mysqli->real_escape_string($_POST['email']);
-	$contactno = $mysqli->real_escape_string($_POST['contactno']);
-	$address = $mysqli->real_escape_string($_POST['address']);
-	// $profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
+    // Fetch input $_POST
+    $name = $mysqli->real_escape_string($_POST['name']);
+    $email = $mysqli->real_escape_string($_POST['email']);
+    $contactno = $mysqli->real_escape_string($_POST['contactno']);
+    $address = $mysqli->real_escape_string($_POST['address']);
+    // $profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
 
-	// Prepared statement
-	$stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=? WHERE `username`='$user'");
+    // Prepared statement
+    $stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=? WHERE `username`='$user'");
 
-	// Bind params
-	mysqli_free_result($result);
+    // Bind params
+    mysqli_free_result($result);
     if (!$stmt) {
         echo ("Failed to prepare statement: " . $mysqli->error);
     }
 
     // Bind the parameter to the statement and execute the update
-    $stmt->bind_param("ssss", $name,$email,$contactno,$address);
+    $stmt->bind_param("ssss", $name, $email, $contactno, $address);
     if (!$stmt->execute()) {
         echo ("Failed to execute statement: " . $stmt->error);
     }
@@ -123,6 +123,48 @@ if (isset($_POST['update'])) {
     mysqli_stmt_close($stmt);
     $mysqli->close();
 }
+
+
+// Charts
+
+
+// Awards Chart 
+
+$query = "SELECT DATE_FORMAT(month, '%M') AS month, COUNT(*) AS num_awards FROM loyalty WHERE username = '$user' GROUP BY MONTH(month)";
+
+$result = mysqli_query($mysqli, $query);
+$data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// Step 3: Format the data for the chart (example assumes two columns: 'label' and 'value')
+$chartData = [];
+foreach ($data as $row) {
+    $chartData[] = [$row['month'], (int)$row['num_awards']];
+}
+
+
+
+// // Get the counts of awards by month for the user
+// $query = "SELECT DATE_FORMAT(month, '%m') AS month, COUNT(*) AS num_awards FROM loyalty WHERE username = '$user' GROUP BY MONTH(month)";
+
+// $result = mysqli_query($mysqli, $query);
+// $data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+// // Initialize an array to hold the counts of awards for each month
+// $countsByMonth = array_fill(1, 12, 0);
+
+// // Store the counts of awards in the array by month
+// foreach ($data as $row) {
+//     $month = intval($row['month']);
+//     $countsByMonth[$month] = intval($row['num_awards']);
+// }
+
+// // Generate the chart data
+// $chartData = array();
+// for ($month = 1; $month <= 12; $month++) {
+//     $monthName = date("F", mktime(0, 0, 0, $month, 1));
+//     $chartData[] = array($monthName, $countsByMonth[$month]);
+// }
+
 
 ?>
 
@@ -196,21 +238,21 @@ if (isset($_POST['update'])) {
                                             <?php endif ?>
                                         </a>
 
-                                        <div id="update-profile-pic-modal" style="flex-direction:column;justify-content:center;align-items: center;">
-                                            <form id="update-pro-pic" method="POST" enctype="multipart/form-data" action="" style="flex-direction:column;justify-content:center;align-items: center;">
+                                        <div id="update-profile-pic-modal">
+                                            <form id="update-pro-pic" method="POST" enctype="multipart/form-data" action="">
                                                 <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
                                                     <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
                                                     <button class="btn-upload" type="submit" name="upload">Upload</button>
                                                 <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                    <img class="profile-pic-update" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
+                                                    <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
                                                     <button type="submit" class="btn-upload" name="upload">Upload</button>
                                                 <?php else :
                                                     $base64Image = base64_encode($profilepic_e);
                                                 ?>
 
-                                                    <img class="profile-pic-update" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
+                                                    <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="data:image/jpg;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
                                                     <button type="submit" class="btn-upload" name="upload">Upload</button>
                                                 <?php endif ?>
@@ -219,13 +261,13 @@ if (isset($_POST['update'])) {
                                         </div>
                                     </th>
                                     <th class="th-edit-button">
-                                    <div class="edit-button" title="Edit Profile">
-                                        <?php echo $user ?>
-                                    <a id="update-profile-btn" class="edit-button" title="Edit Profile">
-                                    <button class="btn-profile-edit"><i class='fas fa-pen'></i></button>
-                                        </a>
+                                        <div class="edit-button" title="Edit Profile">
+                                            <?php echo $user ?>
+                                            <a id="update-profile-btn" class="edit-button" title="Edit Profile">
+                                                <button class="btn-profile-edit"><i class='fas fa-pen'></i></button>
+                                            </a>
                                         </div>
-                                        
+
                                         <div id="update-profile-modal" style="flex-direction:column;justify-content:center;align-items: center;">
                                             <div class="update-container">
                                                 <div class="update-heading">
@@ -289,7 +331,8 @@ if (isset($_POST['update'])) {
                                                     </div>
                                             </div>
                                         </div>
-                                        
+
+
 
 
                                     </th>
@@ -345,8 +388,245 @@ if (isset($_POST['update'])) {
 
             <?php endif ?>
 
-
             <!-- </div> -->
+
+            <div class="profile-dashboard">
+                <div class="group">
+
+                    <a id="project-chart">
+                        <div class="button">
+                            <?php
+                            $user = $_SESSION['user'];
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
+                            $stmt->bind_param("ss", $user, $user);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_array();
+                            $count = $row[0];
+                            ?>
+
+                            <i class="fa fa-tasks"></i>
+                            <h4><?php echo $count; ?>&nbsp;Projects</h4>
+
+                        </div>
+                    </a>
+
+                    <div id="project-chart-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                        <div class="project-chart-container">
+                            <h3 style="padding:20px 0 30px 0">Monthly Project Distribution</h3>
+                            <table class="project-tbl">
+                                <thead>
+                                    <tr>
+                                        <th>Project</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $mysqli = connect();
+                                    date_default_timezone_set('Asia/Kolkata');
+                                    $current_month = date('n');
+                                    $stmt = $mysqli->prepare("SELECT name, status FROM project_list WHERE (MONTH(start_date) = '$current_month' OR MONTH(end_date) = '$current_month') AND manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0");
+                                    $stmt->execute();
+                                    $stmt->store_result();
+                                    if ($stmt->num_rows > 0) {
+                                        $stmt->bind_result($name, $status);
+                                        while ($stmt->fetch()) { ?>
+                                            <tr>
+                                                <td><?= $name ?></td>
+                                                <?php if ($status == 0) {
+                                                    $status = 'Started'; ?>
+                                                    <td><span class="started"><?= $status ?></span></td>
+                                                <?php } elseif ($status == 3) {
+                                                    $status = 'On-Progress'; ?>
+                                                    <td><span class="ongoing"><?= $status ?></span></td>
+                                                <?php } else {
+                                                    $status = 'Done'; ?>
+                                                    <td><span class="done"><?= $status ?></span></td>
+                                                <?php } ?>
+                                            </tr>
+                                    <?php }
+                                    } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+
+                    <a id="project-task-chart">
+                        <div class="button">
+                            <?php
+                            $user = $_SESSION['user'];
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task_list WHERE emp_id = ?");
+                            $stmt->bind_param("s",  $user);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_array();
+                            $count = $row[0];
+                            ?>
+                            <i class="fa fa-tasks"></i>
+                            <h4><?php echo $count; ?>&nbsp;Project Tasks</h4>
+                        </div>
+                    </a>
+                    <div id="project-task-chart-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                        <div class="project-task-chart-container">
+
+                            <h3 style="padding:20px 0 30px 0">Monthly Project Task Distribution</h3>
+                            <table class="project-tbl">
+                                <thead>
+                                    <tr>
+                                        <th>Project Task</th>
+                                        <th>Status</th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $mysqli = connect();
+                                    $user = $_SESSION['user'];
+                                    date_default_timezone_set('Asia/Kolkata');
+                                    $current_month = date('n');
+                                    $stmt = $mysqli->prepare("SELECT task, status FROM task_list WHERE emp_id = '$user' AND (MONTH(start_date) = '$current_month' OR MONTH(end_date) = '$current_month') ");
+                                    
+                                    $stmt->execute();
+                                    
+                                    $stmt->store_result();
+                                    if ($stmt->num_rows > 0) {
+                                        $stmt->bind_result($name, $status);
+                                        while ($stmt->fetch()) { ?>
+                                            <tr>
+                                                <td><?= $name ?></td>
+                                                <?php if ($status == 0) {
+                                                    $status = 'Started'; ?>
+                                                    <td><span class="started"><?= $status ?></span></td>
+                                                <?php } elseif ($status == 3) {
+                                                    $status = 'On-Progress'; ?>
+                                                    <td><span class="ongoing"><?= $status ?></span></td>
+                                                <?php } else {
+                                                    $status = 'Done'; ?>
+                                                    <td><span class="done"><?= $status ?></span></td>
+                                                <?php } ?>
+
+                                            
+                                    <?php }
+                                    } else {?>
+                                        <td>No any allocated tasks from the projects</td>
+                                    <?php }?>
+</tr>
+                                    <?php $stmt->close(); // close the statement
+                                    ?>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                    <a id="task-chart">
+                        <div class="button">
+                            <?php
+                            $user = $_SESSION['user'];
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE employeeid = ?");
+                            $stmt->bind_param("s", $user);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_array();
+                            $count = $row[0];
+                            ?>
+
+                            <i class="fa fa-list-alt"></i>
+                            <h4><?php echo $count; ?>&nbsp;Tasks</h4>
+
+                        </div>
+                    </a>
+                    <div id="task-chart-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                        <div class="task-chart-container">
+
+                            <h3 style="padding:20px 0 30px 0">Monthly Task Distribution</h3>
+                            <table class="project-tbl">
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $mysqli = connect();
+                                    date_default_timezone_set('Asia/Kolkata');
+                                    $current_month = date('n');
+
+
+                                    $stmt = $mysqli->prepare("SELECT name, status FROM task WHERE (MONTH(start_date) = '$current_month' OR MONTH(end_date) = '$current_month') AND employeeid = ?");
+                                    $stmt->bind_param("s", $user);
+                                    $stmt->execute();
+                                    $stmt->store_result();
+                                    if ($stmt->num_rows > 0) {
+                                        $stmt->bind_result($name, $status);
+                                        $current_date = NULL;
+                                        while ($stmt->fetch()) {?>
+                                            <tr>
+                                                <td><?= $name ?></td>
+                                                <?php if ($status == 0) {
+                                                    $status = 'Started'; ?>
+                                                    <td><span class="started"><?= $status ?></span></td>
+                                                <?php } elseif ($status == 3) {
+                                                    $status = 'On-Progress'; ?>
+                                                    <td><span class="ongoing"><?= $status ?></span></td>
+                                                <?php } else {
+                                                    $status = 'Done'; ?>
+                                                    <td><span class="done"><?= $status ?></span></td>
+                                                <?php } ?>
+
+                                            </tr>
+                                    <?php }
+                                    }
+
+                                    $stmt->close();
+                                    $mysqli->close(); ?>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                    <a id="awards-chart">
+                        <div class="button">
+                            <?php
+                            $mysqli = connect();
+                            $user = $_SESSION['user'];
+                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM loyalty WHERE username = ?");
+                            $stmt->bind_param("s", $user);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            $row = $result->fetch_array();
+                            $count = $row[0];
+
+                            ?>
+                            <i class="fas fa-award" aria-hidden="true"></i>
+                            <h4><?php echo $count; ?>&nbsp;&nbsp;Awards</h4>
+
+
+                        </div>
+                    </a>
+                    <div id="awards-chart-modal" style="flex-direction:column;justify-content:center;align-items: center;">
+                        <div class="awards-chart-container">
+                            <h3 style="padding:20px 0 30px 0">Monthly Award Distribution</h3>
+                            <div id="award_column_chart_div" style="width: 100%; height: 400px;"></div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        </div>
 
         </div>
     </section>
@@ -384,6 +664,93 @@ if (isset($_POST['update'])) {
             updateProfileModal.style.display = "none";
         }
     });
+
+    // var updateProfileBtn2 = document.getElementById("update-profile-btn2");
+    // var updateProfileModal2 = document.getElementById("update-profile-modal3");
+
+    // updateProfileBtn2.addEventListener("click", function() {
+    //     updateProfileModal2.style.display = "block";
+    // });
+
+    // window.addEventListener("click", function(event) {
+    //     if (event.target == updateProfileModal2) {
+    //         updateProfileModal2.style.display = "none";
+    //     }
+    // });
+
+    var projectChart = document.getElementById("project-chart");
+    var projectChartModal = document.getElementById("project-chart-modal");
+
+    projectChart.addEventListener("click", function() {
+        projectChartModal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == projectChartModal) {
+            projectChartModal.style.display = "none";
+        }
+    });
+
+    var projectTaskChart = document.getElementById("project-task-chart");
+    var projectTaskChartModal = document.getElementById("project-task-chart-modal");
+
+    projectTaskChart.addEventListener("click", function() {
+        projectTaskChartModal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == projectTaskChartModal) {
+            projectTaskChartModal.style.display = "none";
+        }
+    });
+
+    var TaskChart = document.getElementById("task-chart");
+    var TaskChartModal = document.getElementById("task-chart-modal");
+
+    TaskChart.addEventListener("click", function() {
+        TaskChartModal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == TaskChartModal) {
+            TaskChartModal.style.display = "none";
+        }
+    });
+
+    var awardsChart = document.getElementById("awards-chart");
+    var awardsChartModal = document.getElementById("awards-chart-modal");
+
+    awardsChart.addEventListener("click", function() {
+        awardsChartModal.style.display = "block";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == awardsChartModal) {
+            awardsChartModal.style.display = "none";
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', {
+        'packages': ['corechart']
+    });
+    google.charts.setOnLoadCallback(drawColumnChart);
+
+    function drawColumnChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Label');
+        data.addColumn('number', 'Value');
+        data.addRows(<?php echo json_encode($chartData); ?>);
+
+        var options = {
+            title: 'Monthly Award Distribution',
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('award_column_chart_div'));
+        chart.draw(data, options);
+    }
 </script>
 
 </html>
