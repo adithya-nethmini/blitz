@@ -28,7 +28,7 @@ if (isset($_GET['logout'])) {
 
                 <div class="member-chat">
 
-                    
+
 
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
                         <!-- <div class="div-back-arrow">
@@ -36,34 +36,34 @@ if (isset($_GET['logout'])) {
                         </div> -->
                         <div class="main-chat-container-inner">
 
-                    <a class="member-a" href="direct-chat.php">
-                        <div class="main-chat-member" style="background-color: #ffffff;">
-                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
-                        </div>
-                    </a>
-                    <a class="member-a" href="group-chat.php">
-                        <div class="main-chat-member">
-                            <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
-                        </div>
-                    </a>
-                    <?php
+                            <a class="member-a" href="direct-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct Chat</h3>
+                                </div>
+                            </a>
+                            <a class="member-a" href="group-chat.php">
+                                <div class="main-chat-member" style="background-color: #D9D9D9;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group Chat</h3>
+                                </div>
+                            </a>
+                            <?php
                             $mysqli = connect();
                             $stmt = $mysqli->prepare("SELECT manager_id FROM project_list WHERE manager_id = '$user'");
                             $stmt->execute();
                             $stmt->store_result();
                             if ($stmt->num_rows > 0) {
                                 $stmt->bind_result($manager);
-                                while ($stmt->fetch()) {?>
-                            <a class="member-a" href="dept_head-chat.php">
-                                <div class="main-chat-member" style="background-color: #D9D9D9;">
-                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Dept&nbsp;Head Chat</h3>
-                                </div>
-                            </a>
-                                <?php }
+                                while ($stmt->fetch()) { ?>
+                                    <a class="member-a" href="dept_head-chat.php">
+                                        <div class="main-chat-member" style="background-color: #ffffff;">
+                                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                        </div>
+                                    </a>
+                            <?php }
                             }
                             ?>
 
-                </div>
+                        </div>
                         <div class="member-section-inner">
 
                             <?php
@@ -83,38 +83,39 @@ if (isset($_GET['logout'])) {
                                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 if (count($results) > 0) {
                                     // Loop through results and display name and email
-                                    foreach ($results as $row) { 
+                                    foreach ($results as $row) {
                                         $project_name = $row['name'];
                                         $stmt2 = $pdo->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = '$project_name' AND sender != '$user'");
 
-                                    // Execute SELECT statement
-                                    $stmt2->execute();
+                                        // Execute SELECT statement
+                                        $stmt2->execute();
 
-                                    // Fetch results as associative array
-                                    $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+                                        // Fetch results as associative array
+                                        $results2 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
-                                    // Loop through results and display name and email
-                                    foreach ($results2 as $row2) {
-                                        $sender_unseen = $row2['sender'];
-                                        $count = $row2['COUNT(*)'];
-                                        ?>
+                                        // Loop through results and display name and email
+                                        foreach ($results2 as $row2) {
+                                            $sender_unseen = $row2['sender'];
+                                            $count = $row2['COUNT(*)'];
+                            ?>
 
-                                        <a class="member-a" href="open-depat_head-chat.php?id=<?php echo $row['id']; ?>">
-                                            <div class="member" style="width: 275px;">
-                                                <?php echo $row['name']; 
-                                                if ($count > 0) : ?>
-                                                <div class="div-badge">
-                                                    <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
-                                                </div>
+                                            <a class="member-a" href="open-group-chat.php?id=<?php echo $row['id']; ?>">
+                                                <div class="member" style="width: 275px;">
+                                                    <?php echo $row['name'];
+                                                    if ($count > 0) : ?>
+                                                        <div class="div-badge">
+                                                            <i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="span-badge"><?php echo $count ?></span>
+                                                        </div>
 
                                                     <?php endif; ?>
-                                                    
-                                                
-                                            </div>
-                                        </a>
+
+
+                                                </div>
+                                            </a>
                             <?php
-                                    }}
-                                }else {
+                                        }
+                                    }
+                                } else {
                                     // Display message when there are no projects assigned
                                     echo "No projects assigned.";
                                 }
@@ -124,8 +125,9 @@ if (isset($_GET['logout'])) {
                             }
                             ?>
                         </div>
-                        
-                    </div><div class="vertical-line"></div>
+
+                    </div>
+                    <div class="vertical-line"></div>
                     <div class="chat-area">
                         <div class="chat-area-inner">
                             <h4>Your messages will display here</h4>

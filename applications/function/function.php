@@ -387,41 +387,15 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
     }, $args);
 
 
+    $stmt = $mysqli->prepare("SELECT assigned_person FROM `e_leave` WHERE assigned_person = ? AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))");
+    $stmt->bind_param("s", $assigned_person);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
 
-
-    $sql = "SELECT * FROM e_leave WHERE name = '$user' AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))";
-    $result = mysqli_query($mysqli, $sql);
-    $count_rows = mysqli_num_rows($result);
-
-    if ($count_rows > 0) {
-        // User has already taken a leave during requested time period
+    if ($row) {
+        // Assigned person is not available
         echo "<div id='error-popup' class='error-popup'>
-        <span class='error-popup-close'>&times;</span>
-        <div>
-            <i class='fa-solid fa-triangle-exclamation' style='font-size:50px'></i>
-        </div>
-        <div class='popup-inner'>
-            <p>You have already taken a leave during the requested time period</p>
-        </div>
-    </div>
-    <script>
-    const errorPopup = document.getElementById('error-popup');
-    const errorPopupClose = errorPopup.querySelector('.error-popup-close');
-    errorPopup.style.display = 'block';
-    errorPopupClose.addEventListener('click', function() {
-      errorPopup.style.display = 'none';
-    });
-    </script>";
-    } else {
-        $stmt = $mysqli->prepare("SELECT assigned_person FROM `e_leave` WHERE assigned_person = ? AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))");
-        $stmt->bind_param("s", $assigned_person);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-
-        if (!$row) {
-            // Assigned person is not available
-            echo "<div id='error-popup' class='error-popup'>
                 <span class='error-popup-close'>&times;</span>
                 <div>
                     <i class='fa-solid fa-triangle-exclamation' style='font-size:50px'></i>
@@ -438,33 +412,35 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
               errorPopup.style.display = 'none';
             });
             </script>";
+    }
+
+
+     else {
+
+        $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
+        $stmt->bind_param("s", $username);
+        if (!$stmt->execute()) {
+            $error_message = "Notification insert failed: " . $stmt->error;
+            return $error_message;
         } else {
+            $notification_id = $stmt->insert_id;
+        }
 
-            $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
-            $stmt->bind_param("s", $username);
-            if (!$stmt->execute()) {
-                $error_message = "Notification insert failed: " . $stmt->error;
-                return $error_message;
-            } else {
-                $notification_id = $stmt->insert_id;
-            }
+        date_default_timezone_set('Asia/Kolkata');
+        $current_date = date('Y-m-d H:i:s');
+        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
+        $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
+        if (!$stmt2->execute()) {
+            $error_message = "Leave application insert failed: " . $stmt2->error;
+            return $error_message;
+        } else {
+            $leave_id = $stmt2->insert_id;
+        }
 
-            date_default_timezone_set('Asia/Kolkata');
-            $current_date = date('Y-m-d H:i:s');
-            $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
-            $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
-            if (!$stmt2->execute()) {
-                $error_message = "Leave application insert failed: " . $stmt2->error;
-                return $error_message;
-            } else {
-                $leave_id = $stmt2->insert_id;
-            }
-
-            if ($notification_id && $leave_id) {
-                echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
-            } else {
-                return "An error occurred. Please try again";
-            }
+        if ($notification_id && $leave_id) {
+            echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
+        } else {
+            return "An error occurred. Please try again";
         }
     }
 }
@@ -621,13 +597,13 @@ function sendDirectMessage($sender, $recipient, $message)
     }
 
     $args = array_map(function ($value) use ($mysqli) {
-        //     // Escape special characters
-        //     $value = mysqli_real_escape_string($mysqli, trim($value));
+        // Escape special characters
+        $value = mysqli_real_escape_string($mysqli, trim($value));
 
-        //     // Check for disallowed characters
-        //     if (preg_match("/([<|>])/", $value)) {
-        //         return "<> characters are not allowed";
-        //     }
+        // Check for disallowed characters
+        if (preg_match("/([<|>])/", $value)) {
+            return "<> characters are not allowed";
+        }
 
         return $value;
     }, $args);
@@ -717,4 +693,63 @@ function sendDirectMessage($sender, $recipient, $message)
 //         header("location: leave-status.php");
 //         exit();
 //     }
+// }
+
+
+
+// function getPartnerCompanyID($mysqli, $username) {
+//     $query = "SELECT company_id FROM partner_company WHERE username = ?";
+//     $stmt = $mysqli->prepare($query);
+//     $stmt->bind_param("s", $username);
+//     $stmt->execute();
+//     $stmt->bind_result($companyID);
+//     $stmt->fetch();
+//     $stmt->close();
+
+//     return $companyID;
+// }
+
+// function getPartnerCompanyDetails($mysqli, $username) {
+//     $stmt = $mysqli->prepare("SELECT companyname, companyemail, pcompanycon, companyaddress, description, pcompany_pic FROM partner_company WHERE username = ?");
+//     $stmt->bind_param("s", $username);
+//     $stmt->execute();
+//     $stmt->bind_result($companyname, $companyemail, $pcompanycon, $companyaddress, $description, $pcompany_pic);
+    
+//     // Fetch the results
+//     $stmt->fetch();
+    
+//     // Create an associative array with the retrieved details
+//     $details = array(
+//         'companyname' => $companyname,
+//         'companyemail' => $companyemail,
+//         'pcompanycon' => $pcompanycon,
+//         'companyaddress' => $companyaddress,
+//         'description' => $description,
+//         'pcompany_pic' => $pcompany_pic
+//     );
+    
+//     $stmt->close();
+    
+//     return $details;
+// }
+
+// Function to update the feedback with the reply in the database
+// function updateFeedbackReply($mysqli, $feedbackId, $reply) {
+//     $sql = "UPDATE ratings_feedbacks SET reply = ? WHERE id = ?";
+//     $stmt = $mysqli->prepare($sql);
+//     $stmt->bind_param("si", $reply, $feedbackId);
+//     $result = $stmt->execute();
+//     $stmt->close();
+//     return $result;
+// }
+
+// // Function to retrieve feedbacks by partner company ID
+// function getFeedbacksByPartnerCompanyId($mysqli, $partnerCompanyId) {
+//     $sql = "SELECT * FROM ratings_feedbacks WHERE company_id = ?";
+//     $stmt = $mysqli->prepare($sql);
+//     $stmt->bind_param("i", $partnerCompanyId);
+//     $stmt->execute();
+//     $result = $stmt->get_result();
+//     $stmt->close();
+//     return $result;
 // }

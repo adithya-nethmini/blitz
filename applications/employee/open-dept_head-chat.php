@@ -55,13 +55,19 @@ if ($stmt->num_rows > 0) {
 <body>
     <section>
         <div class="page-content">
+
             <div class="chat-container">
+
                 <div class="member-chat">
+
                     <div class="member-section" onscroll="saveScrollPosition('scroll2', this)">
+
                         <div class="main-chat-container-inner">
+
                             <a class="member-a" href="direct-chat.php">
+
                                 <div class="main-chat-member" style="background-color: #ffffff;">
-                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Direct Messages</h3>
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Direct Chat</h3>
                                 </div>
                             </a>
                             <a class="member-a" href="group-chat.php">
@@ -79,7 +85,7 @@ if ($stmt->num_rows > 0) {
                                 while ($stmt->fetch()) { ?>
                                     <a class="member-a" href="depat_head-chat.php">
                                         <div class="main-chat-member" style="background-color: #D9D9D9;">
-                                            <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Dept&nbsp;Head Chat</h3>
                                         </div>
                                     </a>
                             <?php }
@@ -162,16 +168,16 @@ if ($stmt->num_rows > 0) {
                         <?php
 
                         $user = $_SESSION['user'];
-                        $stmt = $mysqli->prepare("SELECT name FROM `dept_head` WHERE `name` = ?");
+                        $stmt = $mysqli->prepare("SELECT employeeid,name FROM `dept_head` WHERE `name` = ?");
                         $stmt->bind_param("s", $_GET['name']);
                         $stmt->execute();
                         $stmt->store_result();
-                        if ($stmt->num_rows == 1) {
-                            $stmt->bind_result($name);
+                        if ($stmt->num_rows > 0) {
+                            $stmt->bind_result($username,$name);
                             $stmt->fetch();
                         ?>
                             <div class="chat-name-display">
-                                <h3><?php echo $name; ?></h3>
+                                <h3><?php echo $name;  ?></h3>
                             </div>
                             <hr>
 
@@ -180,7 +186,7 @@ if ($stmt->num_rows > 0) {
                                 <?php
                                 $first_sender = "";
                                 $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE chat_type = 'Direct' AND (`recipient` = ? AND `sender` = ?) OR (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
-                                $stmt->bind_param("ssss", $_SESSION['user'], $name, $name, $_SESSION['user']);
+                                $stmt->bind_param("ssss", $_SESSION['user'], $username, $username, $_SESSION['user']);
                                 $stmt->execute();
                                 $stmt->store_result();
                                 if ($stmt->num_rows > 0) {
@@ -244,7 +250,7 @@ if ($stmt->num_rows > 0) {
                                 <div class="type-message">
                                     <form action="" method="POST">
                                         <input type="text" name="message" id="message" class="message" required placeholder="Type your message here..." autocomplete="nope-123456789">
-                                        <input type="hidden" name="recipient" value="<?php echo $name; ?>">
+                                        <input type="hidden" name="recipient" value="<?php echo $username; ?>">
                                 </div>
                                 <div class="send-message">
                                     <button type="submit" name="submit" class="msg-send-btn">Send</button>

@@ -40,7 +40,9 @@ include 'header.php';
                     
             $mysqli = connect();
             $user = $_SESSION['user'];
-            $sql = ("SELECT loyalty_eligibility FROM employee WHERE username = '$user'") ;
+            date_default_timezone_set('Asia/Kolkata');
+            $current_month = date('n');
+            $sql = ("SELECT * FROM loyalty WHERE username = '$user' AND MONTH(month) = '$current_month'");
 
             $result = mysqli_query($mysqli, $sql);
 
@@ -54,7 +56,7 @@ include 'header.php';
                         $loyalty_eligibility = $row['loyalty_eligibility'];
                         
                 ?>
-                <?php if($loyalty_eligibility == 'No'): ?>
+                <?php if($loyalty_eligibility == 'Yes'): ?>
             <div class="page-content-left">
                    
                 <?php

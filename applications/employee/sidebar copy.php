@@ -75,71 +75,24 @@ if (!isset($_SESSION["user"])) {
                 <?php endif ?>
                 <h4 style="text-transform: capitalize;"><?php echo $_SESSION['user'] ?></h4>
 
-                <?php $stmt = $mysqli->prepare("SELECT name FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
-                $stmt->bind_param("ss", $user,$user);
-                $stmt->execute();
-                $stmt->store_result();
-                if ($stmt->num_rows > 0) {
-                    $stmt->bind_result($project_name);
-                    $current_date = NULL;
-                    while ($stmt->fetch()) {
-                        $sql = "SELECT COUNT(*) FROM chat WHERE status = 'unseen' AND sender != '$user' AND (recipient = '$user' OR recipient = '$project_name')";
+                <?php
 
-                        // Execute the query
-                        $stmt = $pdo->query($sql);
+$user = $_SESSION['user'];
+$mysqli = connect();
+$qry = "SELECT COUNT(*) FROM chat WHERE status = 'unseen' AND sender != '$user' AND (recipient = '$user' OR recipient IN (SELECT name FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0))";
+$result = $mysqli->query($qry);
+$row = $result->fetch_row();
+$count = $row[0]; ?>
 
-                        // Retrieve the count of unseen messages
-                        $count = $stmt->fetchColumn();?>
-                        <div title="chat"><?php if (@$count > 0) : ?>
-                            <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
-                        <?php else : ?>
-                            <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i></a>
-                        <?php endif; ?>
-                    </div>
-                    <?php
-                    }
-                } ?>
-
-                <?php /*try {
-                    // Establish database connection using PDO
-                    $pdo = new PDO('mysql:host=' . SERVER . ';dbname=' . DATABASE, USERNAME, PASSWORD);
-
-                    $stmt = $pdo->prepare("SELECT * FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
-
-                    // Bind values to the prepared statement
-                    $stmt->execute([$user, $user]);
-
-                    // Fetch results as associative array
-                    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                    // Loop through results and display name and email
-                    $count = 0;
-                    foreach ($results as $row) {
+<div title="chat">
+    <?php if ($count > 0) : ?>
+        <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
+    <?php else : ?>
+        <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
+    <?php endif; ?>
+</div>
 
 
-                        $project_name = $row['name'];
-                        // Prepare the SQL query
-                        $sql = "SELECT COUNT(*) FROM chat WHERE status = 'unseen' AND sender != '$user' AND (recipient = '$user' OR recipient = '$project_name')";
-
-                        // Execute the query
-                        $stmt = $pdo->query($sql);
-
-                        // Retrieve the count of unseen messages
-                        $count = $stmt->fetchColumn();*/
-
-                ?>
-                    <?php //}
-                    ?>
-                    <!-- <div style="font-size:10px"><?php /*echo '01)' .$user,$project_name,$count . '...';*/ ?></div> -->
-                    <div title="chat"><?php if (@$count > 0) : ?>
-                            <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i><span class="badge"><?php echo $count ?></span></a>
-                        <?php else : ?>
-                            <a href="direct-chat.php"><i class='fa-solid fa-message' style="font-size: 30px; color: white"></i></a>
-                        <?php endif; ?>
-                    </div><?php //} catch (PDOException $e) {
-                            //echo "Database connection failed: " . $e->getMessage();
-                            //exit;
-                        //} ?>
             </div>
             <div class="user-details">
                 <div class="div-logout" title="Logout">

@@ -65,7 +65,7 @@ $user = $_SESSION['user'];
 
                             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                             $user = $_SESSION['user'];
-                            $sql = ("SELECT profilepic_e, gender FROM employee WHERE username = '$user'");
+                            $sql = ("SELECT profilepic_e FROM employee WHERE username = '$user'");
 
                             $result = mysqli_query($con, $sql);
 
@@ -76,22 +76,17 @@ $user = $_SESSION['user'];
                                 if ($count_rows > 0) :
                                     while ($row = mysqli_fetch_assoc($result)) :
                                         $profilepic_e = $row['profilepic_e'];
-                                        $gender = $row['gender'];
 
                             ?>
                                         <?php if ($currentpage == $homeurl) : ?>
-                                            <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
-                                                <img id="profile-pic" src="views/images/pro-icon-male.png" alt="male-user" title="Profile">
-                                            <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                <img id="profile-pic" src="views/images/pro-icon-female.png" alt="female-user" title="Profile">
+                                            <?php if (empty($profilepic_e)) : ?>
+                                                <img id="profile-pic" src="views/images/user1.png" alt="user" title="Profile">
                                             <?php else : ?>
                                                 <img id="profile-pic" src="data:image/png;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="user" title="Profile">
                                             <?php endif ?>
                                         <?php else : ?>
-                                            <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
-                                                <img id="profile-pic" src="../../views/images/pro-icon-male.png" alt="male-user" title="Profile">
-                                            <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                <img id="profile-pic" src="../../views/images/pro-icon-female.png" alt="n-female-user" title="Profile">
+                                            <?php if (empty($profilepic_e)) : ?>
+                                                <img id="profile-pic" src="../../views/images/user1.png" alt="male-user" title="Profile">
                                             <?php else : ?>
                                                 <?php
                                                 $base64_image = base64_encode($profilepic_e);

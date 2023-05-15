@@ -1,8 +1,8 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+$current_month = date('m');
 ?>
 <!--<div class="col-lg-12">-->
 <!--    <div class="card card-outline card-primary">-->
@@ -107,33 +107,46 @@ $mysqli = connect();
                         <th>Action</th>
                     </tr>
                     <?php
-                    $qry = "SELECT id,name,start_date,end_date,status from task";
-                    $result = $mysqli->query($qry);
-
+                    $dept_user = $_SESSION["dept_user"];
+                    $sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+                    $result = $mysqli->query($sql);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            $id = $row ['id'];
-                            echo '
+                            $dept_name = $row ['department'];
+                            $qry = "SELECT id,name,start_date,end_date,status from task WHERE dept_name = '$dept_name'AND MONTH(end_date) = $current_month";
+                            $result = $mysqli->query($qry);
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $id = $row ['id'];
+                                    echo '
                 <tr>
                     <td>' . $row['name'] . '</td>
                     <td>' . $row['start_date'] . '</td>
                     <td>' . $row['end_date'] . '</td> ';
-                            if($row['status']==0){echo '<td><span id="started"> Started</span></td>';}
-                            elseif ($row['status']==3){echo'<td><span id="ongoing"> On-Progress</span></td>';}
-                            elseif ($row['status']==5){echo'<td><span id="done"> Done</span></td>';}
-                            echo ' <td><div class="dropdown">
+                                    if ($row['status'] == 0) {
+                                        echo '<td><span id="started"> Started</span></td>';
+                                    } elseif ($row['status'] == 3) {
+                                        echo '<td><span id="ongoing"> On-Progress</span></td>';
+                                    } elseif ($row['status'] == 5) {
+                                        echo '<td><span id="done"> Done</span></td>';
+                                    }
+                                    echo ' <td><div class="dropdown">
                         <button class="dropbtn">Action</button>
                         <div class="dropdown-content">
-                            <a href="task_view.php?id='.$id.'">View</a>
-                            <a href="#">Update</a>
-                            <a href="#">Delete</a>
+                            <a href="task_view.php?id=' . $id . '">View</a>
+                            <a href="update1.php?id=' . $id . '">Update</a>
+                            <a href="delete1.php?id=' . $id . '" onclick="return deleteItem()">Delete</a>
                         </div>
                     </div>
                     </td>';
 
+                                }
+                            } else {
+                                echo mysqli_error($mysqli);
+                            }
                         }
-                    }
-                    else{
+                    }else {
                         echo mysqli_error($mysqli);
                     }
                     ?>
@@ -163,6 +176,15 @@ $mysqli = connect();
                                 else {
                                     tr[i].style.display = "none";
                                 }
+                            }
+                        }
+                    </script>
+                    <script>
+                        function deleteItem() {
+                            if (confirm("Are you sure you want to permanently delete the details?")) {
+                                return true;
+                            }  else {
+                                return false;
                             }
                         }
                     </script>

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -26,7 +25,7 @@
 <body>
     <header>
 
-        <nav>
+      <nav>
             <div class="container">
                 <div class="home">
                     <a href="index.php"> Home </a>
@@ -49,16 +48,15 @@
                     // Retrieve the count of unseen messages
                     $count = $stmt->fetchColumn(); ?>
 
-                    <li><a href="notification.php" title="Notification">Notification<span class="badge"><?php echo $count ?></span></a></li>
+                    <a href="notification.php" title="Notification">Notification<span class="badge"><?php echo $count ?></span></a>
                 </div>
                 <div class="pcompany-logo">
-                    <a href="#">
-                        <img src="profile.png" alt="" style="width:60px;height:60px"></a>
+                    <a href="profile.php">
+                    <img src="profile.png" alt="" style="width:60px;height:60px"></a>
                 </div>
             </div>
-        </nav>
-
-    </header>
+      </nav>
+        
+    </header> 
 </body>
-
 </html>

@@ -1,8 +1,12 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+$dept_user = $_SESSION["dept_user"];
+$sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+$result = $mysqli->query($sql);
+$row = $result->fetch_assoc();
+$dept_name = $row ['department'];
 if(isset($_POST['submit'])) {
     $task_assigned = $_POST['task_assigned'];
     $name = $_POST['name'];
@@ -12,9 +16,10 @@ if(isset($_POST['submit'])) {
     $end_date = $_POST['end_date'];
 
 
-    $qry = "INSERT INTO `task`(`employeeid`,`name`, `description`, `status`, `start_date`, `end_date`) VALUES ('$task_assigned','$name','$description','$status','$start_date','$end_date')";
+    $qry = "INSERT INTO `task`(`employeeid`,`name`,`dept_name`, `description`, `status`, `start_date`, `end_date`) VALUES ('$task_assigned','$name','$dept_name','$description','$status','$start_date','$end_date')";
     if(mysqli_query($mysqli,$qry)){
-        header('location:task_list.php');
+        echo '<script>window.location.href = "http://localhost/blitz_new/applications/department_head/task_list.php";</script>';
+//        header('location:task_list.php');
     }
     else{
         echo mysqli_error($mysqli);
@@ -152,8 +157,8 @@ if(isset($_POST['submit'])) {
     <input type="text" id="name" placeholder="Enter Task Name" name="name" required>
     <label for="status">Status:</label>
     <select name="status" id="status" class="custom-select custom-select-sm">
-        <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Pending</option>
-        <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>On-Hold</option>
+        <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Started</option>
+        <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>On-Progress</option>
         <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Done</option>
     </select>
     <br>
@@ -174,23 +179,28 @@ if(isset($_POST['submit'])) {
     <br>
     <br>
     <label for="task_assigned">Task Assigned To:</label>
-    <select required name="task_assigned" id="task_assigned" class="custom-select custom-select-sm">
+    <select required name="task_assigned" id="task_assigned" class="custom-select custom-select-sm" >
         <option></option>
         <?php
-        $sql = ("SELECT employeeid,name,jobrole FROM employee") ;
-        $result = mysqli_query($mysqli, $sql);
-        if($result){
-            $count_rows = mysqli_num_rows($result);
-            if($count_rows > 0){
+        $dept_user = $_SESSION["dept_user"];
+        $sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+        $result = $mysqli->query($sql);
+        if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $dept_name = $row ['department'];
+            $sql = ("SELECT employeeid,username,name,jobrole FROM employee WHERE department = '$dept_name'") ;
+            $result = mysqli_query($mysqli, $sql);
+            if ($result->num_rows > 0) {
                 while($row = mysqli_fetch_assoc($result)){
                     $employeeid = $row['employeeid'];
                     $name= $row['name'];
                     $jobrole = $row['jobrole'];
                     ?>
-                    <option value="<?php echo $row['employeeid'] ?>" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>><?php echo $name . " - " . $jobrole?></option>
+                    <option value="<?php echo $row['employeeid'] ?>" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>><?php echo $employeeid ."". " - " .$name ."". " - " . $jobrole?></option>
                     <?php
                 }
             }
+        }
         }
         ?>
     </select>
@@ -204,5 +214,9 @@ if(isset($_POST['submit'])) {
             <button class="inner2" type="submit" name="submit1"><b><a href="project_list.php" >Cancel</a></b></button>
         </div>
     </div>
+    <script>
+
+
+    </script>
 </form>
 </body>

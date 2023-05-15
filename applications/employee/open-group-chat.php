@@ -59,20 +59,36 @@ $stmt->close();
             <div class="chat-container">
                 <div class="member-chat">
                     <div class="member-section">
-                    <div class="main-chat-container-inner">
+                        <div class="main-chat-container-inner">
 
-<a class="member-a" href="direct-chat.php">
-    <div class="main-chat-member" style="background-color: #ffffff;">
-        <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
-    </div>
-</a>
-<a class="member-a" href="group-chat.php">
-    <div class="main-chat-member">
-        <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
-    </div>
-</a>
+                            <a class="member-a" href="direct-chat.php">
+                                <div class="main-chat-member" style="background-color: #ffffff;">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct Chat</h3>
+                                </div>
+                            </a>
+                            <a class="member-a" href="group-chat.php">
+                                <div class="main-chat-member" style="background-color: #D9D9D9;">
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group Chat</h3>
+                                </div>
+                            </a>
+                            <?php
+                            $mysqli = connect();
+                            $stmt = $mysqli->prepare("SELECT manager_id FROM project_list WHERE manager_id = '$user'");
+                            $stmt->execute();
+                            $stmt->store_result();
+                            if ($stmt->num_rows > 0) {
+                                $stmt->bind_result($manager);
+                                while ($stmt->fetch()) { ?>
+                                    <a class="member-a" href="dept_head-chat.php">
+                                        <div class="main-chat-member" style="background-color: #ffffff;">
+                                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                        </div>
+                                    </a>
+                            <?php }
+                            }
+                            ?>
 
-</div>
+                        </div>
                         <div class="member-section-inner">
 
                             <?php
@@ -146,15 +162,27 @@ $stmt->close();
                         $stmt->bind_param("s", $_GET['id']);
                         $stmt->execute();
                         $stmt->store_result();
-                        if ($stmt->num_rows == 1) {
+                        if ($stmt->num_rows > 0) {
                             $stmt->bind_result($name, $manager_id, $user_ids);
                             $stmt->fetch();
+
+                            // $stmt = $mysqli->prepare("SELECT name FROM `employee` WHERE `employeeid` = ?");
+                            // $stmt->bind_param("s", $manager_id);
+                            // $stmt->execute();
+                            // $stmt->store_result();
+                            // if ($stmt->num_rows > 0) {
+                            //     $stmt->bind_result($project_manager_name);
+                            //     $stmt->fetch();
+
                         ?>
-                            <div class="chat-name-display">
-                                <h3><?php echo $name  ?></h3>
-                                <h4><?php echo $manager_id . '(Project Manager), ' . $user_ids ?></h4>
-                            </div>
-                            <hr>
+                                <div class="chat-name-display">
+                                    <h3><?php echo $name  ?></h3>
+                                    <h4><?php echo $manager_id . '(Project Manager), ' . $user_ids ?></h4>
+                                </div>
+                                <hr>
+                            <?php
+                            //  }
+                             ?>
                             <div class="display-message">
                                 <?php
                                 $first_sender = "";

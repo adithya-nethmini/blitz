@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+    font-family: "Roboto";
+ }
+
+ body{
+    background-image: url(landingpagebg.png);
+    background-repeat: repeat;
+}
+
+ .fa-bell,
+ .fa-user-tie{
+     color: #022D66;
+     position: relative;
+ }
+
+ .fa-file-invoice,
+ .fa-file-circle-plus,
+ .fa-right-from-bracket{
+     margin-left: 15px;
+     color: #022D66;
+     position: relative;
+ }
+
+.logo img {
+    float: left;
+    width: 200px;
+    height: 200px;
+    margin-top: -30px;
+    margin-left: 10px;
+}
+
+a.active{
+    border-bottom: 3px solid #F8C000;
+    transition: 0.5s;
+    background: #f8be0037;
+}
+
+center span{
+    margin-left: 20px;
+    font-family: "Roboto";
+    color: #022D66;
+    font-size: 20px;
+}
+
+nav{  
+   background: none;
+   width: 100%;
+   float: right;
+}
+
+nav ul{
+    float: right;
+    margin-right: 20px;
+}   
+
+nav ul li{
+    display: inline-block;
+    line-height: 80px;
+    padding: 0 15px;
+}
+
+nav ul li a{
+    color: #022D66;
+    font-size: 20px;
+    padding: 6px 15px;
+}
+
+nav a:hover{
+    border-bottom: 3px solid #F8C000;
+    transition: 0.5s;
+}
+
+.word{
+    margin-top: 450px;
+    color: #022D66;
+    text-align:center;
+    font-size: 21px;
+}
+
+.word a{
+        color: #022D66;
+        border: 0;
+        background: #f8be00af;
+        text-align: center;
+        margin-top: 50px;
+        margin-left: 0px;
+        border: none;
+        padding: 15px 30px;
+        font-size: 20px;
+        align-self: center;
+        border-radius: 10px;
+        transition: all .2s ease-in-out;
+        cursor: pointer;
+    }
+    
+.word a:hover{
+        background-color:#F8C000;
+    }
+
+.fa-arrow-right{
+    margin-left: 10px;
+}

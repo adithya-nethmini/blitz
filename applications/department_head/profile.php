@@ -31,8 +31,8 @@ include 'header.php';
                         <table>
                             <tr>
                                 <th>
-                                    
-                                
+
+
                                     <!-- <div class="popup" onclick="myFunction()"><i class='fas fa-pen'></i>
                                     <span class="popuptext" id="myPopup">Update Profile
                                         <input type="file" name="profilepic_e" value="<?php echo $_POST['profilepic_e'] ?>">

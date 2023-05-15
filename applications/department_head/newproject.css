@@ -25,6 +25,10 @@
     background-color: royalblue;
 }
 
+.main{
+    position: relative;
+    width: calc(100% - 350px);
+}
 @media (max-width: 800px) {
     .form-inline input {
         margin: 10px 0;

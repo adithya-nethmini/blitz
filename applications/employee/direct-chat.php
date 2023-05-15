@@ -32,15 +32,31 @@ if (isset($_GET['logout'])) {
                         <div class="main-chat-container-inner">
 
                             <a class="member-a" href="direct-chat.php">
-                                <div class="main-chat-member">
-                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct&nbsp;Messages</h3>
+                                <div class="main-chat-member"  style="background-color: #D9D9D9;">
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;&nbsp;Direct Chat</h3>
                                 </div>
                             </a>
                             <a class="member-a" href="group-chat.php">
                                 <div class="main-chat-member" style="background-color: #ffffff;">
-                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group&nbsp;Chat</h3>
+                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;&nbsp;Group Chat</h3>
                                 </div>
                             </a>
+                            <?php
+                            $mysqli = connect();
+                            $stmt = $mysqli->prepare("SELECT manager_id FROM project_list WHERE manager_id = '$user'");
+                            $stmt->execute();
+                            $stmt->store_result();
+                            if ($stmt->num_rows > 0) {
+                                $stmt->bind_result($manager);
+                                while ($stmt->fetch()) { ?>
+                                    <a class="member-a" href="dept_head-chat.php">
+                                        <div class="main-chat-member" style="background-color: #ffffff;">
+                                            <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                        </div>
+                                    </a>
+                            <?php }
+                            }
+                            ?>
 
                         </div>
                         <div class="member-section-inner">

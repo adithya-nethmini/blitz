@@ -102,33 +102,40 @@ if (isset($_POST['update'])) {
     $name = $mysqli->real_escape_string($_POST['name']);
     $email = $mysqli->real_escape_string($_POST['email']);
     $contactno = $mysqli->real_escape_string($_POST['contactno']);
-    $address = $mysqli->real_escape_string($_POST['address']);
     // $profilepic_e = $mysqli->real_escape_string($_POST['profilepic_e']);
-
-    // Prepared statement
-    $stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=?, `address`=? WHERE `username`='$user'");
-
-    // Bind params
-    mysqli_free_result($result);
-    if (!$stmt) {
-        echo ("Failed to prepare statement: " . $mysqli->error);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Sorry! Email is not valid";
+    } else {
+        // Prepared statement
+        $stmt = $mysqli->prepare("UPDATE `employee` SET `name`=?, `email`=?, `contactno`=? WHERE `username`='$user'");
+    
+        // Bind params
+        mysqli_free_result($result);
+        if (!$stmt) {
+            echo ("Failed to prepare statement: " . $mysqli->error);
+        }
+    
+        // Bind the parameter to the statement and execute the update
+        $stmt->bind_param("sss", $name, $email, $contactno);
+        if (!$stmt->execute()) {
+            echo ("Failed to execute statement: " . $stmt->error);
+        }
+    
+        mysqli_stmt_close($stmt);
+        $mysqli->close();
     }
-
-    // Bind the parameter to the statement and execute the update
-    $stmt->bind_param("ssss", $name, $email, $contactno, $address);
-    if (!$stmt->execute()) {
-        echo ("Failed to execute statement: " . $stmt->error);
+    
+    if (isset($error)) {
+        echo $error;
     }
-
-    mysqli_stmt_close($stmt);
-    $mysqli->close();
-}
-
+}    
 
 // Charts
 
 
 // Awards Chart 
+
+$mysqli = connect();
 
 $query = "SELECT DATE_FORMAT(month, '%M') AS month, COUNT(*) AS num_awards FROM loyalty WHERE username = '$user' GROUP BY MONTH(month)";
 
@@ -197,7 +204,7 @@ foreach ($data as $row) {
             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
             $user = $_SESSION['user'];
 
-            $sql = ("SELECT name,employeeid,department,jobrole,email,contactno,address,jobstartdate,username,gender,profilepic_e FROM employee WHERE username = '$user'");
+            $sql = ("SELECT name,employeeid,department,jobrole,email,contactno,jobstartdate,username,profilepic_e FROM employee WHERE username = '$user'");
 
             $result = mysqli_query($con, $sql);
 
@@ -216,10 +223,8 @@ foreach ($data as $row) {
                         $jobrole = $row['jobrole'];
                         $email = $row['email'];
                         $contactno = $row['contactno'];
-                        $address = $row['address'];
                         $jobstartdate = $row['jobstartdate'];
                         $username = $row['username'];
-                        $gender = $row['gender'];
                         $profilepic_e = $row['profilepic_e'];
 
             ?>
@@ -229,10 +234,8 @@ foreach ($data as $row) {
                                 <tr>
                                     <th>
                                         <a id="update-profile-pic-btn">
-                                            <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
-                                                <img class="profile-pic" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
-                                            <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                <img class="profile-pic" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
+                                            <?php if (empty($profilepic_e)) : ?>
+                                                <img class="profile-pic" src="../../views/images/user1.png" alt="Profile Picture" title="Update Profile Picture">
                                             <?php else : ?>
                                                 <img class="profile-pic" src="data:image/png;charset=utf8;base64,<?php echo base64_encode($profilepic_e); ?>" alt="Profile Picture" title="Update Profile Picture">
                                             <?php endif ?>
@@ -240,14 +243,10 @@ foreach ($data as $row) {
 
                                         <div id="update-profile-pic-modal">
                                             <form id="update-pro-pic" method="POST" enctype="multipart/form-data" action="">
-                                                <?php if (empty($profilepic_e) && $gender == 'Male') : ?>
+                                                <?php if (empty($profilepic_e)) : ?>
                                                     <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-male.png" alt="Profile Picture" title="Update Profile Picture">
                                                     <input type="file" name="profilepic_e">
                                                     <button class="btn-upload" type="submit" name="upload">Upload</button>
-                                                <?php elseif (empty($profilepic_e) && $gender == 'Female') : ?>
-                                                    <img style="border: #ffff solid 1.5px;width: 200px;height: 200px;" class="profile-pic-update" src="../../views/images/pro-icon-female.png" alt="Profile Picture" title="Update Profile Picture">
-                                                    <input type="file" name="profilepic_e">
-                                                    <button type="submit" class="btn-upload" name="upload">Upload</button>
                                                 <?php else :
                                                     $base64Image = base64_encode($profilepic_e);
                                                 ?>
@@ -285,12 +284,12 @@ foreach ($data as $row) {
                                                 <?php
                                                 $mysqli = connect();
                                                 // Get employee details
-                                                $stmt = $mysqli->prepare("SELECT `name`,`email`,`contactno`,`address` FROM `employee` WHERE `username` = ?");
+                                                $stmt = $mysqli->prepare("SELECT `name`,`email`,`contactno` FROM `employee` WHERE `username` = ?");
                                                 $stmt->bind_param("s", $_SESSION['user']);
                                                 $stmt->execute();
                                                 $stmt->store_result();
                                                 if ($stmt->num_rows == 1) {
-                                                    $stmt->bind_result($name, $email, $contactno, $address);
+                                                    $stmt->bind_result($name, $email, $contactno);
                                                     $stmt->fetch();
                                                 ?>
                                                     <div class="update-content">
@@ -308,10 +307,6 @@ foreach ($data as $row) {
                                                                 <tr>
                                                                     <!-- <td class="update-label"></td> -->
                                                                     <td class="update-input"><span>Contact Number</span><br><input required type="text" name="contactno" value="<?= $contactno ?>"></td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <!-- <td class="update-label"></td> -->
-                                                                    <td class="update-input"><span>Location</span><br><input required type="text" name="address" value="<?= $address ?>"></td>
                                                                 </tr>
 
                                                             </table>
@@ -362,20 +357,12 @@ foreach ($data as $row) {
                                     <th style="border: 1px solid #071D70;border-radius:10px;color:white;background-color:#071D70;text-align:center"><?php echo $contactno ?></th>
                                 </tr>
                                 <tr>
-                                    <th>Location </th>
-                                    <th style="border: 1px solid #071D70;border-radius:10px;color:white;background-color:#071D70;text-align:center"><?php echo $address ?></th>
-                                </tr>
-                                <tr>
                                     <th>Job&nbsp;start&nbsp;date </th>
                                     <th style="border: 1px solid #071D70;border-radius:10px;color:white;background-color:#071D70;text-align:center"><?php echo $jobstartdate ?></th>
                                 </tr>
                                 <tr>
                                     <th>Username </th>
                                     <th style="border: 1px solid #071D70;border-radius:10px;color:white;background-color:#071D70;text-align:center"><?php echo $username ?></th>
-                                </tr>
-                                <tr>
-                                    <th>Gender </th>
-                                    <th style="border: 1px solid #071D70;border-radius:10px;color:white;background-color:#071D70;text-align:center"><?php echo $gender ?></th>
                                 </tr>
                             </table>
                         </div>
@@ -488,9 +475,9 @@ foreach ($data as $row) {
                                     date_default_timezone_set('Asia/Kolkata');
                                     $current_month = date('n');
                                     $stmt = $mysqli->prepare("SELECT task, status FROM task_list WHERE emp_id = '$user' AND (MONTH(start_date) = '$current_month' OR MONTH(end_date) = '$current_month') ");
-                                    
+
                                     $stmt->execute();
-                                    
+
                                     $stmt->store_result();
                                     if ($stmt->num_rows > 0) {
                                         $stmt->bind_result($name, $status);
@@ -508,14 +495,14 @@ foreach ($data as $row) {
                                                     <td><span class="done"><?= $status ?></span></td>
                                                 <?php } ?>
 
-                                            
-                                    <?php }
-                                    } else {?>
-                                        <td>No any allocated tasks from the projects</td>
-                                    <?php }?>
-</tr>
-                                    <?php $stmt->close(); // close the statement
-                                    ?>
+
+                                            <?php }
+                                    } else { ?>
+                                            <td>No any allocated tasks from the projects</td>
+                                        <?php } ?>
+                                            </tr>
+                                            <?php $stmt->close(); // close the statement
+                                            ?>
 
                                 </tbody>
                             </table>
@@ -567,7 +554,7 @@ foreach ($data as $row) {
                                     if ($stmt->num_rows > 0) {
                                         $stmt->bind_result($name, $status);
                                         $current_date = NULL;
-                                        while ($stmt->fetch()) {?>
+                                        while ($stmt->fetch()) { ?>
                                             <tr>
                                                 <td><?= $name ?></td>
                                                 <?php if ($status == 0) {
@@ -731,26 +718,40 @@ foreach ($data as $row) {
     });
 </script>
 
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-    google.charts.load('current', {
-        'packages': ['corechart']
-    });
-    google.charts.setOnLoadCallback(drawColumnChart);
+<?php
+$stmt = $mysqli->prepare("SELECT loyalty_type FROM loyalty WHERE username = ?");
+$stmt->bind_param("s", $user);
+$stmt->execute();
+$stmt->store_result();
+if ($stmt->num_rows > 0) {
+    $stmt->bind_result($loyalty_type);
+    while ($stmt->fetch()) {
 
-    function drawColumnChart() {
-        var data = new google.visualization.DataTable();
-        data.addColumn('string', 'Label');
-        data.addColumn('number', 'Value');
-        data.addRows(<?php echo json_encode($chartData); ?>);
+?>
 
-        var options = {
-            title: 'Monthly Award Distribution',
-        };
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {
+                'packages': ['corechart']
+            });
+            google.charts.setOnLoadCallback(drawColumnChart);
 
-        var chart = new google.visualization.ColumnChart(document.getElementById('award_column_chart_div'));
-        chart.draw(data, options);
+            function drawColumnChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Label');
+                data.addColumn('number', 'value');
+                data.addRows(<?php echo json_encode($chartData); ?>);
+
+                var options = {
+                    title: 'Monthly Award Distribution',
+                };
+
+                var chart = new google.visualization.ColumnChart(document.getElementById('award_column_chart_div'));
+                chart.draw(data, options);
+            }
+        </script>
+<?php
     }
-</script>
+} ?>
 
 </html>

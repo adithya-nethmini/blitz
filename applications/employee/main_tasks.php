@@ -63,31 +63,7 @@ if (isset($_POST['submit'])) {
 
             <div class="page-content">
 
-                <div class="group">
-                    <div class="button">
-                        <?php
-                        $user = $_SESSION['user'];
-                        $emp_id_query = "SELECT employeeid FROM employee WHERE username = '$user'";
-                        $emp_id_result = $mysqli->query($emp_id_query);
-
-                        if ($emp_id_result->num_rows > 0) :
-                            // Get the employeeid value from the query result
-                            $emp_id_row = $emp_id_result->fetch_assoc();
-                            $emp_id = $emp_id_row['employeeid'];
-                            $stmt = $mysqli->prepare("SELECT COUNT(*) FROM task WHERE employeeid = ?-?");
-                            $stmt->bind_param("is", $emp_id,$user);
-                            $stmt->execute();
-                            $result = $stmt->get_result();
-                            $count = $result->num_rows;
-                        ?>
-
-                            <a href="task_list.php"><i class="fa fa-list-alt"></i>&nbsp;&nbsp;<?php echo $count;?>&nbsp;Tasks</a>
-
-                        <?php endif; ?>
-                    </div>
-                </div>
                 <br>
-
 
                 <br>
                 <div class="leave-container">

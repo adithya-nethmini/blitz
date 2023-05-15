@@ -14,19 +14,38 @@ if (isset($_POST['submit'])) {
     $proofs = file_get_contents($_FILES['proofs']['tmp_name']);
     $proof_uploaded_date = date('Y-m-d H:i:s');
 
-    $sql = "UPDATE task SET proofs = ?, proof_name = ?, proof_uploaded_date = '$proof_uploaded_date' WHERE id = '$id'";
-    $stmt = $mysqli->prepare($sql);
-    if (!$stmt) {
-        echo ("Failed to prepare statement: " . $mysqli->error);
+    $stmt = $mysqli->prepare("SELECT `name` FROM `task` WHERE `employeeid` = ? AND id = '$id'");
+    $stmt->bind_param("s", $user);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows == 1) {
+        $stmt->bind_result($task_name);
+        while ($stmt->fetch()) {
+
+            date_default_timezone_set('Asia/Kolkata');
+            $current_date = date('Y-m-d H:i:s');
+            $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_details, notification_type, username, date_time, status) VALUES('Projects-Tasks', 'Proof upload', ?, '3', ?, '$current_date', 'unseen')");
+            $stmt->bind_param("ss", $task_name, $user);
+            $stmt->execute();
+            if ($stmt->affected_rows != 1) {
+                return "An error occurred. Please try again";
+            } else {
+                echo 'Notification sent';
+            }
+
+            $sql = "UPDATE task SET proofs = ?, proof_name = ?, proof_uploaded_date = '$proof_uploaded_date' WHERE id = '$id'";
+            $stmt = $mysqli->prepare($sql);
+            if (!$stmt) {
+                echo ("Failed to prepare statement: " . $mysqli->error);
+            }
+
+            // Bind the parameter to the statement and execute the update
+            $stmt->bind_param("ss", $proofs, $proof_name);
+            if (!$stmt->execute()) {
+                echo ("Failed to execute statement: " . $stmt->error);
+            }
+        }
     }
-
-    // Bind the parameter to the statement and execute the update
-    $stmt->bind_param("ss", $proofs, $proof_name);
-    if (!$stmt->execute()) {
-        echo ("Failed to execute statement: " . $stmt->error);
-    }
-
-
     mysqli_stmt_close($stmt);
     $mysqli->close();
 }

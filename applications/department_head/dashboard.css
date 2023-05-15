@@ -205,19 +205,35 @@
 
 .container_pro {
     background-color: rgb(192, 192, 192);
-    width: 80%;
-    border-radius: 15px;
+    border-radius: 5px;
+    width: 100%;
 }
 
 .project {
     background-color: rgb(84, 210, 39);
     color: white;
-    padding: 1%;
+    padding:4%;
     text-align: right;
     font-size: 12px;
-    border-radius: 15px;
+    border-radius: 5px;
 }
 
-.progress {
-    width: 70%;
+
+#overdue{
+    color: #f8f8f8;
+    background-color: #d91928;
+    border: 1px solid #d91928;
+    border-radius: 8px;
+    padding: 8px 10px;
+    height: 30px;
+    width: 60px;
+    font-size: 12px;
+}
+
+/*#upload{*/
+/*    color: rgba(26, 191, 10, 0.73);*/
+/*}*/
+
+#upload1{
+    color: #d91928;
 }

@@ -147,7 +147,8 @@
     border-spacing: 0px;
     color: #51619b;
     font-weight: 520;
-    margin-top: 10px;
+    margin-top: 20px;
+    padding-left: 10px;
 }
 
 .task-tbl tr {
@@ -204,17 +205,18 @@
 
 .container_pro {
     background-color: rgb(192, 192, 192);
-    width: 80%;
-    border-radius: 15px;
+    width: 100%;
+    border-radius: 5px;
 }
 
 .project {
     background-color: rgba(2, 100, 162, 0.63);
     color: white;
-    padding: 1%;
+    padding:4%;
     text-align: right;
     font-size: 12px;
-    border-radius: 15px;
+    border-radius: 5px;
+
 }
 
 .button_p{
@@ -237,12 +239,80 @@
 }
 
 #user_t{
-    color: #f8f8f8;
-    background-color: rgba(82, 84, 82, 0.73);
-    border: 1px solid rgba(82, 79, 79, 0.73);
+    background-color: rgba(82, 84, 82, 0.48);
+    border: 1px solid rgba(82, 79, 79, 0.42);
     border-radius: 8px;
     padding: 5px 10px;
     height: 20px;
     width: 30px;
     font-size: 10px;
+}
+
+#user_t1{
+    background-color: rgba(255, 215, 0, 0.73);
+    border: 1px solid rgba(255, 215, 0, 0.62);
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
+
+#user_t2{
+    background-color: rgba(229, 228, 226, 0.87);
+    border: 1px solid rgba(229, 228, 226, 0.87);
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 30px;
+    font-size: 10px;
+}
+
+#user_t3{
+    color: #f8f8f8;
+    background-color: rgba(248, 20, 35, 0.63);
+    border: 1px solid rgba(248, 20, 35, 0.63);
+    border-radius: 8px;
+    padding: 5px 10px;
+    height: 20px;
+    width: 60px;
+    font-size: 7px;
+}
+
+.task-tbl1{
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    table-layout: fixed;
+    display: inline-block;
+    height: 450px;
+    border-collapse: separate;
+    border-spacing: 0px;
+    color: #51619b;
+    font-weight: 520;
+    margin-top: 20px;
+    padding-left: 10px;
+}
+
+.task-tbl1 tr {
+    border: 2px solid grey ;
+}
+
+
+.task-tbl1 tr th{
+    border-bottom: 2px solid grey ;
+    padding: 10px 40px;
+    font-size: 17px;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.task-tbl1 tr td{
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    border-bottom: 1px solid grey ;
+    z-index: -2;
 }

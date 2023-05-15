@@ -32,7 +32,7 @@ if (isset($_GET['logout'])) {
                         <div class="main-chat-container-inner">
                             <a class="member-a" href="direct-chat.php">
                                 <div class="main-chat-member" style="background-color: #ffffff;">
-                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Direct Messages</h3>
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Direct Chat</h3>
                                 </div>
                             </a>
                             <a class="member-a" href="group-chat.php">
@@ -50,7 +50,7 @@ if (isset($_GET['logout'])) {
                                 while ($stmt->fetch()) {?>
                             <a class="member-a" href="depat_head-chat.php">
                                 <div class="main-chat-member" style="background-color: #D9D9D9;">
-                                    <h3><i class="fa-sharp fa-solid fa-users"></i>&nbsp;Dept&nbsp;Head Chat</h3>
+                                    <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Dept&nbsp;Head Chat</h3>
                                 </div>
                             </a>
                                 <?php }
@@ -101,7 +101,7 @@ if (isset($_GET['logout'])) {
                                         // echo $sender_unseen, $member;
                             ?>
 
-                                        <a class="member-a" href="open-dept_head-chat.php?username=<?php echo $member; ?>">
+                                        <a class="member-a" href="open-dept_head-chat.php?name=<?php echo $member; ?>">
                                             <div class="member">
                                                 <?php echo $row['name'];
 

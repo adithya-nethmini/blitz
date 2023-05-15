@@ -15,7 +15,7 @@
 			<li><a href="About.php">About</a></li>    
 			<li><a href="help.php">Help</a></li>    
 			<li><a href="../g_signup.php">Register</a></li>    
-			<li><a href="../employee/login.php">Login</a></li>    
+			<li><a href="../login.php">Login</a></li>
 		</ul>
 	</nav>
 	<br></br>

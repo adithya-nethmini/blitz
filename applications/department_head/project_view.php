@@ -1,8 +1,39 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+
+    $sql = "UPDATE project_list 
+        SET status = 
+        CASE
+            WHEN (
+                SELECT COUNT(*) 
+                FROM task_list 
+                WHERE task_list.project_id = project_list.id
+            ) = 0 THEN project_list.status
+            WHEN (
+                SELECT COUNT(*) 
+                FROM task_list 
+                WHERE task_list.project_id = project_list.id 
+                AND task_list.status = 5
+            ) = (
+                SELECT COUNT(*) 
+                FROM task_list 
+                WHERE task_list.project_id = project_list.id
+            ) THEN 5
+            ELSE LEAST(status, (
+                SELECT MIN(status) 
+                FROM task_list 
+                WHERE task_list.project_id = project_list.id
+            ))
+        END";
+
+    if (mysqli_query($mysqli, $sql)) {
+        $date = date("Y-m-d");
+    } else {
+        echo mysqli_error($mysqli);;
+    }
+
 ?>
     <!--<div class="col-lg-12">-->
     <!--    <div class="card card-outline card-primary">-->
@@ -81,6 +112,22 @@ $mysqli = connect();
         <div class="page">
 
             <div class="page-content">
+                <div class="group">
+                    <?php
+                    $id = $_GET['id'];
+                    $qry = "SELECT id,name,start_date,end_date,status from project_list WHERE id= '$id'";
+                    $result = $mysqli->query($qry);
+
+                    if ($result->num_rows > 0) {
+                            $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
+                            $id = $row ['id'];
+                            echo '
+                    <div class= "button_new">
+                        <a href="progress.php?id=' . $id . '"><i class="fa-solid fa-bars-progress"></i>&nbsp;&nbsp;Progress</a>
+                    </div>';
+                    }
+                    ?>
+                </div>
                 <div class="leave-container1">
 
                     <div class="header">
@@ -110,7 +157,11 @@ $mysqli = connect();
                 <td><label>Status </label><br><br>';if($row['status']==0){echo '<span id="started"> Started</span>';}
             elseif ($row['status']==3){echo'<span id="ongoing"> On-Progress</span>';}
             elseif ($row['status']==5){echo'<span id="done"> Done</span>';}
-            echo ' </td></tr>
+            echo ' 
+                <br><br>';if ($end_date < $date) {
+                echo '<span id="overdue"> Behind The Schedule</span>';
+            }echo '
+                </td></tr>
                 <tr>
                 <td><label>Description </label><br><br> '.$description.' </td>
                 <td><label>Project Manager </label><br><br> '.$manager_id.'</td> 
@@ -150,7 +201,7 @@ $mysqli = connect();
             <th>Action</th>
         </tr>
         <?php
-        $qry = "SELECT id,project_id,task,description,status from task_list WHERE project_id= $id";
+        $qry = "SELECT id,project_id,task,description,status from task_list WHERE project_id= '$id'";
         $result = $mysqli->query($qry);
 
         if ($result->num_rows > 0) {
@@ -167,8 +218,8 @@ $mysqli = connect();
                         <button class="dropbtn">Action</button>
                         <div class="dropdown-content">
                             <a href="project_viewtask.php?id='.$id.'">View</a>
-                            <a href="#">Update</a>
-                            <a href="#">Delete</a>
+                            <a href="update2.php?id='.$id.'">Update</a>
+                            <a href="delete2.php?id='.$id.'"onclick="return deleteItem()" >Delete</a>
                         </div>
                     </div>
                     </td>';
@@ -185,3 +236,12 @@ $mysqli = connect();
      </div>
                 </div>
             </div>
+        <script>
+            function deleteItem() {
+                if (confirm("Are you sure you want to permanently delete the details?")) {
+                    return true;
+                }  else {
+                    return false;
+                }
+            }
+        </script>

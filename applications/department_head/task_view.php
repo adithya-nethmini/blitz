@@ -1,5 +1,4 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
@@ -90,7 +89,8 @@ $mysqli = connect();
 
                     <?php
                     $id = $_GET['id'];
-                    $qry = "SELECT employeeid,name,description,status,start_date,end_date from task WHERE id= '$id'";
+                    $current_date = date('Y-m-d');
+                    $qry = "SELECT employeeid,name,description,status,start_date,end_date,proof_uploaded_date,proofs from task WHERE id= '$id'";
                     if(mysqli_query($mysqli,$qry)){
                         $row = mysqli_fetch_assoc(mysqli_query($mysqli,$qry));
                         $employeeid= $row['employeeid'];
@@ -99,6 +99,8 @@ $mysqli = connect();
                         $status = $row['status'];
                         $start_date = $row['start_date'];
                         $end_date = $row['end_date'];
+                        $proofs = $row['proofs'];
+                        $proof_uploaded_date = $row['proof_uploaded_date'];
                         echo '
 <table class="table1">
                 <tr>
@@ -109,24 +111,65 @@ $mysqli = connect();
                 <td><label>Status </label><br><br>';if($row['status']==0){echo '<span id="started"> Started</span>';}
                         elseif ($row['status']==3){echo'<span id="ongoing"> On-Progress</span>';}
                         elseif ($row['status']==5){echo'<span id="done"> Done</span>';}
-                        echo ' </td></tr>
+                        echo ' 
+                <br><br>';if ($end_date < $current_date && $proof_uploaded_date==NULL) {
+                            echo '<span id="overdue"> Behind The Schedule</span>';
+                        }
+                           elseif ($end_date < $proof_uploaded_date) {
+                               echo '<span id="overdue"> Behind The Schedule</span>';
+
+                }  echo'
+                </td></tr>
                 <tr>
                 <td><label>Description </label><br><br> '.$description.' </td>
-                <td><label>Task Assigned To</label><br><br>Employee ID: '.$employeeid.'</td> 
+                <td><label>Task Assigned To</label><br><br> '.$employeeid.'</td> 
                 </tr>
                 <tr> 
                 </table>'; }
                     ?>
                 <div class="foot">
-                <label>Proof Of Work :</label>
-                <div class= "button_d">
-                    <a href="#"><i class="fa-solid fa-download"></i> Download here</a>
+                <?php
+                if (!is_null($proofs)) {
+                echo ' 
+                    <label>Proof Of Work :</label>
+                    <div class= "button_d">
+                    <a href="download.php?id='.$id.'"><i class="fa-solid fa-download"></i> Download here</a>
                 </div>
-                <label class="container">Verified
-                    <input type="checkbox" checked="checked">
+                <form id="myForm" method="post" action="update_status.php">
+                <label class="container" >Verified ';
+                    $qry = "SELECT employeeid,name,description,status,start_date,end_date,proof_uploaded_date from task WHERE id= '$id'";
+                    if(mysqli_query($mysqli,$qry)) {
+                        $row = mysqli_fetch_assoc(mysqli_query($mysqli, $qry));
+                        $checked = isset($_GET['checked']) ? $_GET['checked'] : '';
+                        if ($row['status'] == 5) {
+                            $checked = 'checked';
+                        }
+                    }
+
+                    echo '<input type="checkbox" id="myCheckbox" name="id" value="' . $id . '" ' . $checked . '>
                     <span class="checkmark"></span>
-                </label>
+                </label>' ;} ?>
                 </div>
                 </div>
             </div>
         </div>
+<script>
+    var form = document.getElementById("myForm");
+    var checkbox = document.getElementById("myCheckbox");
+
+    checkbox.addEventListener("click", function() {
+        if (checkbox.checked) {
+            form.submit();
+        }
+    });
+
+    checkbox.addEventListener("click", function(event) {
+        event.preventDefault();
+        if (confirm("Are you sure you want to verify this task?")) {
+            checkbox.checked = true;
+            form.submit();
+        } else {
+            checkbox.checked = false;
+        }
+    });
+</script>

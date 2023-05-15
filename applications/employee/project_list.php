@@ -62,22 +62,6 @@ if (isset($_POST['submit'])) {
 
             <div class="page-content">
 
-                <div class="group">
-                    <div class="button">
-                    <?php
-                        $user = $_SESSION['user'];
-                        $stmt = $mysqli->prepare("SELECT COUNT(*) FROM project_list WHERE manager_id = ? OR FIND_IN_SET(?, user_ids) > 0");
-                        $stmt->bind_param("ss", $user, $user);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $row = $result->fetch_array();
-                        $count = $row[0];
-                        ?>
-
-                            <a href="task_list.php"><i class="fa fa-tasks"></i>&nbsp;&nbsp;<?php echo $count;?>&nbsp;Projects</a>
-
-                    </div>
-                </div>
                 <br>
                 <div class="leave-container">
 

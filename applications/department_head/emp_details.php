@@ -1,5 +1,4 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
@@ -93,35 +92,48 @@ $mysqli = connect();
 
                     <div class="all-tasks">
 
-                        <table id="table" class="task-tbl">
+                        <table id="table" class="task-tbl1">
 
                     </div>
                     <tr  class="table-header">
                         <th>Employee ID</th>
                         <th>Employee Name </th>
-                        <th>Action</th>
+                        <th>Jobrole </th>
+                        <th>Email </th>
+                        <th>Contact number </th>
+                        <th>Address </th>
                     </tr>
                     <?php
-                    $qry = "SELECT username,employeeid,name from employee";
-                    $result = $mysqli->query($qry);
-
+                    $dept_user = $_SESSION["dept_user"];
+                    $sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+                    $result = $mysqli->query($sql);
                     if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                            $username = $row ['username'];
-                            echo '
+                            $dept_name = $row ['department'];
+
+                            $qry = "SELECT username,employeeid,name,jobrole,email,contactno,address from employee WHERE department = '$dept_name'";
+                            $result = $mysqli->query($qry);
+
+                            if ($result->num_rows > 0) {
+                                while ($row = $result->fetch_assoc()) {
+                                    $username = $row ['username'];
+                                    echo '
                 <tr>
                     <td>' . $row['employeeid'] . '</td>
                     <td>' . $row['name'] . '</td>
-                    <td><div class="dropdown">
-                        <button class="dropbtn1">Remove</button>
-                    </div>
-                    </td>';
+                    <td>' . $row['jobrole'] . '</td>
+                    <td>' . $row['email'] . '</td>
+                    <td>' . $row['contactno'] . '</td>
+                    <td>' . $row['address'] . '</td>';
 
+                                }
+                            } else {
+                                echo mysqli_error($mysqli);
+                            }
                         }
                     }
-                    else{
-                        echo mysqli_error($mysqli);
-                    }
+                    else {
+                    echo mysqli_error($mysqli);}
                     ?>
 
                     </tr>

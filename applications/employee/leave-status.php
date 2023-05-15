@@ -116,7 +116,7 @@ foreach ($data as $row) {
                                             while ($row = mysqli_fetch_assoc($result)) :
                                                 $fname = $row['name'];
 
-                                                $sql = ("SELECT * FROM e_leave WHERE name = '$user' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ORDER BY applied_date");
+                                                $sql = ("SELECT * FROM e_leave WHERE name = '$user' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ORDER BY applied_date DESC");
 
                                                 $result = mysqli_query($con, $sql);
 
@@ -151,10 +151,15 @@ foreach ($data as $row) {
                                         <td><?php echo $start_date ?></td>
                                         <td><?php echo $last_date ?></td>
                                         <td><?php echo $assigned_person ?></td>
-                                        <td title="$applied_date"><?php if ($status == 'Pending') : ?>
+                                        <td title="$applied_date">
+                                            <?php if ($status == 'Pending') : ?>
                                                 <b class="status-pending" title="<?php echo $applied_date; ?>"><?php echo $status ?></b>
                                             <?php elseif ($status == 'Accepted') : ?>
                                                 <b class="status-accepted"><?php echo $status ?></b>
+                                            <?php elseif ($status == 'Taken') : ?>
+                                                <b class="status-taken"><?php echo $status ?></b>
+                                            <?php elseif ($status == 'Expired') : ?>
+                                                <b class="status-expired"><?php echo $status ?></b>
                                             <?php else : ?>
                                                 <b class="status-cancel"><?php echo $status ?></b>
                                             <?php endif ?>
@@ -165,7 +170,7 @@ foreach ($data as $row) {
                                                 <a href="delete-leave?id=<?= $id ?>" onclick="return confirm('Are you sure you want to delete?')"><button class="btn-task-delete">Delete</button></a>
                                             <?php } else { ?>
                                                 <i class='fa-solid fa-circle-check'></i>
-                                            <?php                                        } ?>
+                                            <?php } ?>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -260,6 +265,7 @@ foreach ($data as $row) {
                                         $count_rows = mysqli_num_rows($result);
 
                                         if ($count_rows > 0) :
+
                                             while ($row = mysqli_fetch_assoc($result)) :
                                                 $fname = $row['name'];
 
@@ -298,10 +304,15 @@ foreach ($data as $row) {
                                         <td><?php echo $start_date ?></td>
                                         <td><?php echo $last_date ?></td>
                                         <td><?php echo $assigned_person ?></td>
-                                        <td title="<?php echo $applied_date ?>"><?php if ($status == 'Pending') : ?>
+                                        <td title="<?php echo $applied_date ?>">
+                                            <?php if ($status == 'Pending') : ?>
                                                 <b class="status-pending" title="<?php echo $applied_date; ?>"><?php echo $status ?></b>
                                             <?php elseif ($status == 'Accepted') : ?>
                                                 <b class="status-accepted"><?php echo $status ?></b>
+                                            <?php elseif ($status == 'Taken') : ?>
+                                                <b class="status-taken"><?php echo $status ?></b>
+                                            <?php elseif ($status == 'Expired') : ?>
+                                                <b class="status-expired"><?php echo $status ?></b>
                                             <?php else : ?>
                                                 <b class="status-cancel"><?php echo $status ?></b>
                                             <?php endif ?>

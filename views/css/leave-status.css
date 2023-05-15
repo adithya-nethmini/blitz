@@ -17,6 +17,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    padding-top: 20px;
 }
 
 .leave-container{
@@ -162,7 +163,7 @@
     z-index: -2;
 }
 
-.status-pending,.status-accepted,.status-cancel{
+.status-pending,.status-accepted,.status-cancel, .status-taken, .status-expired{
     border-radius: 8px;
     padding: 8px;
     height: 30px;
@@ -185,6 +186,17 @@
     color: white;
     border: 1px solid #a2020284;
 }
+.status-taken{
+    background-color: #58d2f7f5;
+    color: white;
+    border: 1px solid #3a8aa3;
+}
+.status-expired{
+    background-color: #80121284;
+    color: white;
+    border: 1px solid #80121284;
+}
+
 
 .action{
     display: flex;

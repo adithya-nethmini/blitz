@@ -53,7 +53,7 @@ if (!$stmt->execute()) {
                 $stmt->execute();
                 $stmt->store_result();
                 if ($stmt->num_rows == 1) {
-                    $stmt->bind_result($id, $notification_name, $notification_description, $notification_type, $username, $date_time, $status);
+                    $stmt->bind_result($id, $notification_name, $notification_description, $notification_details, $notification_type, $username, $date_time, $status);
                     $stmt->fetch();
                 ?>
 
@@ -65,9 +65,9 @@ if (!$stmt->execute()) {
                             <div class="up-inner-left">
                                 <h3>Description</h3>
                                 <?php echo $username . ' ' . $notification_description; ?>
-                                <?php if ($notification_name == "Leave Application") : ?>
+                                <?php if ($notification_name == "Leave Application") { ?>
                                     <a href="manage-leave.php"><button class="btn">Manage&nbsp;Leaves</button></a>
-                                <?php endif; ?>
+                                <?php } ?>
                             </div>
 
                             <div class="up-inner-mid">

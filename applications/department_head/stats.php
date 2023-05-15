@@ -1,9 +1,30 @@
 <?php
-if(!isset($mysqli)){include 'functions.php';}
 include 'sidebar.php';
-include 'header.php';
+//include 'header.php';
 $mysqli = connect();
+$current_date = date('Y-m-d');
+$current_month = date('F');
+$current_year = date('Y');
+$pdo = new PDO('mysql:host=localhost;dbname=blitz', 'root', '');
+
+$dept_user = $_SESSION["dept_user"];
+$sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+$result = $mysqli->query($sql);
+$row = $result->fetch_assoc();
+$dept_name = $row ['department'];
+
+
+$query = "SELECT DATE_FORMAT(end_date, '%M') AS month, COUNT(*) AS num_projects FROM project_list WHERE dept_name = '$dept_name' AND (status = 5 ) GROUP BY MONTH(end_date)";
+
+$result = mysqli_query($mysqli, $query);
+$data = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+$chartData = [];
+foreach ($data as $row) {
+    $chartData[] = [$row['month'], (int)$row['num_projects']];
+}
 ?>
+
 <!--<div class="col-lg-12">-->
 <!--    <div class="card card-outline card-primary">-->
 <!--        <div class="card-body">-->
@@ -63,6 +84,8 @@ $mysqli = connect();
 <!--                            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">-->
 <!--                                <option></option>-->
 <!--                                --><?//php?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,20 +100,23 @@ $mysqli = connect();
 </head>
 <body>
 <div class="page">
-    <h3>Employee Performance in May</h3>
+    <h3>Annual Done Projects - Year <?php echo $current_year ?></h3>
+    <br>
+    <div id="column_chart_div" style="width: 1000px; height: 500px;"></div>
+    <h3>Employee Performance in <?php echo $current_month ?></h3>
     <br>
     <br>
 
 <canvas id="myChart" ></canvas>
 
 <script>
-    var xValues = ["Silver", "Gold", "Platinum", "Normal"];
+    var xValues = ["Silver", "Gold", "Platinum", "Not Applicable"];
     var yValues = [63, 49, 44, 31];
     var barColors = [
-        "#3f3d3e",
-        "#00aba9",
-        "#2b5797",
-        "#e8c3b9"
+        "rgba(82, 84, 82, 0.48)",
+        "rgba(255, 215, 0, 0.73)",
+        "rgba(229, 228, 226, 0.87)",
+        "rgba(248, 20, 35, 0.63)"
     ];
 
     new Chart("myChart", {
@@ -116,33 +142,6 @@ $mysqli = connect();
     <br>
     <br>
     <br>
-<!--    <canvas id="myChart1"></canvas>-->
-<!---->
-<!---->
-<!--    <script>-->
-<!--        var xValues = [January,February,March,April,May,June,July,August,September,Octomber,November,December];-->
-<!--        var yValues = [7,8,8,9,9,9,10,11,14,14,15,15];-->
-<!---->
-<!--        new Chart("myChart1", {-->
-<!--            type: "line",-->
-<!--            data: {-->
-<!--                labels: xValues,-->
-<!--                datasets: [{-->
-<!--                    fill: false,-->
-<!--                    lineTension: 0,-->
-<!--                    backgroundColor: "rgba(0,0,255,1.0)",-->
-<!--                    borderColor: "rgba(0,0,255,0.1)",-->
-<!--                    data: yValues-->
-<!--                }]-->
-<!--            },-->
-<!--            options: {-->
-<!--                legend: {display: false},-->
-<!--                scales: {-->
-<!--                    yAxes: [{ticks: {min: 6, max:16}}],-->
-<!--                }-->
-<!--            }-->
-<!--        });-->
-<!--    </script>-->
 
     <script>
         window.onload = function () {
@@ -175,13 +174,36 @@ $mysqli = connect();
             chart.render();
 
         }
+
     </script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {
+            'packages': ['corechart']
+        });
+        google.charts.setOnLoadCallback(drawColumnChart);
+
+        function drawColumnChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Label');
+            data.addColumn('number', 'Done');
+            data.addRows(<?php echo json_encode($chartData); ?>);
+
+            var options = {
+                title: 'Monthly Project Completion Analysis: A Breakdown of Completed Projects by Month',
+            };
+
+            var chart = new google.visualization.ColumnChart(document.getElementById('column_chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+
     </head>
     <body>
     <div id="chartContainer" style="height: 370px; width: 100%;"></div>
 
     </body>
-</html>
 </div>
 </div>
 </body>

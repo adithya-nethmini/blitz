@@ -48,21 +48,23 @@ $user = $_SESSION['user'];
 
             $mysqli = connect();
             $user = $_SESSION['user'];
+            date_default_timezone_set('Asia/Kolkata');
+            $current_month = date('n');
             $sql = ("SELECT loyalty_eligibility FROM employee WHERE username = '$user'");
 
             $result = mysqli_query($mysqli, $sql);
 
-            if ($result == TRUE) :
+            if ($result == TRUE) {
 
                 $count_rows = mysqli_num_rows($result);
 
-                if ($count_rows > 0) :
-                    while ($row = mysqli_fetch_assoc($result)) :
+                if ($count_rows > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
 
                         $loyalty_eligibility = $row['loyalty_eligibility'];
 
             ?>
-                        <?php if ($loyalty_eligibility == 'Yes') : ?>
+                        <?php if ($loyalty_eligibility == 'Yes') { ?>
                             <div class="page-content-left">
 
                                 <?php
@@ -74,12 +76,12 @@ $user = $_SESSION['user'];
 
                                 $result = mysqli_query($mysqli, $sql);
 
-                                if ($result == TRUE) :
+                                if ($result == TRUE) {
 
                                     $count_rows = mysqli_num_rows($result);
 
-                                    if ($count_rows > 0) :
-                                        while ($row = mysqli_fetch_assoc($result)) :
+                                    if ($count_rows > 0) {
+                                        while ($row = mysqli_fetch_assoc($result)) {
 
                                             $id = $row['id'];
                                             $unique_Id = $row['unique_Id'];
@@ -90,13 +92,13 @@ $user = $_SESSION['user'];
                                 ?>
                                             <div id="container">
                                                 <div class="container">
-                                                    <?php if ($loyalty_type == 'Gold') : ?>
+                                                    <?php if ($loyalty_type == 'Gold') { ?>
                                                         <img src="../../views/images/gold-trophy.png" alt="">
-                                                    <?php elseif ($loyalty_type == 'Silver') : ?>
+                                                    <?php }elseif ($loyalty_type == 'Silver') { ?>
                                                         <img src="../../views/images/silver-trophy.png" alt="">
-                                                    <?php else : ?>
+                                                    <?php }else { ?>
                                                         <img src="../../views/images/platinum-trophy.png" alt="">
-                                                    <?php endif ?>
+                                                    <?php } ?>
                                                     <h2>Congratulations <?php echo $user; ?>!</h2>
                                                     <h3>You are a <?php echo $loyalty_type; ?> Loyalty User of Month <?php echo date("F", strtotime($month)); ?></h3>
                                                     <h5>We appreciate your contribution</h5>
@@ -139,33 +141,31 @@ $user = $_SESSION['user'];
 
                             <div class="page-content-right">
                                 <div>
-                                    <?php if ($loyalty_type == 'Gold') : ?>
+                                    <?php if ($loyalty_type == 'Gold') {?>
                                         <a href="#">Gold&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
-                                    <?php elseif ($loyalty_type == 'Silver') : ?>
+                                    <?php }elseif ($loyalty_type == 'Silver') { ?>
                                         <a href="#">Silver&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
-                                    <?php else : ?>
+                                    <?php }else { ?>
                                         <a href="#">Platinum&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
-                                    <?php endif ?>
+                                    <?php } ?>
                                 </div>
                             </div>
                 <?php
-                                        endwhile;
-                                    endif;
-                                endif;
+                                        };
+                                    };
+                                };
                 ?>
-            <?php else : ?>
+            <?php } else { ?>
                 <div class="page-content-left">
-
-
                     <div class="container">
                         <img src="../../views/images/sorry.png" alt="">
                         <h2>Sorry!</h2>
                         <h3>You are not a Loyalty User of Month <?php /* echo date("jS F", strtotime($$month)); */ ?></h3>
                     </div>
-                <?php endif ?>
-            <?php endwhile ?>
-        <?php endif ?>
-    <?php endif ?>
+                <?php } ?>
+            <?php } ?>
+        <?php } ?>
+    <?php } ?>
                 </div>
 
 
