@@ -3,66 +3,21 @@ include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
 $current_month = date('m');
-?>
-<!--<div class="col-lg-12">-->
-<!--    <div class="card card-outline card-primary">-->
-<!--        <div class="card-body">-->
-<!--            <form action="" id="manage-project">-->
-<!---->
-<!--                <input type="hidden" name="id" value="--><?php //echo isset($id) ? $id : '' ?><!--">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Name</label>-->
-<!--                            <input type="text" class="form-control form-control-sm" name="name" value="--><?php //echo isset($name) ? $name : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="">Status</label>-->
+$statusOptions = array(
+    "All" => "",
+    "Started" => "0",
+    "On-Progress" => "3",
+    "Done" => "5"
+);
 
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Start Date</label>-->
-<!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="--><?php //echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">End Date</label>-->
-<!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="--><?php //echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row">-->
-<!--                    --><?php //if($_SESSION['login_type'] == 1 ): ?>
-<!--                        <div class="col-md-6">-->
-<!--                            <div class="form-group">-->
-<!--                                <label for="" class="control-label">Project Manager</label>-->
-<!--                                <select class="form-control form-control-sm select2" name="manager_id">-->
-<!--                                    <option></option>-->
-<!--                                    --><?php
-//                                    $managers = $mysqli->query("SELECT *,concat(name,' ',jobrole) as name FROM employee order by concat(name,' ',jobrole) asc ");
-//                                    while($row= $managers->fetch_assoc()):
-//                                        ?>
-<!--                                        <option value="--><?php //echo $row['id'] ?><!--" --><?php //echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?><!-->--><?php //echo ucwords($row['name']) ?><!--</option>-->
-<!--                                    --><?php //endwhile; ?>
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    --><?php //else: ?>
-<!--                        <input type="hidden" name="manager_id" value="--><?php //echo $_SESSION['login_id'] ?><!--">-->
-<!--                    --><?php //endif; ?>
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Project Team Members</label>-->
-<!--                            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">-->
-<!--                                <option></option>-->
-<!--                                --><?//php?>
+// Get the selected status from the dropdown
+if (isset($_POST['status'])) {
+    $selected_status = $_POST['status'];
+} else {
+    $selected_status = 'all';
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,10 +42,20 @@ $current_month = date('m');
 
                     <div class="header">
                         <div class="topic"><h2>Project List</h2></div>
+                        <form method="post">
+                            <label for="status">Filter by Status:</label>
+                            <select name="status" id="status" onchange="this.form.submit()">
+                                <option value="all" <?php if ($selected_status == 'all') echo 'selected'; ?>>All</option>
+                                <option value="0" <?php if ($selected_status == '0') echo 'selected'; ?>>Started</option>
+                                <option value="3" <?php if ($selected_status == '3') echo 'selected'; ?>>On-Progress</option>
+                                <option value="5" <?php if ($selected_status == '5') echo 'selected'; ?>>Done</option>
+                            </select>
+                        </form>
                         <div class="div-search">
                             &nbsp;&nbsp;<i class="fa-solid fa-magnifying-glass"></i>
                             <input type="text" id="search" onkeyup="searchFunction()"  placeholder="Search" title="Search">
                         </div>
+
 
                     </div>
 
@@ -108,12 +73,15 @@ $current_month = date('m');
         </tr>
     <?php
     $dept_user = $_SESSION["dept_user"];
-    $sql = "SELECT * from dept_head WHERE employeeid = '$dept_user' ";
+    $sql = "SELECT * from dept_head WHERE employeeid = '$dept_user'";
     $result = $mysqli->query($sql);
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $dept_name = $row ['department'];
             $qry = "SELECT id,name,start_date,end_date,status from project_list WHERE dept_name = '$dept_name' AND MONTH(end_date) = $current_month ";
+            if ($selected_status != 'all') {
+                $qry .= " AND status = $selected_status";
+            }
             $result = $mysqli->query($qry);
 
             if ($result->num_rows > 0) {

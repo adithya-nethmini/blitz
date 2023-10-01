@@ -87,7 +87,7 @@ if (isset($_POST['submit'])) {
                     </tr>
                     <?php
                     $user = $_SESSION['user'];
-                    
+
                     $qry = "SELECT * FROM project_list WHERE manager_id = '$user' OR FIND_IN_SET('$user', user_ids) > 0";
                     $result = $mysqli->query($qry);
 
@@ -129,6 +129,12 @@ if (isset($_POST['submit'])) {
                             tr = table.getElementsByTagName("tr");
                             for (var i = 0; i < tr.length; i++) {
                                 var tds = tr[i].getElementsByTagName("td");
+                                // var td = tds[columnIndex]; // Get the specific column for comparison
+                                // if (td) {
+                                //   if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                                // tr[i].style.display = "";
+                                //   } else {
+                                // tr[i].style.display = "none";
                                 var flag = false;
                                 for (var j = 0; j < tds.length; j++) {
                                     var td = tds[j];
@@ -151,8 +157,8 @@ if (isset($_POST['submit'])) {
         </div>
         </td>
 
-</tr>
-</table>
+        </tr>
+        </table>
 
     </div>
     <br>

@@ -41,36 +41,38 @@ $mysqli = connect();
         </div>
         <tr  class="table-header">
         <tr>
-            <th> User Name</th>
-            <th> User Email</th>
+            <th> Employeeid</th>
+            <th> Email</th>
             <th> Subject</th>
             <th> Feedback</th>
             <th> Sent On</th>
             <th> Action</th>
         </tr>
     <?php
-    $qry = "SELECT username,email,subject,feedback,senton,action from feedback";
+    $qry = "SELECT id,employeeid,email,subject,feedback,senton,action from feedback";
     $result = $mysqli->query($qry);
 
     if (@$result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
+            $id = $row['id'];
+            $sentOn = date('Y-m-d H:i:s', strtotime($row['senton']));
             echo '
                 <tr>
-                    <td>' . $row['username'] . '</td>
+                    <td>' . $row['employeeid'] . '</td>
                     <td>' . $row['email'] . '</td>
                     <td>' . $row['subject'] . '</td> 
                     <td>' . $row['feedback'] . '</td> 
-                    <td>' . $row['senton'] . '</td> ';
-                    echo ' <td><div class="dropdown">
+                    <td>' . $row['senton'] . '</td> ';?>
+                     <td><div class="dropdown">
                         <button class="dropbtn">Action</button>
                         <div class="dropdown-content">
-                            <a href="#">Response</a>
-                            <a href="#">Delete</a>
+                        <a class="edit_btn" href="feedResponse.php?id=<?php echo $id ?>">Response</a>
+                            <a href="delete.js">Delete</a>
                         </div>
                     </div>
-                    </td>';
+                    </td>
 
-        }
+     <?php   }
     }
     else{
         echo mysqli_error($mysqli);

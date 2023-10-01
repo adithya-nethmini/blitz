@@ -2,68 +2,10 @@
 include 'sidebar.php';
 include 'header.php';
 $mysqli = connect();
+date_default_timezone_set("Asia/Kolkata");
 $current_date = date('Y-m-d');
 $current_month = date('m');
 ?>
-<!--<div class="col-lg-12">-->
-<!--    <div class="card card-outline card-primary">-->
-<!--        <div class="card-body">-->
-<!--            <form action="" id="manage-project">-->
-<!---->
-<!--                <input type="hidden" name="id" value="--><?php //echo isset($id) ? $id : '' ?><!--">-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Name</label>-->
-<!--                            <input type="text" class="form-control form-control-sm" name="name" value="--><?php //echo isset($name) ? $name : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="">Status</label>-->
-
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row">-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Start Date</label>-->
-<!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="--><?php //echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">End Date</label>-->
-<!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="--><?php //echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?><!--">-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="row">-->
-<!--                    --><?php //if($_SESSION['login_type'] == 1 ): ?>
-<!--                        <div class="col-md-6">-->
-<!--                            <div class="form-group">-->
-<!--                                <label for="" class="control-label">Project Manager</label>-->
-<!--                                <select class="form-control form-control-sm select2" name="manager_id">-->
-<!--                                    <option></option>-->
-<!--                                    --><?php
-//                                    $managers = $mysqli->query("SELECT *,concat(name,' ',jobrole) as name FROM employee order by concat(name,' ',jobrole) asc ");
-//                                    while($row= $managers->fetch_assoc()):
-//                                        ?>
-<!--                                        <option value="--><?php //echo $row['id'] ?><!--" --><?php //echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?><!-->--><?php //echo ucwords($row['name']) ?><!--</option>-->
-<!--                                    --><?php //endwhile; ?>
-<!--                                </select>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    --><?php //else: ?>
-<!--                        <input type="hidden" name="manager_id" value="--><?php //echo $_SESSION['login_id'] ?><!--">-->
-<!--                    --><?php //endif; ?>
-<!--                    <div class="col-md-6">-->
-<!--                        <div class="form-group">-->
-<!--                            <label for="" class="control-label">Project Team Members</label>-->
-<!--                            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">-->
-<!--                                <option></option>-->
-<!--                                --><?//php?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -189,7 +131,7 @@ $current_month = date('m');
             <div class="leave-container2">
 
                 <div class="header">
-                    <div class="topic"><h3>Member Performance Evaluation</h3></div>
+                    <div class="topic"><h3>Employee Performance Evaluation</h3></div>
                     <div class= "button_p">
                         <button style="background-color:transparent;border:none;color:white" id="PrintButton" onclick="PrintTable1()"><i class='fa-solid fa-print'></i>&nbsp;&nbsp;Print</button>
                     </div>
@@ -311,7 +253,6 @@ $current_month = date('m');
                                     }
                                 }
 
-
                                 $attendance = ($total_working_days - $total_leave) / $total_working_days * 100;
 
                                 $attendance = number_format($attendance, 1);
@@ -321,14 +262,73 @@ $current_month = date('m');
                                 $employee_performance = ($total_task_progress + $attendance) / 2;
 
                                 echo ' <td>' . $employee_performance . '%</td>';
+                                $qry_check = "SELECT COUNT(*) as count FROM `loyalty` WHERE `unique_Id` = '$unique_Id' AND MONTH(`month`) = '$current_month'";
+                                $result_check = mysqli_query($mysqli,$qry_check);
+                                $count = mysqli_fetch_assoc($result_check)['count'];
+
                                 $loyalty_type = "";
                                 if (70 <= $employee_performance && $employee_performance <= 80) {
+                                    $loyalty_type = "Silver";
+                                    $loyalty_eligibility = "Yes";
+                                    if($count == 0) {
+                                        $qry_insert = "INSERT INTO `loyalty`(`unique_Id`,`loyalty_type`,`username`) VALUES ('$unique_Id','$loyalty_type','$employeeid')";
+                                        if(mysqli_query($mysqli,$qry_insert)){
+                                            echo '';
+                                        }
+                                        else{
+                                            echo mysqli_error($mysqli);
+                                        }
+                                    }
+                                    $SQL = "UPDATE employee SET loyalty_eligibility = '$loyalty_eligibility' WHERE employeeid = '$employeeid'";
+                                    if(mysqli_query($mysqli,$SQL)){
+                                        echo '';
+                                    }
+                                    else{
+                                        echo mysqli_error($mysqli);
+                                    }
                                     echo '<td><span id="user_t">Silver</span></td>';
                                 } elseif (80 <= $employee_performance && $employee_performance <= 90) {
+                                    $loyalty_type = "Gold";
+                                    $loyalty_eligibility = "Yes";
+                                    if($count == 0) {
+                                        $qry_insert = "INSERT INTO `loyalty`(`unique_Id`,`loyalty_type`,`username`) VALUES ('$unique_Id','$loyalty_type','$employeeid')";
+                                        if(mysqli_query($mysqli,$qry_insert)){
+                                            echo '';
+                                        }
+                                        else{
+                                            echo mysqli_error($mysqli);
+                                        }
+                                    }
+                                    $SQL = "UPDATE employee SET loyalty_eligibility = '$loyalty_eligibility' WHERE employeeid = '$employeeid'";
+                                    if(mysqli_query($mysqli,$SQL)){
+                                        echo '';
+                                    }
+                                    else{
+                                        echo mysqli_error($mysqli);
+                                    }
                                     echo '<td><span id="user_t1">Gold</span></td>';
                                 } elseif (90 <= $employee_performance && $employee_performance <= 100) {
+                                    $loyalty_type = "Platinum";
+                                    $loyalty_eligibility = "Yes";
+                                    if($count == 0) {
+                                        $qry_insert = "INSERT INTO `loyalty`(`unique_Id`,`loyalty_type`,`username`) VALUES ('$unique_Id','$loyalty_type','$employeeid')";
+                                        if(mysqli_query($mysqli,$qry_insert)){
+                                            echo '';
+                                        }
+                                        else{
+                                            echo mysqli_error($mysqli);
+                                        }
+                                    }
+                                    $SQL = "UPDATE employee SET loyalty_eligibility = '$loyalty_eligibility' WHERE employeeid = '$employeeid'";
+                                    if(mysqli_query($mysqli,$SQL)){
+                                        echo '';
+                                    }
+                                    else{
+                                        echo mysqli_error($mysqli);
+                                    }
                                     echo '<td><span id="user_t2">Platinum</span></td>';
                                 } else {
+                                    $loyalty_eligibility = "No";
                                     echo '<td><span id="user_t3">Not Applicable</span></td>';
                                 }
                             }

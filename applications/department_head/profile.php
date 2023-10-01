@@ -1,8 +1,6 @@
 <?php
 include 'sidebar.php';
 include 'header.php';
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,17 +28,7 @@ include 'header.php';
                     <div class="profile-tbl">
                         <table>
                             <tr>
-                                <th>
 
-
-                                    <!-- <div class="popup" onclick="myFunction()"><i class='fas fa-pen'></i>
-                                    <span class="popuptext" id="myPopup">Update Profile
-                                        <input type="file" name="profilepic_e" value="<?php echo $_POST['profilepic_e'] ?>">
-                                        <button type= "submit" name="submit"><strong>UPDATE</strong></button>
-                                    </span>
-                                    </div> -->
-
-                                </th>
                                 <th class="th-edit-button"><div class="edit-button" title="Edit Profile">
                                 
                                     

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
 
                         <!-- <div style="display: flex;flex-direction:row"> -->
                         <div name="first">
-                        <label for="">Leave Type&nbsp;:</label>
+                            <label for="">Leave Type&nbsp;:</label>
                             <select name="leave_type" onchange="showSecondDiv()" id="leave-select" required>
                                 <option value="" selected disabled hidden>Select an Option</option>
                                 <option value="Annual Leave">Annual Leave</option>
@@ -56,6 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                                 <option value="Personal Leave">Personal Leave</option>
                                 <option value="Accident Leave">Accident Leave</option>
                                 <option value="Study Leave">Study Leave</option>
+                                <option value="Other">Other</option>
+
                             </select>
                         </div>
 
@@ -70,10 +72,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                                 <input type="date" id="start-date" name="start_date" min="<?php date("m/d/y") ?>" required>
                             </div>
 
+
                             <div name="end">
                                 <label for="">Last&nbsp;Date&nbsp;:</label>
                                 <input type="date" id="last-date" name="last_date" min="<?php echo date("Y-m-d") ?>" max="<?php echo date("Y-m-d", strtotime('+14 days')) ?>" required>
 
+                            </div>
+
+                            <div class="div-daysCount">
+                                <label for="">Number of Days</label>
+                                <span id="daysCount" name="daysCount"></span>
                             </div>
 
                             <div>
@@ -127,6 +135,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                                 <button type="submit" name="submit" class="apply">Apply&nbsp;Now</button>
                             </div>
                         </div>
+
+                        
                         <!-- </div> -->
 
 
@@ -146,8 +156,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
         var leaveSelect = document.getElementById("leave-select");
         var secondDiv = document.getElementsByName("second")[0];
         var startDateDiv = document.getElementsByName("start")[0];
+
         var lastDateDiv = document.getElementsByName("end")[0];
-        var maxDays = 7; // default number of days
+        // default number of days
 
         leaveSelect.addEventListener("change", function() {
             var selectedOption = leaveSelect.value;
@@ -165,6 +176,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                     lastDateDiv.style.display = "block";
                     maxDays = 84;
                     break;
+                case "Other":
+                    secondDiv.style.display = "block";
+                    startDateDiv.style.display = "block";
+                    lastDateDiv.style.display = "block";                    
+                    maxDays = 50;
+                    break;
                 case "none":
                     secondDiv.style.display = "none";
                     break;
@@ -174,6 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                     lastDateDiv.style.display = "block";
                     maxDays = 7;
                     break;
+
             }
 
             // Get the start date picker element
@@ -194,7 +212,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
                 // Set the maximum date for the last date picker to 14 days from the selected start date
                 var maxDate = new Date(startDate.getTime() + maxDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
                 lastDatePicker.setAttribute("max", maxDate);
+
+                /* get the difference between startDatePicker and lastDatePicker */
+                // var date1 = new Date(startDatePicker.value);
             });
+            var daysCount = lastDatePicker - startDatePicker;
+
         });
 
 
@@ -240,9 +263,123 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['check'])) {
             }
         }
     </script>
+    <script>
+        const start_date_input_field = document.getElementById("start-date");
+        const last_date_input_field = document.getElementById("last-date");
+        const daysCount_filed = document.getElementById("daysCount");
+
+
+        start_date_input.addEventListener("change", countDays);
+        last_date_input.addEventListener("change", countDays);
+
+        function countDays() {
+            const start_date = start_date_input.value;
+            const last_date = last_date_input.value;
+
+
+            const xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState === 4 && this.status === 200) {
+                    daysCount_filed.innerHTML = this.responseText;
+                }
+            };
+            xhttp.open("GET", "daysCount.php?start_date=" + start_date + "&last_date=" + last_date, true);
+            xhttp.send();
+        }
+    </script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
 </body>
 
 
 </html>
+
+
+
+<?php
+/*
+function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $daysCount, $username, $assigned_person)
+{
+    $user = $_SESSION['user'];
+    $mysqli = connect();
+    $args = func_get_args();
+
+    // Validate input data types
+    // if (!is_string($leave_type) || !is_string($recipient) || !is_string($message)) {
+    //     return "Invalid data types";
+    // }
+
+
+
+    $args = array_map(function ($value) use ($mysqli) {
+        // Escape special characters
+        $value = mysqli_real_escape_string($mysqli, trim($value));
+
+        // Check for disallowed characters
+        if (preg_match("/([<|>])/", $value)) {
+            return "<> characters are not allowed";
+        }
+
+
+        return $value;
+    }, $args);
+
+
+    $stmt = $mysqli->prepare("SELECT assigned_person FROM `e_leave` WHERE assigned_person = ? AND status != 'Canceled' AND ((start_date <= '$start_date' AND last_date >= '$start_date') OR (start_date <= '$last_date' AND last_date >= '$last_date') OR (start_date >= '$start_date' AND last_date <= '$last_date'))");
+    $stmt->bind_param("s", $assigned_person);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+
+    if ($row) {
+        // Assigned person is not available
+        echo "<div id='error-popup' class='error-popup'>
+                <span class='error-popup-close'>&times;</span>
+                <div>
+                    <i class='fa-solid fa-triangle-exclamation' style='font-size:50px'></i>
+                </div>
+                <div class='popup-inner'>
+                    <p>The assigned person is not available. Please choose another person.</p>
+                </div>
+            </div>
+            <script>
+            const errorPopup = document.getElementById('error-popup');
+            const errorPopupClose = errorPopup.querySelector('.error-popup-close');
+            errorPopup.style.display = 'block';
+            errorPopupClose.addEventListener('click', function() {
+              errorPopup.style.display = 'none';
+            });
+            </script>";
+    } else {
+
+        $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
+        $stmt->bind_param("s", $username);
+        if (!$stmt->execute()) {
+            $error_message = "Notification insert failed: " . $stmt->error;
+            return $error_message;
+        } else {
+            $notification_id = $stmt->insert_id;
+        }
+
+        
+
+
+        date_default_timezone_set('Asia/Kolkata');
+        $current_date = date('Y-m-d H:i:s');
+        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date, daysCount, status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
+        $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $daysCount, $username, $assigned_person);
+        if (!$stmt2->execute()) {
+            $error_message = "Leave application insert failed: " . $stmt2->error;
+            echo 'Error: ' . $mysqli->error;
+        } else {
+            $leave_id = $stmt2->insert_id;
+        }
+
+        if ($notification_id && $leave_id) {
+            echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
+        } else {
+            echo 'Error: ' . $mysqli->error;
+        }
+    }
+}*/
+?>

@@ -266,7 +266,7 @@ function loginUser($username, $password)
             header('location: ../applications/department_head/dashboard.php');
             break;
         case "partner_company_admin":
-            $_SESSION['padmin_user'] = $username;
+            $_SESSION['pcompany_user'] = $username;
             header('location: ../applications/partner_company/partner-profile.php');
             break;
         default:
@@ -412,10 +412,7 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
               errorPopup.style.display = 'none';
             });
             </script>";
-    }
-
-
-     else {
+    } else {
 
         $stmt = $mysqli->prepare("INSERT INTO notification(notification_name, notification_description, notification_type, username, status) VALUES('Leave Application', 'Apply for a leave', '4', ?, 'unseen')");
         $stmt->bind_param("s", $username);
@@ -426,13 +423,22 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
             $notification_id = $stmt->insert_id;
         }
 
+        
+$start_date = strtotime($start_date);
+$last_date = strtotime($last_date);
+$daysCount = ($last_date) - ($start_date);
+$daysCount = floor($daysCount / (60 * 60 * 24));
+$start_date = date('Y-m-d', $start_date);
+$last_date = date('Y-m-d', $last_date);
+
+
         date_default_timezone_set('Asia/Kolkata');
         $current_date = date('Y-m-d H:i:s');
-        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date,status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, 'Pending', ?, ?, '$current_date')");
+        $stmt2 = $mysqli->prepare("INSERT INTO e_leave(leave_type,reason,start_date,last_date, daysCount, status,name,assigned_person,applied_date) VALUES(?, ?, ?, ?, '$daysCount', 'Pending', ?, ?, '$current_date')");
         $stmt2->bind_param("ssssss", $leave_type, $reason, $start_date, $last_date, $username, $assigned_person);
         if (!$stmt2->execute()) {
             $error_message = "Leave application insert failed: " . $stmt2->error;
-            return $error_message;
+            echo 'Error: ' . $mysqli->error;
         } else {
             $leave_id = $stmt2->insert_id;
         }
@@ -440,7 +446,7 @@ function applyLeaveTest($leave_type, $reason, $start_date, $last_date, $username
         if ($notification_id && $leave_id) {
             echo '<script>window.location.href = "http://localhost/blitz/applications/employee/leave-status.php";</script>';
         } else {
-            return "An error occurred. Please try again";
+            echo 'Error: ' . $mysqli->error;
         }
     }
 }

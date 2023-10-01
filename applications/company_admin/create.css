@@ -2,14 +2,14 @@
 /* Style the form - display items horizontally */
 
 .contain{
-    margin-top: 50000px;
+    margin-top: 80000px;
 }
 .form-inline {
     display: inline-block;
     flex-flow: row wrap;
     align-items: center;
     margin-left: 500px;
-    margin-top: -250px;
+    margin-top: -100px;
     
 }
 
@@ -28,13 +28,7 @@
     text-align: center;
 }
 
-/*!* Style the submit button *!*/
-/*.form-inline button {*/
-/*    padding: 100px 50px;*/
-/*    background-color: dodgerblue;*/
-/*    border: 1px solid #ddd;*/
-/*    color: white;*/
-/*}*/
+
 
 .form-inline button:hover {
     background-color: royalblue;
@@ -82,42 +76,40 @@ textarea {
     resize: none;
 }
 
-.inner1{
-    text-align: center;
-    margin-top: 10px;
-    display: inline-block;
-    margin-left: 70px;
-    border: 2px solid #262626;
-    padding: 10px 18px;
-    font-size: 15px;
-    align-self: center;
-    border-radius: 5px;
-    transition: all .2s ease-in-out;
-    cursor: pointer;
-}
-
-.inner1:hover{
-    background-color: #ffffff;
-}
-
-.inner2{
-    text-align: center;
-    margin-top: 10px;
-    display: inline-block;
-    margin-left: 10px;
-    border: 2px solid #262626;
-    padding: 10px 18px;
-    font-size: 15px;
-    align-self: center;
-    border-radius: 5px;
-    transition: all .2s ease-in-out;
-    cursor: pointer;
-}
-
-.inner2:hover{
-    background-color: #ffffff;
-}
-
+.inner1 {
+    background-color: #4CAF50; /* set background color */
+    border: none; /* remove border */
+    color: white; /* set font color */
+    padding: 10px 20px; /* set padding */
+    text-align: center; /* center text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    cursor: pointer; /* change cursor to pointer on hover */
+    border-radius: 5px; /* round the corners */
+  }
+  
+  .inner1:hover {
+    background-color: #3e8e41; /* darken background color on hover */
+  }
+  
+  .inner2 {
+    background-color: #f44336; /* set background color */
+    border: none; /* remove border */
+    color: white; /* set font color */
+    padding: 10px 20px; /* set padding */
+    text-align: center; /* center text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    cursor: pointer; /* change cursor to pointer on hover */
+    border-radius: 5px; /* round the corners */
+  }
+  
+  .inner2:hover {
+    background-color: #c6372c; /* darken background color on hover */
+  }
+  
 .bar{
     margin-left: 200px;
 }
@@ -133,6 +125,7 @@ textarea {
 .error {
     color: #FF0001;
     text-align: center;
+    
 } 
 /* .up{
     margin-top: 150px;

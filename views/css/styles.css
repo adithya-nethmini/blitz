@@ -169,9 +169,11 @@
 
 #section-landing-2{
     padding: 50px 30px;
-    align-items: center;
-    justify-content: center;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .div-get-started{

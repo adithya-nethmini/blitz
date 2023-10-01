@@ -53,6 +53,7 @@ nav ul .li-img{
 nav ul li a i{
     margin-top: 25px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }

@@ -12,9 +12,9 @@ nav{
     height: 100px;
     line-height: 75px;
     padding: 0px 100px;
-    position: fixed;
     background-color: #fff;
-
+    overflow: hidden;
+    position: fixed;
 }
 
 /* Container */

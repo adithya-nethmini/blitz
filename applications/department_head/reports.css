@@ -9,7 +9,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 380px;
-    margin-top: 100px;
+    padding-top: 150px;
 }
 .leave-container1{
     width: 1080px;
@@ -279,6 +279,7 @@
     font-size: 7px;
 }
 
+
 .task-tbl1{
     width: 100%;
     overflow-x: auto;
@@ -316,3 +317,24 @@
     border-bottom: 1px solid grey ;
     z-index: -2;
 }
+
+.button_p1{
+    color: #fafafa;
+    border: none;
+    background: #071D70;
+    float: right;
+    margin-left: 250px;
+    margin-bottom: 20px;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 15px;
+    align-self: center;
+    transition: all .2s ease-in-out;
+    cursor: pointer;
+}
+
+.button_p1:hover{
+    background-color: #2242b9;
+}
+
+

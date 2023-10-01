@@ -28,7 +28,7 @@ $mysqli = connect();
                         <div class="main-chat-container-inner">
 
 
-                            <a class="member-a" href="depat_head-chat.php">
+                            <a class="member-a" href="project_manager-chat.php">
                                 <div class="main-chat-member" style="background-color: #D9D9D9;">
                                     <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Project&nbsp;Manager Chat</h3>
                                 </div>
@@ -38,7 +38,6 @@ $mysqli = connect();
                         <div class="member-section-inner">
 
                             <?php
-                            $mysqli = connect();
                             $user = $_SESSION['dept_user'];
                             $stmt = $mysqli->prepare("SELECT department FROM dept_head WHERE employeeid = '$user'");
                             $stmt->execute();
@@ -49,24 +48,24 @@ $mysqli = connect();
 
                                     // Prepare SELECT statement
                                     $sql = "SELECT manager_id FROM project_list WHERE dept_name = ?";
-                                    $stmt = mysqli_prepare($mysqli, $sql);
-                                    mysqli_stmt_bind_param($stmt, "s", $department);
+                                    $stmt2 = mysqli_prepare($mysqli, $sql);
+                                    mysqli_stmt_bind_param($stmt2, "s", $department);
 
                                     // Execute SELECT statement
-                                    mysqli_stmt_execute($stmt);
-                                    $result = mysqli_stmt_get_result($stmt);
+                                    mysqli_stmt_execute($stmt2);
+                                    $result = mysqli_stmt_get_result($stmt2);
 
                                     // Loop through results and display name and email
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         $member = strtolower($row['manager_id']);
                                         // $sql2 = "SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?";
                                         // $stmt = mysqli_prepare($mysqli, $sql2);
-                                        $stmt2 = $mysqli->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?");
-                                        mysqli_stmt_bind_param($stmt2, "ss", $user, $member);
+                                        $stmt3 = $mysqli->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?");
+                                        mysqli_stmt_bind_param($stmt3, "ss", $user, $member);
 
                                         // Execute SELECT statement
-                                        mysqli_stmt_execute($stmt2);
-                                        $result2 = mysqli_stmt_get_result($stmt2);
+                                        mysqli_stmt_execute($stmt3);
+                                        $result2 = mysqli_stmt_get_result($stmt3);
 
                                         // Loop through results and display name and email
                                         while ($row2 = mysqli_fetch_assoc($result2)) {

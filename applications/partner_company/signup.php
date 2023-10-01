@@ -2,7 +2,7 @@
 
     include ("function.php");
     if(isset($_POST['submit'])){
-        $response = registerCompany($_POST['companyname'],$_POST['companyemail'],$_POST['pcompanycon'],@$_POST['companyaddress'],$_POST['industry'],@$_POST['username'],$_POST['password'],@$_POST['repassword'], @$_POST['user_type']);
+        $response = registerCompany($_POST['companyname'],$_POST['companyemail'],$_POST['pcompanycon'],@$_POST['companyaddress'],$_POST['industry'],@$_POST['username'],@$_POST['repassword'], $_POST['password'],@$_POST['package'],@$_POST['user_type']);
     }
     
 ?>
@@ -39,9 +39,21 @@
         
             <label>Company Address</label><br>
             <input type="text" name="companyaddress" value="<?php echo @$_POST['companyaddress']; ?>"><br>
-        
-            <label>Industry Category</label><br>
-            <input type="text" name="industry" value="<?php echo @$_POST['industry']; ?>"><br>
+
+            <label><b>catagory</b></label><br>
+            <select name="industry" id="industry" value="<?php echo @$_POST['industry']; ?>">
+                <option value="">Select an option</option>
+                <option value="super-market">Super Market</option>
+                <option value="textile">Textile</option>
+                <option value="pharmacy">Pharmacy</option>
+            </select><br>
+            <label><b>Partnership Package</b></label><br>
+            <select name="package" id="package" value="<?php echo @$_POST['package']; ?>">
+                <option value="">Select an option</option>
+                <option value="basic">Basic</option>
+                <option value="premium">Premium</option>
+                <option value="premium-plus">Premium Plusy</option>
+            </select><br>
        
             <label>Username</label><br>
             <input type="text" name="username" value="<?php echo @$_POST['username']; ?>"><br>

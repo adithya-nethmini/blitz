@@ -1,6 +1,6 @@
 <?php 
 
-$connect = new PDO("mysql:host=localhost;dbname=testing", "root", "");
+$connect = new PDO("mysql:host=localhost;dbname=blitz", "root", "");
 
 ?>
 

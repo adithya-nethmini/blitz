@@ -35,65 +35,6 @@ $mysqli = connect();
     }
 
 ?>
-    <!--<div class="col-lg-12">-->
-    <!--    <div class="card card-outline card-primary">-->
-    <!--        <div class="card-body">-->
-    <!--            <form action="" id="manage-project">-->
-    <!---->
-    <!--                <input type="hidden" name="id" value="--><?php //echo isset($id) ? $id : '' ?><!--">-->
-    <!--                <div class="row">-->
-    <!--                    <div class="col-md-6">-->
-    <!--                        <div class="form-group">-->
-    <!--                            <label for="" class="control-label">Name</label>-->
-    <!--                            <input type="text" class="form-control form-control-sm" name="name" value="--><?php //echo isset($name) ? $name : '' ?><!--">-->
-    <!--                        </div>-->
-    <!--                    </div>-->
-    <!--                    <div class="col-md-6">-->
-    <!--                        <div class="form-group">-->
-    <!--                            <label for="">Status</label>-->
-
-    <!--                        </div>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="row">-->
-    <!--                    <div class="col-md-6">-->
-    <!--                        <div class="form-group">-->
-    <!--                            <label for="" class="control-label">Start Date</label>-->
-    <!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="--><?php //echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?><!--">-->
-    <!--                        </div>-->
-    <!--                    </div>-->
-    <!--                    <div class="col-md-6">-->
-    <!--                        <div class="form-group">-->
-    <!--                            <label for="" class="control-label">End Date</label>-->
-    <!--                            <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="--><?php //echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?><!--">-->
-    <!--                        </div>-->
-    <!--                    </div>-->
-    <!--                </div>-->
-    <!--                <div class="row">-->
-    <!--                    --><?php //if($_SESSION['login_type'] == 1 ): ?>
-    <!--                        <div class="col-md-6">-->
-    <!--                            <div class="form-group">-->
-    <!--                                <label for="" class="control-label">Project Manager</label>-->
-    <!--                                <select class="form-control form-control-sm select2" name="manager_id">-->
-    <!--                                    <option></option>-->
-    <!--                                    --><?php
-//                                    $managers = $mysqli->query("SELECT *,concat(name,' ',jobrole) as name FROM employee order by concat(name,' ',jobrole) asc ");
-//                                    while($row= $managers->fetch_assoc()):
-//                                        ?>
-    <!--                                        <option value="--><?php //echo $row['id'] ?><!--" --><?php //echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?><!-->--><?php //echo ucwords($row['name']) ?><!--</option>-->
-    <!--                                    --><?php //endwhile; ?>
-    <!--                                </select>-->
-    <!--                            </div>-->
-    <!--                        </div>-->
-    <!--                    --><?php //else: ?>
-    <!--                        <input type="hidden" name="manager_id" value="--><?php //echo $_SESSION['login_id'] ?><!--">-->
-    <!--                    --><?php //endif; ?>
-    <!--                    <div class="col-md-6">-->
-    <!--                        <div class="form-group">-->
-    <!--                            <label for="" class="control-label">Project Team Members</label>-->
-    <!--                            <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">-->
-    <!--                                <option></option>-->
-    <!--                                --><?//php?>
 
 <!DOCTYPE html>
 <html lang="en">

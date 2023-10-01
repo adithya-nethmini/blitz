@@ -125,3 +125,18 @@ select {
     justify-content: center;
     align-items: center;
 }
+
+.div-daysCount{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#daysCount{
+    color: #a00002;
+    font-weight: 700;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

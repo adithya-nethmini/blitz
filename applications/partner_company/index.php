@@ -3,6 +3,35 @@
   include 'header.php';
   include 'function.php';
 
+  function getOffers($partner_company) {
+    // Modify the SQL query to filter results based on the logged-in partner company
+    $query = "SELECT * FROM offers WHERE companyname = '$partner_company' AND start_date <= NOW() AND end_date >= NOW()";
+    
+    // Execute the query and retrieve the results
+    // ...
+  }
+  
+  // Call the function and retrieve the offers/ads
+  $offers = getOffers($_SESSION['partner_company']);
+  
+  // Loop through the results and display them using HTML and CSS
+  foreach ($offers as $offer) {
+    echo 
+    '<div style="padding: 20px;">
+    <div class="promo">
+            <div class="image-container"> 
+                <img src='.$offer_cover.' alt="cover photo">
+            </div>
+                <ul>
+                    <li><b>'.$offer_name.'</b></li>
+                    <li>'.$offertype.' offer</li>
+                    <li>Valid until: '.$offer_date.'</li>
+                    <li>Save '.$amount.'/=</li>
+                </ul>
+    
+    </div></div>' ;
+  }
+
 if(isset($_GET['logout'])){
   unset($_SESSION['login']);
   session_destroy();

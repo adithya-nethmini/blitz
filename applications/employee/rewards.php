@@ -142,11 +142,11 @@ $user = $_SESSION['user'];
                             <div class="page-content-right">
                                 <div>
                                     <?php if ($loyalty_type == 'Gold') {?>
-                                        <a href="#">Gold&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
+                                        <a href="view-offer.php">Gold&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
                                     <?php }elseif ($loyalty_type == 'Silver') { ?>
-                                        <a href="#">Silver&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
+                                        <a href="view-offer.php">Silver&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
                                     <?php }else { ?>
-                                        <a href="#">Platinum&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
+                                        <a href="view-offer.php">Platinum&nbsp;User&nbsp;Offers&nbsp;<i class="fa-solid fa-angles-right"></i>&nbsp;</a>
                                     <?php } ?>
                                 </div>
                             </div>

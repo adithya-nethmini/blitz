@@ -5,4 +5,3 @@
     echo "<script>location.href = 'http://localhost/blitz_new/applications/department_head/landingpage.php'</script>"
     
 ?>
-<html

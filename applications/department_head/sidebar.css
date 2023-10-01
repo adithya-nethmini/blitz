@@ -147,22 +147,3 @@
     margin-top: 12px;
 }
 
-.profile-logout{    
-    color: rgb(255, 255, 255);
-    background-color:#071D70;
-    border: 0.5px solid white;
-    width: 200px;
-    height: 30px;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    padding: 20px 60px;
-    align-items: center;
-}
-
-.profile-logout:hover{
-    color: #071D70;
-    background-color:white;
-    cursor: pointer;
-    font-weight: bold;
-}

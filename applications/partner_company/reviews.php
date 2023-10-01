@@ -1,5 +1,12 @@
+
+
 <?php 
-include 'function.php';
+include '../function/partner_companyf/reviews-f.php';
+include 'submit_rating.php';
+
+// Retrieve reviews from the database
+$reviews = get_reviews();
+
 
 ?>
 
@@ -27,7 +34,10 @@ include 'function.php';
         <button type="submit">Submit Review</button>
     </form>
 </div>
-<?php foreach (@$reviews as $review): ?>
+
+<?php 
+    foreach ($reviews as $review): 
+?>
 <div class="review">
     <h3 class="name"><?=htmlspecialchars($review['employee'], ENT_QUOTES)?></h3>
     <div>
@@ -41,20 +51,20 @@ include 'function.php';
 <div class="reviews"></div>
 <script>
 const review_company_name = 1;
-fetch("review.php?companyname=" + reviews_page_id).then(response => response.text()).then(data => {
-	document.querySelector(".review").innerHTML = data;
-	document.querySelector(".review .write_review_btn").onclick = event => {
+fetch("review.php?companyname=" + review_company_name).then(response => response.text()).then(data => {
+	document.querySelector(".reviews").innerHTML = data;
+	document.querySelector(".write_review_btn").onclick = event => {
 		event.preventDefault();
-		document.querySelector(".review .write_review").style.display = 'block';
-		document.querySelector(".review .write_review input[name='employee']").focus();
+		document.querySelector(".write_review").style.display = 'block';
+		document.querySelector(".write_review input[name='employee']").focus();
 	};
-	document.querySelector(".review .write_review form").onsubmit = event => {
+	document.querySelector(".write_review form").onsubmit = event => {
 		event.preventDefault();
-		fetch("review.php?companyname=" + review_page_id, {
+		fetch("review.php?companyname=" + review_company_name, {
 			method: 'POST',
-			body: new FormData(document.querySelector(".review .write_review form"))
+			body: new FormData(document.querySelector(".write_review form"))
 		}).then(response => response.text()).then(data => {
-			document.querySelector(".review .write_review").innerHTML = data;
+			document.querySelector(".write_review").innerHTML = data;
 		});
 	};
 });

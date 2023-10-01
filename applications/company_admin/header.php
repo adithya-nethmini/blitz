@@ -24,7 +24,7 @@
 
       <nav>
             <ul>
-                <li><a href="../../index.php">Home</a></li>
+                <li><a href="../../home.php">Home</a></li>
                 <li><a href="#">About</a></li>
                 <li><a href="#">Help</a></li>
                 

@@ -1,16 +1,14 @@
-<?php 
-
-include"function.php";
-
-if(!isset($_SESSION["padmin_user"])){
-    header("location: login.php");
+<?php
+// include_once 'function.php';
+if(!isset($_SESSION["pcompany_user"])){
+    header("location: ../login.php");
 
     exit();
 }
       if(isset($_GET['logout'])){
         unset($_SESSION['login']);
         session_destroy();
-        header("location: ../../landingpage.php");
+        header("location: ../../index.php");
         exit();
       }
 ?>
@@ -26,28 +24,45 @@ if(!isset($_SESSION["padmin_user"])){
     <script src="https://kit.fontawesome.com/b1cec324bd.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="sidebar">
-
+    <div class="sidebar">
         <img src="images/logo-white.png" alt="logo">
         <div class="sidebar-menu">
             <ul>
-                <li><a href="partner-profile.php"><i class="fa-solid fa-building"></i><b>&nbsp;Company&nbsp;Profile</b></a></li>
-                <li><a href="offers-promotions.php"><i class="fa fa-gift" aria-hidden="true"></i><b>&nbsp;Offers&nbsp;&&nbsp;Promotions</b></a></li>
-                <li><a href=""><i class="fa-solid fa-square-poll-vertical"></i><b>&nbsp;Offer&nbsp;Redeem&nbsp;Report</b></a></li>
+                <li><a href="partner-profile.php" id="company-profile"><i class="fa-solid fa-building"></i><b>&nbsp;Company&nbsp;Profile</b></a></li>
+                <li><a href="company-feed.php" id="company-feed"><i class="fa fa-gift" aria-hidden="true"></i><b>&nbsp;Company&nbsp;Feed</b></a></li>
+                <li><a href="partner-page.php" id="company-feed"><i class="fa fa-gift" aria-hidden="true"></i><b>&nbsp;Company&nbsp;Page</b></a></li>
+                <li><a href="redeem-report.php" id="redeem-report"><i class="fa-solid fa-square-poll-vertical"></i><b>&nbsp;Offer&nbsp;Redeem&nbsp;Report</b></a></li>
             </ul>
         </div>
-
         <div class="sidebar-bottom">
             <div class="company-deets">
-                <img src="images/keels.png" alt="partner company logo">
-                <h4>Company Name</h4>
+
+           
+         
+                <?php
+                $mysqli = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
+                $user = $_SESSION['pcompany_user'];
+                $sql = ("SELECT pcompany_pic FROM partner_company WHERE username = '$user'");
+                    //$mysqli=connect();
+                    $username = $_SESSION['pcompany_user'];
+                    $details = getPartnerCompanyDetails($mysqli, $username);
+                    $pcompany_pic = $details['pcompany_pic'];
+                    $companyName = $details['companyname'];
+                    
+                    if ($profilePicture) {
+                        echo '<img src=' . $pcompany_pic . ' alt="Profile Picture">';
+                    } else {
+                        echo '<img src="../../views/images/pro-icon-partner.png" alt="Profile Picture">';
+                    }
+                    echo '<h3>' . $companyName . '</h3>';
+                ?>
             </div>
+            
             <div class="logout">
                 <button id="logout">
-                    <h4><a href="?logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a> </h4>
+                    <h4><a href="?logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a></h4>
                 </button>
             </div>
-
         </div>
     </div>
 </body>

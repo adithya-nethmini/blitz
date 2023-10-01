@@ -16,8 +16,11 @@
     width: 325px;
     height: 100%;
     background: #071D70;
+    box-shadow: 0px 0px 15px 2px #acacac;
     padding: 0 0;
     z-index: 2;
+    top: 0;
+    margin-top: 0;
 }
 
 .sidebar .sidebar-menu ul li{
@@ -69,12 +72,13 @@
     font-size: 20px;
 }
  
-.company-deets h4{
+.company-deets h3{
     padding-top: 17px;
-    padding-left: 10px;
+    padding-left: 15px;
+    margin-left: 15px;
 }
 .company-deets img{
-    height: 60px;
+    height: 70px;
     width: 90px;
 }
 .sidebar .sidebar-bottom .logout{
@@ -95,4 +99,7 @@
     background-color: transparent;
 
    
+}
+.current-page{
+    background: #fff;
 }

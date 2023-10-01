@@ -236,7 +236,7 @@ foreach ($data as $row) {
 
                             $con = mysqli_connect(SERVER, USERNAME, PASSWORD, DATABASE);
                             /* $user = $_SESSION['user']; */
-                            $sql = "SELECT * FROM e_leave WHERE status = 'Accepted' ORDER BY applied_date";
+                            $sql = "SELECT * FROM e_leave WHERE status = 'Accepted' OR status = 'Taken' ORDER BY applied_date";
 
                             $result = mysqli_query($con, $sql);
 
@@ -281,7 +281,7 @@ foreach ($data as $row) {
                 <?php else : ?>
 
                     <tr>
-                        <td colspan="5">No leaves applied yet</td>
+                        <td colspan="5">No leaves accepted yet</td>
                     </tr>
 
                 <?php endif ?>

@@ -34,7 +34,7 @@ if (isset($_POST['submit'])) {
                         <div class="main-chat-container-inner">
 
 
-                            <a class="member-a" href="depat_head-chat.php">
+                            <a class="member-a" href="project_manager-chat.php">
                                 <div class="main-chat-member" style="background-color: #D9D9D9;">
                                     <h3><i class="fa-sharp fa-solid fa-user"></i>&nbsp;Project&nbsp;Manager Chat</h3>
                                 </div>
@@ -54,25 +54,26 @@ if (isset($_POST['submit'])) {
                                 while ($stmt->fetch()) {
 
                                     // Prepare SELECT statement
-                                    $sql = "SELECT manager_id FROM project_list WHERE dept_name = ?";
-                                    $stmt = mysqli_prepare($mysqli, $sql);
-                                    mysqli_stmt_bind_param($stmt, "s", $department);
+                                    $sql = "SELECT manager_id,name FROM project_list WHERE dept_name = ?";
+                                    $stmt2 = mysqli_prepare($mysqli, $sql);
+                                    mysqli_stmt_bind_param($stmt2, "s", $department);
 
                                     // Execute SELECT statement
-                                    mysqli_stmt_execute($stmt);
-                                    $result = mysqli_stmt_get_result($stmt);
+                                    mysqli_stmt_execute($stmt2);
+                                    $result = mysqli_stmt_get_result($stmt2);
 
                                     // Loop through results and display name and email
                                     while ($row = mysqli_fetch_assoc($result)) {
                                         $member = strtolower($row['manager_id']);
+                                        $name = $row['name'];
                                         // $sql2 = "SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?";
                                         // $stmt = mysqli_prepare($mysqli, $sql2);
-                                        $stmt2 = $mysqli->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?");
-                                        mysqli_stmt_bind_param($stmt2, "ss", $user, $member);
+                                        $stmt3 = $mysqli->prepare("SELECT COUNT(*),sender FROM chat WHERE status = 'unseen' AND recipient = ? AND sender = ?");
+                                        mysqli_stmt_bind_param($stmt3, "ss", $user, $member);
 
                                         // Execute SELECT statement
-                                        mysqli_stmt_execute($stmt2);
-                                        $result2 = mysqli_stmt_get_result($stmt2);
+                                        mysqli_stmt_execute($stmt3);
+                                        $result2 = mysqli_stmt_get_result($stmt3);
 
                                         // Loop through results and display name and email
                                         while ($row2 = mysqli_fetch_assoc($result2)) {
@@ -82,7 +83,7 @@ if (isset($_POST['submit'])) {
 
                                             <a class="member-a" href="open-project_manager-chat.php?manager_id=<?php echo $member; ?>">
                                                 <div class="member">
-                                                    <?php echo $row['manager_id'];
+                                                    <?php echo $member . '-' . $name;
 
                                                     if ($count > 0) : ?>
                                                         <div class="div-badge">
@@ -109,18 +110,16 @@ if (isset($_POST['submit'])) {
 
                         <?php
                         $mysqli = connect();
-                        $stmt = $mysqli->prepare("SELECT name,username FROM `employee` WHERE username = ?");
-                        $stmt->bind_param("s", $_GET['manager_id']);
-                        $stmt->execute();
-                        $stmt->store_result();
-                        if ($stmt->num_rows == 1) {
-                            $stmt->bind_result($name, $username);
-                            $stmt->fetch();
+                        $stmt4 = $mysqli->prepare("SELECT name,employeeid FROM `employee` WHERE employeeid = ?");
+                        $stmt4->bind_param("s", $_GET['manager_id']);
+                        $stmt4->execute();
+                        $stmt4->store_result();
+                        if ($stmt4->num_rows == 1) {
+                            $stmt4->bind_result($name, $username);
+                            $stmt4->fetch();
                         ?>
                             <div class="chat-name-display">
-                                <h3><?php echo $name;
-                                    echo $username;
-                                    echo $_SESSION['dept_user'] ?></h3>
+                                <h3><?php echo $name; ?></h3>
                             </div>
                             <hr>
 
@@ -128,14 +127,14 @@ if (isset($_POST['submit'])) {
                             <div class="display-message">
                                 <?php
                                 $first_sender = "";
-                                $stmt = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE chat_type = 'Direct' AND (`recipient` = ? AND `sender` = ?) OR (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
-                                $stmt->bind_param("ssss", $_SESSION['dept_user'], $username, $username, $_SESSION['dept_user']);
-                                $stmt->execute();
-                                $stmt->store_result();
-                                if ($stmt->num_rows > 0) {
-                                    $stmt->bind_result($id, $sender, $recipient, $message, $created_date_time, $status);
+                                $stmt5 = $mysqli->prepare("SELECT id, sender, recipient, message, created_date_time, status FROM `chat` WHERE chat_type = 'Direct' AND (`recipient` = ? AND `sender` = ?) OR (`recipient` = ? AND `sender` = ?) ORDER BY created_date_time, id");
+                                $stmt5->bind_param("ssss", $_SESSION['dept_user'], $username, $username, $_SESSION['dept_user']);
+                                $stmt5->execute();
+                                $stmt5->store_result();
+                                if ($stmt5->num_rows > 0) {
+                                    $stmt5->bind_result($id, $sender, $recipient, $message, $created_date_time, $status);
                                     $current_date = NULL;
-                                    while ($stmt->fetch()) {
+                                    while ($stmt5->fetch()) {
                                         if ($sender == $_SESSION['dept_user']) { // Check if sender is current user
                                 ?>
                                             <div class="outgoing-messages">

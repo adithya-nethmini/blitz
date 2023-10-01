@@ -1,22 +1,13 @@
 <?php
+include 'connection.php';
 
-if (isset($_GET ["id"])) {
-    $id = $_GET["id"];
-
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "blitz";
-
-// Create connection
-$connection = new mysqli($servername, $username, $password, $database);
-
-
-    //read the row of the selected client from database table 
-    $sql = "DELETE FROM c_admins WHERE id=$id";
-    $connection->query($sql);
+if(isset($_GET['id']) && is_numeric($_GET['id'])){
+    $id = $_GET['id'];
+    $sql = "UPDATE `dept_head` SET `status` = 'inactive' WHERE `id` = $id";
+    $result = $conn->query($sql);
+    if($result){
+        echo "<script>alert('Record has been deleted successfully.')</script>";
+    }
 }
 
-header ("location:listadmin.php");
-exit;
 ?>

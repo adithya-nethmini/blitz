@@ -9,6 +9,7 @@
     display: flex;
     flex-direction: column;
     margin-left: 380px;
+    
 }
 .leave-container{
     width: 1080px;
@@ -18,6 +19,9 @@
     background-color:white;
     padding-bottom: 40px;
     color: #51619b;
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    
 }
 
 
@@ -28,6 +32,8 @@
     padding: 10px 0;
     flex-direction: row;
     flex-wrap: wrap;
+    background-color: white;
+    
 }
 
 .topic h2{
@@ -72,7 +78,7 @@
 
 .btn-task-add, .btn-task-update, .btn-task-delete{
     color: white;
-    padding: 10px;
+    padding: 0px;
     font-weight: bold;
     text-decoration: none;
     border-style: none;
@@ -126,9 +132,9 @@
 
 .task-tbl tr th{
     border-bottom: 2px solid grey ;
-    padding: 10px 40px;
+    padding: 0px 0px;
     font-size: 17px;
-    position: sticky;
+
     position: -webkit-sticky;
     top: 0;
     z-index: 2;
@@ -186,7 +192,7 @@
 
 .dropbtn {
     background:none;
-    color: #51619b;
+    color: #3a4981;
     padding: 5px 5px;
     font-size: 13px;
     border: 1px solid #0264A2;
@@ -222,3 +228,79 @@
 .table-header th{
     background: white;
 }
+
+.edit_btn {
+    background-color: #4CAF50; /* set the background color */
+    border: none; /* remove border */
+    color: white; /* set text color */
+    padding: 12px 24px; /* set padding */
+    text-align: center; /* center the text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    margin: 10px 0; /* set margin */
+    cursor: pointer; /* add pointer cursor on hover */
+    width:100px;
+  }
+  
+  .edit_btn:hover {
+    background-color: #3e8e41; /* change background color on hover */
+  }
+
+  .delete_btn {
+    background-color: #f44336; /* set the background color */
+    border: none; /* remove border */
+    color: white; /* set text color */
+    padding: 12px 24px; /* set padding */
+    text-align: center; /* center the text */
+    text-decoration: none; /* remove underline */
+    display: inline-block; /* display as inline block */
+    font-size: 16px; /* set font size */
+    margin: 10px 0; /* set margin */
+    cursor: pointer; /* add pointer cursor on hover */
+    width:100px;
+  }
+  
+  .delete_btn:hover {
+    background-color: #d32f2f; /* change background color on hover */
+  }
+  
+  .checkbox input[type="checkbox"] {
+    transform: scale(2.5); /* Increase the size of the checkbox */
+    margin-right: 5px; /* Add some space between the checkbox and the label */
+  }
+  
+  .dropbtn {
+    position: relative;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    padding: 10px 20px;
+    margin: 10px;
+    text-align: center;
+    display: inline-block;
+  }
+  .dropbtn:hover {
+    background-color: #3e8e41;
+  }
+  .dropdown-content {
+    display: none;
+    position: center;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 1;
+  }
+  .view_btn {
+    background-color: yellow;
+    color: black;
+  }
+  .edit_btn {
+/*     background-color: blue; */
+    color: white;
+  }
+  .delete_btn {
+   /*  background-color: red; */
+    color: white;
+  }

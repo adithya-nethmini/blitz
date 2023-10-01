@@ -25,19 +25,20 @@
             <div class="box">
 <!-- <a href="add.php">Home</a> -->
                 <li><a href="Dash.php"><i class="fa fa-tachometer" aria-hidden="true"></i><b>&nbsp;Dashboard</b></a></li>
-                <li><a href="listadmin.php"><i class="fa fa-user-plus" aria-hidden="true"></i><b>&nbsp;Add&nbsp;Roles</b></a></li>
-                <li><a href="table.php"><i class="fa fa-university" aria-hidden="true"></i><b>&nbsp;Departments</b></a></li>
-                <li><a href="partner.php"><i class="fa fa-users" aria-hidden="true"></i><b>&nbsp;Partner&nbsp;Companies</b></a></li>
+                <li><a href="list_depthead.php"><i class="fa fa-user-plus" aria-hidden="true"></i><b>&nbsp;Department&nbsp;Heads</b></a></li>
+                <li><a href="list_employee.php"><i class="fa fa-users" aria-hidden="true"></i><b>&nbsp;Add&nbsp;Employees</b></a></li>
+                <li><a href="list_dept.php"><i class="fa fa-university" aria-hidden="true"></i><b>&nbsp;Departments</b></a></li>
+                <li><a href="list_partner.php"><i class="fa fa-handshake-o" aria-hidden="true"></i><b>&nbsp;Partner&nbsp;Companies</b></a></li>
                 <li><a href="feed.php"><i class="fa fa-comments-o" aria-hidden="true"></i><b>&nbsp;Feedbacks</b></a></li>
                 <li><a href="manage-leave.php"><i class="fa fa-calendar" aria-hidden="true"></i><b>&nbsp;Leave Management</b></a></li>
             </ul>
         </div>
 
         <div class="sidebar-bottom">
-        <div class="user-details">
-                <div class="div-logout" title="Logout">
-                    <a href="?logout" class="profile-logout" onclick="return confirm('Are you sure you want to logout?')"><i class="fa fa-sign-out"></i>&nbsp;Logout</a>
-                </div>
+        <div class="logout">
+                <button id="logout">
+                    <h4><a href="?logout" onclick="return confirm('Are you sure you want to logout?')">Logout</a> </h4>
+                </button>
             </div>
 
         </div>

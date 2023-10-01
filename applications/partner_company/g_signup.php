@@ -1,6 +1,6 @@
 <?php 
 
-    require("function.php");
+    require("../function/partner_companyf/g_signup-f.php");
     if(isset($_POST['submit'])){
         $response = selectRadio(@$_POST['$signup_Option']);
     }

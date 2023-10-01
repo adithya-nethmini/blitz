@@ -116,7 +116,7 @@ foreach ($data as $row) {
                                             while ($row = mysqli_fetch_assoc($result)) :
                                                 $fname = $row['name'];
 
-                                                $sql = ("SELECT * FROM e_leave WHERE name = '$user' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ORDER BY applied_date DESC");
+                                                $sql = ("SELECT * FROM e_leave WHERE name = '$user' AND MONTH(applied_date)=MONTH(CURRENT_TIMESTAMP) ORDER BY daysCount DESC");
 
                                                 $result = mysqli_query($con, $sql);
 
@@ -133,6 +133,7 @@ foreach ($data as $row) {
                                                             $reason = $row['reason'];
                                                             $start_date = $row['start_date'];
                                                             $last_date = $row['last_date'];
+                                                            $daysCount = $row['daysCount'];
                                                             $status = $row['status'];
                                                             $name = $row['name'];
                                                             $assigned_person = $row['assigned_person'];
@@ -150,6 +151,7 @@ foreach ($data as $row) {
                                         <td><?php echo $reason ?></td>
                                         <td><?php echo $start_date ?></td>
                                         <td><?php echo $last_date ?></td>
+                                        <td><?php echo $daysCount ?></td>
                                         <td><?php echo $assigned_person ?></td>
                                         <td title="$applied_date">
                                             <?php if ($status == 'Pending') : ?>
